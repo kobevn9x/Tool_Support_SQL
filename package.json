@@ -1,7 +1,7 @@
 {
   "name": "sql-data-formatter",
   "version": "1.0.0",
-  "description": "SQL Data Formatter Tool by Kobe",
+  "description": "SQL Data Formatter Tool - Kobe",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
