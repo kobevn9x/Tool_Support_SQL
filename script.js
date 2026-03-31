@@ -10,23 +10,23 @@ window.addEventListener('DOMContentLoaded', () => {
     displayHistory();
 });
 
-function convertData() {
+function convertData(isFromHistory = false) {
     const input = document.getElementById('inputText').value;
     
     if (!input.trim()) {
-        showToast(t('toastPleaseEnterData'), 'error');
+        if (!isFromHistory) showToast(t('toastPleaseEnterData'), 'error');
         return;
     }
 
     // Get options
-    const removeEmpty = document.getElementById('removeEmpty').checked;
-    const removeDuplicates = document.getElementById('removeDuplicates').checked;
-    const addQuotes = document.getElementById('addQuotes').checked;
-    const uppercase = document.getElementById('uppercase').checked;
-    const lowercase = document.getElementById('lowercase').checked;
-    const separator = document.getElementById('separator').value || ',';
-    const outputFormat = document.getElementById('outputFormat').value;
-    const inKeywordCase = document.getElementById('inKeywordCase').value;
+    const removeEmpty = document.getElementById('removeEmpty')?.checked ?? true;
+    const removeDuplicates = document.getElementById('removeDuplicates')?.checked ?? false;
+    const addQuotes = document.getElementById('addQuotes')?.checked ?? true;
+    const uppercase = document.getElementById('uppercase')?.checked ?? false;
+    const lowercase = document.getElementById('lowercase')?.checked ?? false;
+    const separator = document.getElementById('separator')?.value ?? ',';
+    const outputFormat = document.getElementById('outputFormat')?.value ?? 'inclause';
+    const inKeywordCase = document.getElementById('inKeywordCase')?.value ?? 'upper';
 
     // Process lines
     let lines = input.split('\n');
@@ -96,7 +96,7 @@ function convertData() {
         document.getElementById('charCount').textContent = currentChunks.join('\n').length;
         document.getElementById('chunkCount').textContent = currentChunks.length;
         
-        showToast(t('toastChunked')(currentChunks.length), 'success');
+        if (!isFromHistory) showToast(t('toastChunked')(currentChunks.length), 'success');
     } else {
         // Single output mode
         const result = formatLines(lines);
@@ -111,12 +111,14 @@ function convertData() {
         document.getElementById('lineCount').textContent = lines.length;
         document.getElementById('charCount').textContent = result.length;
         
-        showToast(t('toastConvertSuccess'), 'success');
+        if (!isFromHistory) showToast(t('toastConvertSuccess'), 'success');
     }
     
     // Save to history (save first chunk or full result)
-    const outputToSave = shouldChunk ? currentChunks[0] : document.getElementById('outputText').value;
-    saveToHistory(input, outputToSave);
+    if (!isFromHistory) {
+        const outputToSave = shouldChunk ? currentChunks[0] : document.getElementById('outputText').value;
+        saveToHistory(input, outputToSave);
+    }
 }
 
 function createChunkTabs() {
@@ -182,8 +184,24 @@ function copyAllChunks() {
 function clearInput() {
     document.getElementById('inputText').value = '';
     document.getElementById('outputText').value = '';
-    showToast(t('toastCleared'), 'success');
+    
+    // Reset chunked mode UI
+    currentChunks = [];
+    currentChunkIndex = 0;
+    document.getElementById('chunkedOutputText').value = '';
+    document.getElementById('chunkTabs').innerHTML = '';
+    
+    // Reset views to single output mode
+    document.getElementById('singleOutputMode').style.display = 'block';
+    document.getElementById('chunkedOutputMode').style.display = 'none';
+    document.getElementById('chunkCountStat').style.display = 'none';
+    
+    // Reset stats
+    document.getElementById('lineCount').textContent = '0';
+    document.getElementById('charCount').textContent = '0';
+    document.getElementById('chunkCount').textContent = '0';
 
+    showToast(t('toastCleared'), 'success');
 }
 
 function copyToClipboard() {
@@ -233,18 +251,19 @@ function saveToHistory(input, output) {
     const historyItem = {
         id: Date.now(),
         input: input.substring(0, 200), // Limit to 200 chars for display
+        fullInput: input,
         output: output.substring(0, 200),
         fullOutput: output,
         timestamp: new Date().toLocaleString('vi-VN'),
         options: {
-            removeEmpty: document.getElementById('removeEmpty').checked,
-            removeDuplicates: document.getElementById('removeDuplicates').checked,
-            addQuotes: document.getElementById('addQuotes').checked,
-            uppercase: document.getElementById('uppercase').checked,
-            lowercase: document.getElementById('lowercase').checked,
-            separator: document.getElementById('separator').value,
-            outputFormat: document.getElementById('outputFormat').value,
-            inKeywordCase: document.getElementById('inKeywordCase').value
+            removeEmpty: document.getElementById('removeEmpty')?.checked ?? true,
+            removeDuplicates: document.getElementById('removeDuplicates')?.checked ?? false,
+            addQuotes: document.getElementById('addQuotes')?.checked ?? true,
+            uppercase: document.getElementById('uppercase')?.checked ?? false,
+            lowercase: document.getElementById('lowercase')?.checked ?? false,
+            separator: document.getElementById('separator')?.value ?? ',',
+            outputFormat: document.getElementById('outputFormat')?.value ?? 'inclause',
+            inKeywordCase: document.getElementById('inKeywordCase')?.value ?? 'upper'
         }
     };
     
@@ -285,29 +304,20 @@ function displayHistory() {
 function loadHistory(id) {
     const item = history.find(h => h.id === id);
     if (item) {
-        document.getElementById('inputText').value = item.input;
-        
-        // Reset to single mode first
-        document.getElementById('singleOutputMode').style.display = 'block';
-        document.getElementById('chunkedOutputMode').style.display = 'none';
-        document.getElementById('chunkCountStat').style.display = 'none';
-        
-        document.getElementById('outputText').value = item.fullOutput;
+        document.getElementById('inputText').value = item.fullInput || item.input;
         
         // Restore options
-        document.getElementById('removeEmpty').checked = item.options.removeEmpty;
-        document.getElementById('removeDuplicates').checked = item.options.removeDuplicates;
-        document.getElementById('addQuotes').checked = item.options.addQuotes;
-        document.getElementById('uppercase').checked = item.options.uppercase;
-        document.getElementById('lowercase').checked = item.options.lowercase;
-        document.getElementById('separator').value = item.options.separator;
-        if (item.options.outputFormat) document.getElementById('outputFormat').value = item.options.outputFormat;
-        if (item.options.inKeywordCase) document.getElementById('inKeywordCase').value = item.options.inKeywordCase;
+        if (document.getElementById('removeEmpty')) document.getElementById('removeEmpty').checked = item.options.removeEmpty;
+        if (document.getElementById('removeDuplicates')) document.getElementById('removeDuplicates').checked = item.options.removeDuplicates;
+        if (document.getElementById('addQuotes')) document.getElementById('addQuotes').checked = item.options.addQuotes;
+        if (document.getElementById('uppercase')) document.getElementById('uppercase').checked = item.options.uppercase;
+        if (document.getElementById('lowercase')) document.getElementById('lowercase').checked = item.options.lowercase;
+        if (document.getElementById('separator')) document.getElementById('separator').value = item.options.separator;
+        if (item.options.outputFormat && document.getElementById('outputFormat')) document.getElementById('outputFormat').value = item.options.outputFormat;
+        if (item.options.inKeywordCase && document.getElementById('inKeywordCase')) document.getElementById('inKeywordCase').value = item.options.inKeywordCase;
         
-        // Update stats
-        const lines = item.fullOutput.split('\n').filter(l => l.trim()).length;
-        document.getElementById('lineCount').textContent = lines;
-        document.getElementById('charCount').textContent = item.fullOutput.length;
+        // Handle proper output rendering logic including chunked mode splitting
+        convertData(true);
         
         showToast(t('toastHistoryLoaded'), 'success');
         window.scrollTo({ top: 0, behavior: 'smooth' });
