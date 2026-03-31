@@ -3,8 +3,10 @@ let history = JSON.parse(localStorage.getItem('sqlFormatterHistory'))||[];
 let currentChunks = [];
 let currentChunkIndex = 0;
 
-// Display history on load
+// Display history on load + init language
 window.addEventListener('DOMContentLoaded', () => {
+    initLanguageSelector();
+    applyLanguage(currentLang);
     displayHistory();
 });
 
@@ -12,7 +14,7 @@ function convertData() {
     const input = document.getElementById('inputText').value;
     
     if (!input.trim()) {
-        showToast('Vui lòng nhập dữ liệu', 'error');
+        showToast(t('toastPleaseEnterData'), 'error');
         return;
     }
 
@@ -94,7 +96,7 @@ function convertData() {
         document.getElementById('charCount').textContent = currentChunks.join('\n').length;
         document.getElementById('chunkCount').textContent = currentChunks.length;
         
-        showToast(`Đã tách thành ${currentChunks.length} blocks (mỗi block 999 dòng)`, 'success');
+        showToast(t('toastChunked')(currentChunks.length), 'success');
     } else {
         // Single output mode
         const result = formatLines(lines);
@@ -109,7 +111,7 @@ function convertData() {
         document.getElementById('lineCount').textContent = lines.length;
         document.getElementById('charCount').textContent = result.length;
         
-        showToast('Chuyển đổi thành công!', 'success');
+        showToast(t('toastConvertSuccess'), 'success');
     }
     
     // Save to history (save first chunk or full result)
@@ -151,18 +153,18 @@ function copyCurrentChunk() {
     const textarea = document.getElementById('chunkedOutputText');
     
     if (!textarea.value) {
-        showToast('Không có dữ liệu để copy', 'error');
+        showToast(t('toastNoDataCopy'), 'error');
         return;
     }
     
     textarea.select();
     document.execCommand('copy');
-    showToast(`Đã copy Block ${currentChunkIndex + 1}!`, 'success');
+    showToast(t('toastCopiedBlock')(currentChunkIndex + 1), 'success');
 }
 
 function copyAllChunks() {
     if (currentChunks.length === 0) {
-        showToast('Không có dữ liệu để copy', 'error');
+        showToast(t('toastNoDataCopy'), 'error');
         return;
     }
     
@@ -174,13 +176,13 @@ function copyAllChunks() {
     document.execCommand('copy');
     document.body.removeChild(textarea);
     
-    showToast(`Đã copy tất cả ${currentChunks.length} blocks!`, 'success');
+    showToast(t('toastCopiedAllBlocks')(currentChunks.length), 'success');
 }
 
 function clearInput() {
     document.getElementById('inputText').value = '';
     document.getElementById('outputText').value = '';
-    showToast('Đã xóa dữ liệu!', 'success');
+    showToast(t('toastCleared'), 'success');
 
 }
 
@@ -188,13 +190,13 @@ function copyToClipboard() {
     const output = document.getElementById('outputText');
     
     if (!output.value) {
-        showToast('Không có dữ liệu để copy', 'error');
+        showToast(t('toastNoDataCopy'), 'error');
         return;
     }
     
     output.select();
     document.execCommand('copy');
-    showToast('Đã copy vào clipboard!', 'success');
+    showToast(t('toastCopied'), 'success');
 }
 
 function downloadResult() {
@@ -210,7 +212,7 @@ function downloadResult() {
     }
     
     if (!output) {
-        showToast('Không có dữ liệu để tải', 'error');
+        showToast(t('toastNoDataDownload'), 'error');
         return;
     }
     
@@ -224,7 +226,7 @@ function downloadResult() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     
-    showToast('Đã tải xuống!', 'success');
+    showToast(t('toastDownloaded'), 'success');
 }
 
 function saveToHistory(input, output) {
@@ -261,7 +263,7 @@ function displayHistory() {
     const historyList = document.getElementById('historyList');
     
     if (history.length === 0) {
-        historyList.innerHTML = '<p style="text-align: center; color: #9ca3af; padding: 40px;">Chưa có lịch sử nào</p>';
+        historyList.innerHTML = `<p style="text-align: center; color: #9ca3af; padding: 40px;">${t('historyEmpty')}</p>`;
         return;
     }
     
@@ -270,8 +272,8 @@ function displayHistory() {
             <div class="history-header">
                 <span class="history-time">🕐 ${item.timestamp}</span>
                 <div class="history-actions">
-                    <button class="btn-secondary" onclick="loadHistory(${item.id})">📥 Tải</button>
-                    <button class="btn-success" onclick="copyHistoryItem(${item.id})">📋 Copy</button>
+                    <button class="btn-secondary" onclick="loadHistory(${item.id})">${t('btnLoad')}</button>
+                    <button class="btn-success" onclick="copyHistoryItem(${item.id})">${t('btnCopy')}</button>
                     <button class="btn-danger" onclick="deleteHistoryItem(${item.id})">❌</button>
                 </div>
             </div>
@@ -307,7 +309,7 @@ function loadHistory(id) {
         document.getElementById('lineCount').textContent = lines;
         document.getElementById('charCount').textContent = item.fullOutput.length;
         
-        showToast('Đã tải lịch sử!', 'success');
+        showToast(t('toastHistoryLoaded'), 'success');
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 }
@@ -321,25 +323,25 @@ function copyHistoryItem(id) {
         textarea.select();
         document.execCommand('copy');
         document.body.removeChild(textarea);
-        showToast('Đã copy lịch sử!', 'success');
+        showToast(t('toastHistoryCopied'), 'success');
     }
 }
 
 function deleteHistoryItem(id) {
-    if (confirm('Bạn có chắc muốn xóa mục này?')) {
+    if (confirm(t('confirmDeleteItem'))) {
         history = history.filter(h => h.id !== id);
         localStorage.setItem('sqlFormatterHistory', JSON.stringify(history));
         displayHistory();
-        showToast('Đã xóa mục lịch sử', 'success');
+        showToast(t('toastHistoryItemDeleted'), 'success');
     }
 }
 
 function clearHistory() {
-    if (confirm('Bạn có chắc muốn xóa toàn bộ lịch sử?')) {
+    if (confirm(t('confirmClearHistory'))) {
         history = [];
         localStorage.setItem('sqlFormatterHistory', JSON.stringify(history));
         displayHistory();
-        showToast('Đã xóa toàn bộ lịch sử', 'success');
+        showToast(t('toastHistoryCleared'), 'success');
     }
 }
 

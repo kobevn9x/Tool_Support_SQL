@@ -9,36 +9,39 @@
 <body>
     <div class="container">
         <header>
-            <h1>⚡SQL Data Formatter - Kobe⚡</h1>
-            <p>Fast and efficient SQL data formatting tool</p>
+            <div class="lang-switcher">
+                <select id="langSelect"></select>
+            </div>
+            <h1 data-i18n="headerTitle">⚡SQL Data Formatter - Kobe⚡</h1>
+            <p data-i18n="headerSubtitle">Fast and efficient SQL data formatting tool</p>
         </header>
 
         <div class="main-content">
             <div class="card">
-                <h2>📝 Dữ liệu đầu vào</h2>
-                <textarea id="inputText" placeholder="Nhập dữ liệu của bạn vào đây (mỗi giá trị một dòng)..."></textarea>
+                <h2 data-i18n="inputTitle">📝 Dữ liệu đầu vào</h2>
+                <textarea id="inputText" data-i18n-placeholder="inputPlaceholder" placeholder="Nhập dữ liệu của bạn vào đây (mỗi giá trị một dòng)..."></textarea>
                 <div class="controls">
                     <button class="btn-primary" onclick="convertData()">
-                        🔄 Chuyển đổi
+                        <span data-i18n="btnConvert">🔄 Chuyển đổi</span>
                     </button>
                     <button class="btn-secondary" onclick="clearInput()">
-                        🗑️ Xóa
+                        <span data-i18n="btnClear">🗑️ Xóa</span>
                     </button>
                 </div>
             </div>
 
             <div class="card">
-                <h2>✨ Kết quả</h2>
+                <h2 data-i18n="outputTitle">✨ Kết quả</h2>
                 
                 <!-- Single output mode -->
                 <div id="singleOutputMode">
-                    <textarea id="outputText" readonly placeholder="Kết quả sẽ hiển thị ở đây..."></textarea>
+                    <textarea id="outputText" readonly data-i18n-placeholder="outputPlaceholder" placeholder="Kết quả sẽ hiển thị ở đây..."></textarea>
                     <div class="controls">
                         <button class="btn-success" onclick="copyToClipboard()">
-                            📋 Copy
+                            <span data-i18n="btnCopy">📋 Copy</span>
                         </button>
                         <button class="btn-secondary" onclick="downloadResult()">
-                            💾 Tải xuống
+                            <span data-i18n="btnDownload">💾 Tải xuống</span>
                         </button>
                     </div>
                 </div>
@@ -50,13 +53,13 @@
                         <textarea id="chunkedOutputText" readonly></textarea>
                         <div class="controls">
                             <button class="btn-success" onclick="copyCurrentChunk()">
-                                📋 Copy Block hiện tại
+                                <span data-i18n="btnCopyCurrentBlock">📋 Copy Block hiện tại</span>
                             </button>
                             <button class="btn-primary" onclick="copyAllChunks()">
-                                📋 Copy TẤT CẢ Blocks
+                                <span data-i18n="btnCopyAllBlocks">📋 Copy TẤT CẢ Blocks</span>
                             </button>
                             <button class="btn-secondary" onclick="downloadResult()">
-                                💾 Tải xuống
+                                <span data-i18n="btnDownload">💾 Tải xuống</span>
                             </button>
                         </div>
                     </div>
@@ -65,49 +68,49 @@
                 <div class="stats">
                     <div class="stat-item">
                         <div class="stat-value" id="lineCount">0</div>
-                        <div class="stat-label">Dòng</div>
+                        <div class="stat-label" data-i18n="statLines">Dòng</div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-value" id="charCount">0</div>
-                        <div class="stat-label">Ký tự</div>
+                        <div class="stat-label" data-i18n="statChars">Ký tự</div>
                     </div>
                     <div class="stat-item" id="chunkCountStat" style="display: none;">
                         <div class="stat-value" id="chunkCount">0</div>
-                        <div class="stat-label">Blocks</div>
+                        <div class="stat-label" data-i18n="statBlocks">Blocks</div>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="options-panel">
-            <h3>⚙️ Tùy chọn</h3>
+            <h3 data-i18n="optionsTitle">⚙️ Tùy chọn</h3>
             <div class="options-grid">
                 <div class="option-item">
                     <input type="checkbox" id="removeEmpty" checked>
-                    <label for="removeEmpty">Xóa dòng trống</label>
+                    <label for="removeEmpty" data-i18n="optRemoveEmpty">Xóa dòng trống</label>
                 </div>
                 <div class="option-item">
                     <input type="checkbox" id="removeDuplicates">
-                    <label for="removeDuplicates">Xóa giá trị trùng lặp</label>
+                    <label for="removeDuplicates" data-i18n="optRemoveDuplicates">Xóa giá trị trùng lặp</label>
                 </div>
                 <div class="option-item">
                     <input type="checkbox" id="addQuotes" checked>
-                    <label for="addQuotes">Thêm dấu ngoặc đơn</label>
+                    <label for="addQuotes" data-i18n="optAddQuotes">Thêm dấu ngoặc đơn</label>
                 </div>
                 <div class="option-item">
                     <input type="checkbox" id="uppercase">
-                    <label for="uppercase">Chuyển HOA</label>
+                    <label for="uppercase" data-i18n="optUppercase">Chuyển HOA</label>
                 </div>
                 <div class="option-item">
                     <input type="checkbox" id="lowercase">
-                    <label for="lowercase">Chuyển thường</label>
+                    <label for="lowercase" data-i18n="optLowercase">Chuyển thường</label>
                 </div>
                 <div class="option-item">
-                    <label for="separator">Ký tự phân cách:</label>
+                    <label for="separator" data-i18n="optSeparator">Ký tự phân cách:</label>
                     <input type="text" id="separator" value="," maxlength="3">
                 </div>
                 <div class="option-item">
-                    <label for="sqlDialect">SQL Dialect:</label>
+                    <label for="sqlDialect" data-i18n="optSqlDialect">SQL Dialect:</label>
                     <select id="sqlDialect">
                         <option value="standard">Standard SQL</option>
                         <option value="mssql">MS SQL</option>
@@ -115,17 +118,17 @@
                     </select>
                 </div>
                 <div class="option-item">
-                    <label for="outputFormat">Output Format:</label>
+                    <label for="outputFormat" data-i18n="optOutputFormat">Output Format:</label>
                     <select id="outputFormat">
                         <option value="inclause">IN Clause</option>
                         <option value="databyrow">DataByRow</option>
                     </select>
                 </div>
                 <div class="option-item">
-                    <label for="inKeywordCase">"IN" Keyword Case:</label>
+                    <label for="inKeywordCase" data-i18n="optInKeywordCase">"IN" Keyword Case:</label>
                     <select id="inKeywordCase">
-                        <option value="upper">Uppercase</option>
-                        <option value="lower">Lowercase</option>
+                        <option value="upper" data-i18n="optInCaseUpper">Uppercase</option>
+                        <option value="lower" data-i18n="optInCaseLower">Lowercase</option>
                     </select>
                 </div>
             </div>
@@ -133,13 +136,13 @@
 
         <div class="history-panel">
             <h3>
-                📚 Lịch sử chuyển đổi
+                <span data-i18n="historyTitle">📚 Lịch sử chuyển đổi</span>
                 <button class="btn-danger" onclick="clearHistory()" style="padding: 8px 16px; font-size: 12px;">
-                    🗑️ Xóa tất cả
+                    <span data-i18n="btnClearAll">🗑️ Xóa tất cả</span>
                 </button>
             </h3>
             <div class="history-list" id="historyList">
-                <p style="text-align: center; color: #9ca3af; padding: 40px;">Chưa có lịch sử nào</p>
+                <p style="text-align: center; color: #9ca3af; padding: 40px;" data-i18n="historyEmpty">Chưa có lịch sử nào</p>
             </div>
         </div>
     </div>
@@ -148,6 +151,7 @@
         <span id="toastMessage"></span>
     </div>
 
+    <script src="i18n.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
