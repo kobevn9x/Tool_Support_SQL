@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Data Formatter - IN Clause & DataByRow - Kobe</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚡ SQL Data Formatter - IN Clause & DataByRow - Kobe</h1>
+            <p>Fast and efficient SQL data formatting tool</p>
+        </header>
+
+        <div class="main-content">
+            <div class="card">
+                <h2>📝 Dữ liệu đầu vào</h2>
+                <textarea id="inputText" placeholder="Nhập dữ liệu của bạn vào đây (mỗi giá trị một dòng)..."></textarea>
+                <div class="controls">
+                    <button class="btn-primary" onclick="convertData()">
+                        🔄 Chuyển đổi
+                    </button>
+                    <button class="btn-secondary" onclick="clearInput()">
+                        🗑️ Xóa
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>✨ Kết quả</h2>
+                
+                <!-- Single output mode -->
+                <div id="singleOutputMode">
+                    <textarea id="outputText" readonly placeholder="Kết quả sẽ hiển thị ở đây..."></textarea>
+                    <div class="controls">
+                        <button class="btn-success" onclick="copyToClipboard()">
+                            📋 Copy
+                        </button>
+                        <button class="btn-secondary" onclick="downloadResult()">
+                            💾 Tải xuống
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chunked output mode with tabs -->
+                <div id="chunkedOutputMode" style="display: none;">
+                    <div class="chunk-tabs" id="chunkTabs"></div>
+                    <div class="chunk-content">
+                        <textarea id="chunkedOutputText" readonly></textarea>
+                        <div class="controls">
+                            <button class="btn-success" onclick="copyCurrentChunk()">
+                                📋 Copy Block hiện tại
+                            </button>
+                            <button class="btn-primary" onclick="copyAllChunks()">
+                                📋 Copy TẤT CẢ Blocks
+                            </button>
+                            <button class="btn-secondary" onclick="downloadResult()">
+                                💾 Tải xuống
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="lineCount">0</div>
+                        <div class="stat-label">Dòng</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="charCount">0</div>
+                        <div class="stat-label">Ký tự</div>
+                    </div>
+                    <div class="stat-item" id="chunkCountStat" style="display: none;">
+                        <div class="stat-value" id="chunkCount">0</div>
+                        <div class="stat-label">Blocks</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="options-panel">
+            <h3>⚙️ Tùy chọn</h3>
+            <div class="options-grid">
+                <div class="option-item">
+                    <input type="checkbox" id="removeEmpty" checked>
+                    <label for="removeEmpty">Xóa dòng trống</label>
+                </div>
+                <div class="option-item">
+                    <input type="checkbox" id="removeDuplicates">
+                    <label for="removeDuplicates">Xóa giá trị trùng lặp</label>
+                </div>
+                <div class="option-item">
+                    <input type="checkbox" id="addQuotes" checked>
+                    <label for="addQuotes">Thêm dấu ngoặc đơn</label>
+                </div>
+                <div class="option-item">
+                    <input type="checkbox" id="uppercase">
+                    <label for="uppercase">Chuyển HOA</label>
+                </div>
+                <div class="option-item">
+                    <input type="checkbox" id="lowercase">
+                    <label for="lowercase">Chuyển thường</label>
+                </div>
+                <div class="option-item">
+                    <label for="separator">Ký tự phân cách:</label>
+                    <input type="text" id="separator" value="," maxlength="3">
+                </div>
+                <div class="option-item">
+                    <label for="sqlDialect">SQL Dialect:</label>
+                    <select id="sqlDialect">
+                        <option value="standard">Standard SQL</option>
+                        <option value="mssql">MS SQL</option>
+                        <option value="oracle">Oracle</option>
+                    </select>
+                </div>
+                <div class="option-item">
+                    <label for="outputFormat">Output Format:</label>
+                    <select id="outputFormat">
+                        <option value="inclause">IN Clause</option>
+                        <option value="databyrow">DataByRow</option>
+                    </select>
+                </div>
+                <div class="option-item">
+                    <label for="inKeywordCase">"IN" Keyword Case:</label>
+                    <select id="inKeywordCase">
+                        <option value="upper">Uppercase</option>
+                        <option value="lower">Lowercase</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="history-panel">
+            <h3>
+                📚 Lịch sử chuyển đổi
+                <button class="btn-danger" onclick="clearHistory()" style="padding: 8px 16px; font-size: 12px;">
+                    🗑️ Xóa tất cả
+                </button>
+            </h3>
+            <div class="history-list" id="historyList">
+                <p style="text-align: center; color: #9ca3af; padding: 40px;">Chưa có lịch sử nào</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">
+        <span id="toastMessage"></span>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
