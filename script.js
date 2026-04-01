@@ -1,7 +1,22 @@
-// Load history from localStorage
-let history = JSON.parse(localStorage.getItem('sqlFormatterHistory'))||[];
+// Load history from localStorage with validation
+let history = [];
+try {
+    const stored = localStorage.getItem('sqlFormatterHistory');
+    if (stored) {
+        const parsed = JSON.parse(stored);
+        // Validate it's an array
+        if (Array.isArray(parsed)) {
+            history = parsed;
+        }
+    }
+} catch (error) {
+    console.error('Failed to load history:', error);
+    localStorage.removeItem('sqlFormatterHistory');
+}
+
 let currentChunks = [];
 let currentChunkIndex = 0;
+let isProcessing = false;
 
 // Display history on load + init language
 window.addEventListener('DOMContentLoaded', () => {
@@ -11,6 +26,11 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 function convertData(isFromHistory = false) {
+    // Prevent concurrent processing
+    if (isProcessing) {
+        return;
+    }
+
     const input = document.getElementById('inputText').value;
     
     if (!input.trim()) {
@@ -18,6 +38,34 @@ function convertData(isFromHistory = false) {
         return;
     }
 
+    // Show loading state
+    isProcessing = true;
+    const convertBtn = document.querySelector('.btn-primary');
+    const originalBtnText = convertBtn?.innerHTML;
+    if (convertBtn) {
+        convertBtn.disabled = true;
+        convertBtn.innerHTML = '<span class="spinner"></span> Processing...';
+    }
+
+    // Use setTimeout to allow UI to update before heavy processing
+    setTimeout(() => {
+        try {
+            processConversion(input, isFromHistory);
+        } catch (error) {
+            console.error('Conversion error:', error);
+            showToast('Error: ' + error.message, 'error');
+        } finally {
+            // Reset loading state
+            isProcessing = false;
+            if (convertBtn) {
+                convertBtn.disabled = false;
+                convertBtn.innerHTML = originalBtnText || '<span data-i18n="btnConvert">🔄 Convert</span>';
+            }
+        }
+    }, 50);
+}
+
+function processConversion(input, isFromHistory) {
     // Get options
     const removeEmpty = document.getElementById('removeEmpty')?.checked ?? true;
     const removeDuplicates = document.getElementById('removeDuplicates')?.checked ?? false;
@@ -56,9 +104,9 @@ function convertData(isFromHistory = false) {
         lines = lines.map(line => `'${line.replace(/'/g, "''")}'`);
     }
     
-    // Check if we need to chunk the data
-    const chunkSize = 999;
-    const shouldChunk = lines.length > 1000;
+    // Check if we need to chunk the data (fixed off-by-one)
+    const chunkSize = 1000;
+    const shouldChunk = lines.length >= chunkSize;
 
     // Helper function to format lines based on output format
     const formatLines = (lineArray) => {
@@ -137,21 +185,45 @@ function createChunkTabs() {
 function showChunk(index) {
     currentChunkIndex = index;
     
-    // Update textarea
-    document.getElementById('chunkedOutputText').value = currentChunks[index];
+    const textarea = document.getElementById('chunkedOutputText');
+    const chunkContent = document.querySelector('.chunk-content');
     
-    // Update active tab
-    const tabs = document.querySelectorAll('.chunk-tab');
-    tabs.forEach((tab, i) => {
-        if (i === index) {
-            tab.classList.add('active');
-        } else {
-            tab.classList.remove('active');
-        }
-    });
+    // Add fade transition
+    if (chunkContent) {
+        chunkContent.style.opacity = '0';
+        
+        setTimeout(() => {
+            // Update textarea
+            textarea.value = currentChunks[index];
+            
+            // Update active tab
+            const tabs = document.querySelectorAll('.chunk-tab');
+            tabs.forEach((tab, i) => {
+                if (i === index) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+            
+            // Fade in
+            chunkContent.style.opacity = '1';
+        }, 150);
+    } else {
+        // Fallback without animation
+        textarea.value = currentChunks[index];
+        const tabs = document.querySelectorAll('.chunk-tab');
+        tabs.forEach((tab, i) => {
+            if (i === index) {
+                tab.classList.add('active');
+            } else {
+                tab.classList.remove('active');
+            }
+        });
+    }
 }
 
-function copyCurrentChunk() {
+async function copyCurrentChunk() {
     const textarea = document.getElementById('chunkedOutputText');
     
     if (!textarea.value) {
@@ -159,26 +231,30 @@ function copyCurrentChunk() {
         return;
     }
     
-    textarea.select();
-    document.execCommand('copy');
-    showToast(t('toastCopiedBlock')(currentChunkIndex + 1), 'success');
+    try {
+        await copyToClipboardModern(textarea.value);
+        showToast(t('toastCopiedBlock')(currentChunkIndex + 1), 'success');
+    } catch (error) {
+        console.error('Copy failed:', error);
+        showToast('Copy failed: ' + error.message, 'error');
+    }
 }
 
-function copyAllChunks() {
+async function copyAllChunks() {
     if (currentChunks.length === 0) {
         showToast(t('toastNoDataCopy'), 'error');
         return;
     }
     
     const allData = currentChunks.join('\n\n');
-    const textarea = document.createElement('textarea');
-    textarea.value = allData;
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
     
-    showToast(t('toastCopiedAllBlocks')(currentChunks.length), 'success');
+    try {
+        await copyToClipboardModern(allData);
+        showToast(t('toastCopiedAllBlocks')(currentChunks.length), 'success');
+    } catch (error) {
+        console.error('Copy failed:', error);
+        showToast('Copy failed: ' + error.message, 'error');
+    }
 }
 
 function clearInput() {
@@ -204,7 +280,7 @@ function clearInput() {
     showToast(t('toastCleared'), 'success');
 }
 
-function copyToClipboard() {
+async function copyToClipboard() {
     const output = document.getElementById('outputText');
     
     if (!output.value) {
@@ -212,9 +288,40 @@ function copyToClipboard() {
         return;
     }
     
-    output.select();
-    document.execCommand('copy');
-    showToast(t('toastCopied'), 'success');
+    try {
+        await copyToClipboardModern(output.value);
+        showToast(t('toastCopied'), 'success');
+    } catch (error) {
+        console.error('Copy failed:', error);
+        showToast('Copy failed: ' + error.message, 'error');
+    }
+}
+
+// Modern Clipboard API with fallback
+async function copyToClipboardModern(text) {
+    // Try modern Clipboard API first
+    if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+    } else {
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = text;
+        textarea.style.position = 'fixed';
+        textarea.style.left = '-999999px';
+        textarea.style.top = '-999999px';
+        document.body.appendChild(textarea);
+        textarea.focus();
+        textarea.select();
+        
+        try {
+            const successful = document.execCommand('copy');
+            if (!successful) {
+                throw new Error('Copy command failed');
+            }
+        } finally {
+            document.body.removeChild(textarea);
+        }
+    }
 }
 
 function downloadResult() {
@@ -278,6 +385,7 @@ function saveToHistory(input, output) {
     displayHistory();
 }
 
+// Optimized history rendering
 function displayHistory() {
     const historyList = document.getElementById('historyList');
     
@@ -286,19 +394,57 @@ function displayHistory() {
         return;
     }
     
-    historyList.innerHTML = history.map(item => `
-        <div class="history-item">
-            <div class="history-header">
-                <span class="history-time">🕐 ${item.timestamp}</span>
-                <div class="history-actions">
-                    <button class="btn-secondary" onclick="loadHistory(${item.id})">${t('btnLoad')}</button>
-                    <button class="btn-success" onclick="copyHistoryItem(${item.id})">${t('btnCopy')}</button>
-                    <button class="btn-danger" onclick="deleteHistoryItem(${item.id})">❌</button>
-                </div>
-            </div>
-            <div class="history-content">${item.output}${item.output.length >= 200 ? '...' : ''}</div>
-        </div>
-    `).join('');
+    // Use DocumentFragment for better performance
+    const fragment = document.createDocumentFragment();
+    
+    history.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'history-item';
+        
+        const header = document.createElement('div');
+        header.className = 'history-header';
+        
+        const timeSpan = document.createElement('span');
+        timeSpan.className = 'history-time';
+        timeSpan.textContent = `🕐 ${item.timestamp}`;
+        
+        const actionsDiv = document.createElement('div');
+        actionsDiv.className = 'history-actions';
+        
+        const loadBtn = document.createElement('button');
+        loadBtn.className = 'btn-secondary';
+        loadBtn.textContent = t('btnLoad');
+        loadBtn.onclick = () => loadHistory(item.id);
+        
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'btn-success';
+        copyBtn.textContent = t('btnCopy');
+        copyBtn.onclick = () => copyHistoryItem(item.id);
+        
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'btn-danger';
+        deleteBtn.textContent = '❌';
+        deleteBtn.onclick = () => deleteHistoryItem(item.id);
+        
+        actionsDiv.appendChild(loadBtn);
+        actionsDiv.appendChild(copyBtn);
+        actionsDiv.appendChild(deleteBtn);
+        
+        header.appendChild(timeSpan);
+        header.appendChild(actionsDiv);
+        
+        const content = document.createElement('div');
+        content.className = 'history-content';
+        // Use textContent to prevent XSS
+        content.textContent = item.output.length >= 200 ? item.output + '...' : item.output;
+        
+        div.appendChild(header);
+        div.appendChild(content);
+        fragment.appendChild(div);
+    });
+    
+    historyList.innerHTML = '';
+    historyList.appendChild(fragment);
 }
 
 function loadHistory(id) {
@@ -324,16 +470,16 @@ function loadHistory(id) {
     }
 }
 
-function copyHistoryItem(id) {
+async function copyHistoryItem(id) {
     const item = history.find(h => h.id === id);
     if (item) {
-        const textarea = document.createElement('textarea');
-        textarea.value = item.fullOutput;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        showToast(t('toastHistoryCopied'), 'success');
+        try {
+            await copyToClipboardModern(item.fullOutput);
+            showToast(t('toastHistoryCopied'), 'success');
+        } catch (error) {
+            console.error('Copy failed:', error);
+            showToast('Copy failed: ' + error.message, 'error');
+        }
     }
 }
 

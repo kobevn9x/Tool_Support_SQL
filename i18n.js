@@ -22,7 +22,7 @@ const languages = {
 
         // Input card
         inputTitle: '📝 Dữ liệu đầu vào',
-        inputPlaceholder: 'Nhập dữ liệu của bạn vào đây (mỗi giá trị một dòng)... \nCtrl + Enter để chuyển đổi',
+        inputPlaceholder: 'Nhập dữ liệu của bạn vào đây (mỗi giá trị một dòng)...\n\n💡 Phím tắt: Ctrl + Enter để chuyển đổi nhanh',
         btnConvert: '🔄 Chuyển đổi',
         btnClear: '🗑️ Xóa',
 
@@ -90,7 +90,7 @@ const languages = {
 
         // Input card
         inputTitle: '📝 Input Data',
-        inputPlaceholder: 'Enter your data here (one value per line)... \nCtrl + Enter to convert',
+        inputPlaceholder: 'Enter your data here (one value per line)...\n\n💡 Keyboard Shortcut: Ctrl + Enter to convert quickly',
         btnConvert: '🔄 Convert',
         btnClear: '🗑️ Clear',
 
