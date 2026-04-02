@@ -23,6 +23,18 @@ window.addEventListener('DOMContentLoaded', () => {
     initLanguageSelector();
     applyLanguage(currentLang);
     displayHistory();
+
+    const clockEl = document.getElementById('headerClock');
+    const tickClock = () => {
+        if (!clockEl) return;
+        clockEl.textContent = new Date().toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+    };
+    tickClock();
+    setInterval(tickClock, 1000);
 });
 
 function convertData(isFromHistory = false) {

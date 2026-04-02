@@ -45,6 +45,22 @@
             right: 0;
         }
 
+        .header-clock {
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 8px 14px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: 'Consolas', 'Monaco', monospace;
+            letter-spacing: 0.04em;
+        }
+
         .lang-switcher select {
             padding: 8px 14px;
             border: 2px solid rgba(255, 255, 255, 0.3);
@@ -545,3 +561,223 @@
         /* ::-webkit-scrollbar-thumb:hover {
             background: #764ba2;
         } */
+
+        body.theme-cyberpunk {
+            background:
+                radial-gradient(1100px 620px at 18% 0%, rgba(255, 0, 122, 0.22), transparent 62%),
+                radial-gradient(900px 560px at 85% 8%, rgba(0, 255, 255, 0.16), transparent 55%),
+                radial-gradient(820px 520px at 50% 120%, rgba(0, 255, 140, 0.10), transparent 60%),
+                #05060a;
+            color: #e5e7eb;
+        }
+
+        body.theme-cyberpunk header h1 {
+            text-shadow: 0 0 18px rgba(0, 255, 255, 0.28), 0 0 32px rgba(255, 0, 122, 0.18);
+            letter-spacing: 0.02em;
+        }
+
+        body.theme-cyberpunk header p {
+            opacity: 0.9;
+        }
+
+        body.theme-cyberpunk .header-clock,
+        body.theme-cyberpunk .lang-switcher select {
+            border-color: rgba(0, 255, 255, 0.25);
+            background: rgba(10, 12, 18, 0.55);
+            box-shadow: 0 0 0 1px rgba(255, 0, 122, 0.10), 0 10px 40px rgba(0, 0, 0, 0.35);
+        }
+
+        body.theme-cyberpunk .lang-switcher select:hover {
+            border-color: rgba(255, 0, 122, 0.55);
+            background-color: rgba(10, 12, 18, 0.75);
+        }
+
+        body.theme-cyberpunk .lang-switcher select:focus {
+            border-color: rgba(255, 0, 122, 0.7);
+            box-shadow: 0 0 0 4px rgba(255, 0, 122, 0.18);
+        }
+
+        body.theme-cyberpunk .lang-switcher select option {
+            background: #070912;
+            color: #e5e7eb;
+        }
+
+        body.theme-cyberpunk .card,
+        body.theme-cyberpunk .options-panel,
+        body.theme-cyberpunk .history-panel {
+            background: rgba(10, 12, 18, 0.86);
+            border: 1px solid rgba(0, 255, 255, 0.16);
+            box-shadow: 0 16px 70px rgba(0, 0, 0, 0.6);
+        }
+
+        body.theme-cyberpunk .card:hover {
+            box-shadow: 0 18px 80px rgba(0, 0, 0, 0.72);
+        }
+
+        body.theme-cyberpunk .card h2,
+        body.theme-cyberpunk .options-panel h3,
+        body.theme-cyberpunk .history-panel h3,
+        body.theme-cyberpunk .stat-value {
+            color: #00ffff;
+        }
+
+        body.theme-cyberpunk .card h2:before {
+            background: linear-gradient(135deg, rgba(255, 0, 122, 1) 0%, rgba(0, 255, 255, 1) 100%);
+        }
+
+        body.theme-cyberpunk textarea {
+            background: rgba(7, 9, 18, 0.92);
+            border-color: rgba(0, 255, 255, 0.2);
+            color: #e5e7eb;
+        }
+
+        body.theme-cyberpunk textarea:focus {
+            border-color: rgba(255, 0, 122, 0.75);
+            background: rgba(7, 9, 18, 0.98);
+            box-shadow: 0 0 0 4px rgba(255, 0, 122, 0.18);
+        }
+
+        body.theme-cyberpunk #outputText,
+        body.theme-cyberpunk #chunkedOutputText {
+            background: rgba(7, 9, 18, 0.92);
+            border-color: rgba(255, 0, 122, 0.25);
+            color: #e5e7eb;
+        }
+
+        body.theme-cyberpunk .btn-primary {
+            background: linear-gradient(135deg, #ff007a 0%, #00ffff 100%);
+            color: #03050a;
+        }
+
+        body.theme-cyberpunk .btn-primary:hover {
+            box-shadow: 0 10px 34px rgba(255, 0, 122, 0.22), 0 10px 34px rgba(0, 255, 255, 0.16);
+        }
+
+        body.theme-cyberpunk .btn-secondary {
+            background: rgba(255, 255, 255, 0.06);
+            color: #e5e7eb;
+            border: 1px solid rgba(255, 255, 255, 0.10);
+        }
+
+        body.theme-cyberpunk .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.10);
+        }
+
+        body.theme-cyberpunk .btn-success {
+            background: linear-gradient(135deg, #00ffb3 0%, #00ffff 100%);
+            color: #03050a;
+        }
+
+        body.theme-cyberpunk .btn-success:hover {
+            box-shadow: 0 10px 34px rgba(0, 255, 179, 0.18), 0 10px 34px rgba(0, 255, 255, 0.16);
+        }
+
+        body.theme-cyberpunk .btn-danger {
+            background: rgba(255, 0, 122, 0.22);
+            color: #e5e7eb;
+            border: 1px solid rgba(255, 0, 122, 0.35);
+        }
+
+        body.theme-cyberpunk .btn-danger:hover {
+            background: rgba(255, 0, 122, 0.30);
+            box-shadow: 0 10px 34px rgba(255, 0, 122, 0.16);
+        }
+
+        body.theme-cyberpunk .option-item {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        body.theme-cyberpunk .option-item:hover {
+            background: rgba(0, 255, 255, 0.06);
+        }
+
+        body.theme-cyberpunk .option-item input[type="checkbox"] {
+            accent-color: #00ffff;
+        }
+
+        body.theme-cyberpunk .option-item label {
+            color: rgba(229, 231, 235, 0.92);
+        }
+
+        body.theme-cyberpunk .option-item select,
+        body.theme-cyberpunk .option-item input[type="text"] {
+            background: rgba(7, 9, 18, 0.92);
+            border-color: rgba(0, 255, 255, 0.18);
+            color: #e5e7eb;
+        }
+
+        body.theme-cyberpunk .option-item select:focus,
+        body.theme-cyberpunk .option-item input[type="text"]:focus {
+            border-color: rgba(255, 0, 122, 0.7);
+        }
+
+        body.theme-cyberpunk .chunk-tabs {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        body.theme-cyberpunk .chunk-tab {
+            background: rgba(7, 9, 18, 0.92);
+            border-color: rgba(0, 255, 255, 0.14);
+            color: rgba(229, 231, 235, 0.86);
+        }
+
+        body.theme-cyberpunk .chunk-tab:hover {
+            border-color: rgba(255, 0, 122, 0.55);
+            background: rgba(7, 9, 18, 0.98);
+        }
+
+        body.theme-cyberpunk .chunk-tab:focus {
+            outline: 2px solid rgba(255, 0, 122, 0.75);
+        }
+
+        body.theme-cyberpunk .chunk-tab.active {
+            background: linear-gradient(135deg, #ff007a 0%, #00ffff 100%);
+            color: #03050a;
+            border-color: rgba(0, 255, 255, 0.45);
+            box-shadow: 0 8px 22px rgba(255, 0, 122, 0.16), 0 8px 22px rgba(0, 255, 255, 0.12);
+        }
+
+        body.theme-cyberpunk .history-item {
+            background: rgba(7, 9, 18, 0.92);
+            border-color: rgba(0, 255, 255, 0.14);
+        }
+
+        body.theme-cyberpunk .history-item:hover {
+            border-color: rgba(255, 0, 122, 0.55);
+        }
+
+        body.theme-cyberpunk .history-time {
+            color: rgba(229, 231, 235, 0.65);
+        }
+
+        body.theme-cyberpunk .history-content {
+            background: rgba(255, 255, 255, 0.03);
+            color: rgba(229, 231, 235, 0.9);
+        }
+
+        body.theme-cyberpunk .stats {
+            border-top-color: rgba(0, 255, 255, 0.14);
+        }
+
+        body.theme-cyberpunk .stat-label {
+            color: rgba(229, 231, 235, 0.72);
+        }
+
+        body.theme-cyberpunk .toast {
+            background: rgba(10, 12, 18, 0.92);
+            color: #e5e7eb;
+            border: 1px solid rgba(0, 255, 255, 0.14);
+            box-shadow: 0 16px 70px rgba(0, 0, 0, 0.6);
+        }
+
+        body.theme-cyberpunk .toast.success {
+            border-left-color: #00ffff;
+        }
+
+        body.theme-cyberpunk .toast.error {
+            border-left-color: #ff007a;
+        }
+
+        body.theme-cyberpunk ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #ff007a 0%, #00ffff 100%);
+        }
