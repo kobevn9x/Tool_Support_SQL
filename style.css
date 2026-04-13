@@ -18,11 +18,11 @@
     --status-info: #0078d4;
 
     /* Neutrals */
-    --surface-bg: #f8f9fa;
+    --surface-bg: #737272c4;
     --surface-card: #6c757d;
     --border-light: #e9ecef;
     --border-medium: #dee2e6;
-    --text-primary: #2d3436;
+    --text-primary: #0d0d0d;
     --text-secondary: #6c757d;
     --text-tertiary: #adb5bd;
 
@@ -114,8 +114,8 @@ body.theme-enterprise {
 .header-clock {
     font-family: var(--font-code);
     font-size: 0.875rem;
-    color: var(--text-secondary);
-    background: var(--surface-card);
+    color: #0d0d0d;
+    background: #f3f9fd;
     padding: 6px 12px;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-light);
@@ -559,7 +559,7 @@ body.theme-enterprise {
 }
 
 .history-item {
-    background: var(--surface-bg);
+    background: whitesmoke;
     border: 1px solid var(--border-light);
     border-left: 4px solid var(--status-info);
     border-radius: var(--radius-sm);

@@ -305,7 +305,7 @@ async function processConversion(input, isFromHistory) {
         if (options.outputFormat === 'inclause') {
             // IN Clause format: IN ('val1', 'val2', 'val3')
             const inKeyword = options.inKeywordCase === 'upper' ? 'IN' : 'in';
-            return `${inKeyword} (${lineArray.join(', ')})`;
+            return `${inKeyword} (${lineArray.join(',')})`;
         } else {
             // DataByRow format: each value on separate line with separator
             return lineArray.join(`${options.separator}\n`);
