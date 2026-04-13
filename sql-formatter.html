@@ -1,153 +1,231 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SQL Data Formatter - Kobe</title>
+    <title>SQL Data Formatter - Enterprise</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="theme-cyberpunk">
-    <div class="container">
-        <header>
-            <div class="header-clock" id="headerClock" aria-label="Clock"></div>
-            <div class="lang-switcher">
-                <select id="langSelect"></select>
+<body class="theme-enterprise">
+    <div class="app-container">
+        <!-- HEADER -->
+        <header class="app-header">
+            <div class="header-brand">
+                <svg class="brand-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path>
+                </svg>
+                <div class="brand-text">
+                    <h1 data-i18n="headerTitle">SQL Data Formatter</h1>
+                    <p data-i18n="headerSubtitle">Enterprise Precision Edition</p>
+                </div>
             </div>
-            <h1 data-i18n="headerTitle">⚡SQL Data Formatter - Kobe⚡</h1>
-            <p data-i18n="headerSubtitle">Fast and efficient SQL data formatting tool</p>
+            <div class="header-actions">
+                <div class="header-clock" id="headerClock" aria-label="Clock"></div>
+                <div class="lang-switcher">
+                    <select id="langSelect" aria-label="Language"></select>
+                </div>
+            </div>
         </header>
 
-        <div class="main-content">
-            <div class="card">
-                <h2 data-i18n="inputTitle">📝 Dữ liệu đầu vào</h2>
-                <textarea id="inputText" data-i18n-placeholder="inputPlaceholder" placeholder="Nhập dữ liệu của bạn vào đây (mỗi giá trị một dòng)..."></textarea>
-                <div class="controls">
-                    <button class="btn-primary" onclick="convertData()">
-                        <span data-i18n="btnConvert">🔄 Chuyển đổi</span>
-                    </button>
-                    <button class="btn-secondary" onclick="clearInput()">
-                        <span data-i18n="btnClear">🗑️ Xóa</span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2 data-i18n="outputTitle">✨ Kết quả</h2>
-                
-                <!-- Single output mode -->
-                <div id="singleOutputMode">
-                    <textarea id="outputText" readonly data-i18n-placeholder="outputPlaceholder" placeholder="Kết quả sẽ hiển thị ở đây..."></textarea>
-                    <div class="controls">
-                        <button class="btn-success" onclick="copyToClipboard()">
-                            <span data-i18n="btnCopy">📋 Copy</span>
-                        </button>
-                        <button class="btn-secondary" onclick="downloadResult()">
-                            <span data-i18n="btnDownload">💾 Tải xuống</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Chunked output mode with tabs -->
-                <div id="chunkedOutputMode" style="display: none;">
-                    <div class="chunk-tabs" id="chunkTabs"></div>
-                    <div class="chunk-content">
-                        <textarea id="chunkedOutputText" readonly></textarea>
-                        <div class="controls">
-                            <button class="btn-success" onclick="copyCurrentChunk()">
-                                <span data-i18n="btnCopyCurrentBlock">📋 Copy Block hiện tại</span>
-                            </button>
-                            <button class="btn-primary" onclick="copyAllChunks()">
-                                <span data-i18n="btnCopyAllBlocks">📋 Copy TẤT CẢ Blocks</span>
-                            </button>
-                            <button class="btn-secondary" onclick="downloadResult()">
-                                <span data-i18n="btnDownload">💾 Tải xuống</span>
+        <!-- MAIN LAYOUT -->
+        <main class="app-main">
+            <!-- LEFT PANEL -->
+            <div class="panel-left">
+                <!-- INPUT SECTION -->
+                <section class="card section-input">
+                    <div class="card-header">
+                        <h2 data-i18n="inputTitle">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            Raw Data Input
+                        </h2>
+                        <div class="card-actions">
+                            <button class="btn btn-danger btn-sm" onclick="clearInput()">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                <span data-i18n="btnClear">Clear</span>
                             </button>
                         </div>
                     </div>
-                </div>
+                    <div class="card-body">
+                        <textarea id="inputText" class="code-textarea" data-i18n-placeholder="inputPlaceholder" placeholder="Enter your raw data here (one value per line)..."></textarea>
+                    </div>
+                </section>
 
-                <div class="stats">
-                    <div class="stat-item">
-                        <div class="stat-value" id="lineCount">0</div>
-                        <div class="stat-label" data-i18n="statLines">Dòng</div>
+                <!-- OUTPUT SECTION -->
+                <section class="card section-output interactive-border">
+                    <div class="card-header">
+                        <h2 data-i18n="outputTitle">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="8 17 12 21 16 17"></polyline><line x1="12" y1="12" x2="12" y2="21"></line><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"></path></svg>
+                            Formatted Result
+                        </h2>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="charCount">0</div>
-                        <div class="stat-label" data-i18n="statChars">Ký tự</div>
+                    <div class="card-body">
+                        <!-- Single Output Mode -->
+                        <div id="singleOutputMode">
+                            <textarea id="outputText" class="code-textarea output-textarea" readonly data-i18n-placeholder="outputPlaceholder" placeholder="Result will appear here..."></textarea>
+                            <div class="controls-row">
+                                <button class="btn btn-success" onclick="copyToClipboard()">
+                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    <span data-i18n="btnCopy">Copy</span>
+                                </button>
+                                <button class="btn btn-secondary" onclick="downloadResult()">
+                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                    <span data-i18n="btnDownload">Download</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Chunked Output Mode -->
+                        <div id="chunkedOutputMode" style="display: none;">
+                            <div class="chunk-tabs" id="chunkTabs"></div>
+                            <div class="chunk-content">
+                                <textarea id="chunkedOutputText" class="code-textarea output-textarea" readonly></textarea>
+                                <div class="controls-row">
+                                    <button class="btn btn-success" onclick="copyCurrentChunk()">
+                                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                        <span data-i18n="btnCopyCurrentBlock">Copy Current Block</span>
+                                    </button>
+                                    <button class="btn btn-primary-alt" onclick="copyAllChunks()">
+                                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                        <span data-i18n="btnCopyAllBlocks">Copy All Blocks</span>
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="downloadResult()">
+                                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                        <span data-i18n="btnDownload">Download</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-item" id="chunkCountStat" style="display: none;">
-                        <div class="stat-value" id="chunkCount">0</div>
-                        <div class="stat-label" data-i18n="statBlocks">Blocks</div>
-                    </div>
-                </div>
+                </section>
             </div>
-        </div>
 
-        <div class="options-panel">
-            <h3 data-i18n="optionsTitle">⚙️ Tùy chọn</h3>
-            <div class="options-grid">
-                <div class="option-item">
-                    <input type="checkbox" id="removeEmpty" checked>
-                    <label for="removeEmpty" data-i18n="optRemoveEmpty">Xóa dòng trống</label>
-                </div>
-                <div class="option-item">
-                    <input type="checkbox" id="removeDuplicates">
-                    <label for="removeDuplicates" data-i18n="optRemoveDuplicates">Xóa giá trị trùng lặp</label>
-                </div>
-                <div class="option-item">
-                    <input type="checkbox" id="addQuotes" checked>
-                    <label for="addQuotes" data-i18n="optAddQuotes">Thêm dấu ngoặc đơn</label>
-                </div>
-                <div class="option-item">
-                    <input type="checkbox" id="uppercase">
-                    <label for="uppercase" data-i18n="optUppercase">Chuyển HOA</label>
-                </div>
-                <div class="option-item">
-                    <input type="checkbox" id="lowercase">
-                    <label for="lowercase" data-i18n="optLowercase">Chuyển thường</label>
-                </div>
-                <!-- <div class="option-item">
-                    <label for="separator" data-i18n="optSeparator">Ký tự phân cách:</label>
-                    <input type="text" id="separator" value="," maxlength="3">
-                </div>
-                <div class="option-item">
-                    <label for="sqlDialect" data-i18n="optSqlDialect">SQL Dialect:</label>
-                    <select id="sqlDialect">
-                        <option value="standard">Standard SQL</option>
-                        <option value="mssql">MS SQL</option>
-                        <option value="oracle">Oracle</option>
-                    </select>
-                </div> -->
-                <div class="option-item">
-                    <label for="outputFormat" data-i18n="optOutputFormat">Output Format:</label>
-                    <select id="outputFormat">
-                        <option value="inclause">IN Clause</option>
-                        <option value="databyrow">DataByRow</option>
-                    </select>
-                </div>
-                <div class="option-item">
-                    <label for="inKeywordCase" data-i18n="optInKeywordCase">"IN" Keyword Case:</label>
-                    <select id="inKeywordCase">
-                        <option value="upper" data-i18n="optInCaseUpper">Uppercase</option>
-                        <option value="lower" data-i18n="optInCaseLower">Lowercase</option>
-                    </select>
-                </div>
+            <!-- RIGHT PANEL -->
+            <div class="panel-right">
+                <!-- OPTIONS PANEL -->
+                <section class="card section-options">
+                    <div class="card-header">
+                        <h3 data-i18n="optionsTitle">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                            Configuration
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="options-list">
+                            <label class="control-checkbox">
+                                <input type="checkbox" id="removeEmpty" checked>
+                                <span class="control-indicator"></span>
+                                <span data-i18n="optRemoveEmpty">Remove Empty Lines</span>
+                            </label>
+                            <label class="control-checkbox">
+                                <input type="checkbox" id="removeDuplicates">
+                                <span class="control-indicator"></span>
+                                <span data-i18n="optRemoveDuplicates">Remove Duplicates</span>
+                            </label>
+                            <label class="control-checkbox">
+                                <input type="checkbox" id="addQuotes" checked>
+                                <span class="control-indicator"></span>
+                                <span data-i18n="optAddQuotes">Wrap in Quotes ('')</span>
+                            </label>
+                            <label class="control-checkbox">
+                                <input type="checkbox" id="uppercase">
+                                <span class="control-indicator"></span>
+                                <span data-i18n="optUppercase">Convert to UPPERCASE</span>
+                            </label>
+                            <label class="control-checkbox">
+                                <input type="checkbox" id="lowercase">
+                                <span class="control-indicator"></span>
+                                <span data-i18n="optLowercase">Convert to lowercase</span>
+                            </label>
+
+                            <div class="control-group">
+                                <label for="separator" data-i18n="optSeparator">Separator:</label>
+                                <select id="separator" class="control-select">
+                                    <option value=",">Comma (,)</option>
+                                    <option value=";">Semicolon (;)</option>
+                                    <option value="|">Pipe (|)</option>
+                                    <option value=" ">Space</option>
+                                </select>
+                            </div>
+
+                            <div class="control-group">
+                                <label for="outputFormat" data-i18n="optOutputFormat">Output Format:</label>
+                                <select id="outputFormat" class="control-select">
+                                    <option value="inclause">IN Clause</option>
+                                    <option value="databyrow">Data By Row</option>
+                                </select>
+                            </div>
+
+                            <div class="control-group">
+                                <label for="inKeywordCase" data-i18n="optInKeywordCase">"IN" Keyword Case:</label>
+                                <select id="inKeywordCase" class="control-select">
+                                    <option value="upper" data-i18n="optInCaseUpper">UPPERCASE</option>
+                                    <option value="lower" data-i18n="optInCaseLower">lowercase</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="action-convert-container">
+                            <button class="btn btn-primary btn-large btn-block" onclick="convertData()">
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                                <span data-i18n="btnConvert">Convert Data</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- STATS DISPLAY -->
+                <section class="card section-stats">
+                    <div class="card-header">
+                        <h3 data-i18n="statsTitle">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+                            Statistics
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="stats-grid">
+                            <div class="stat-box">
+                                <div class="stat-value" id="lineCount">0</div>
+                                <div class="stat-label" data-i18n="statLines">Lines</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value" id="charCount">0</div>
+                                <div class="stat-label" data-i18n="statChars">Characters</div>
+                            </div>
+                            <div class="stat-box" id="chunkCountStat" style="display: none;">
+                                <div class="stat-value" id="chunkCount">0</div>
+                                <div class="stat-label" data-i18n="statBlocks">Blocks</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </div>
-        </div>
+        </main>
 
-        <div class="history-panel">
-            <h3>
-                <span data-i18n="historyTitle">📚 Lịch sử chuyển đổi</span>
-                <button class="btn-danger" onclick="clearHistory()" style="padding: 8px 16px; font-size: 12px;">
-                    <span data-i18n="btnClearAll">🗑️ Xóa tất cả</span>
+        <!-- HISTORY PANEL -->
+        <section class="history-panel card">
+            <div class="card-header history-header-main">
+                <h3 style="margin: 0; display: flex; align-items: center; gap: 8px;">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    <span data-i18n="historyTitle">Conversion History</span>
+                </h3>
+                <button class="btn btn-danger btn-sm" onclick="clearHistory()">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    <span data-i18n="btnClearAll">Clear</span>
                 </button>
-            </h3>
-            <div class="history-list" id="historyList">
-                <p style="text-align: center; color: #9ca3af; padding: 40px;" data-i18n="historyEmpty">Chưa có lịch sử nào</p>
             </div>
-        </div>
+            <div class="card-body">
+                <div class="history-list" id="historyList">
+                    <p class="history-empty" data-i18n="historyEmpty">No history yet</p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="app-footer">
+            <p>&copy; 2026 SQL Data Formatter. Enterprise Precision Edition.</p>
+        </footer>
     </div>
 
+    <!-- TOAST NOTIFICATION -->
     <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true">
         <span id="toastMessage"></span>
     </div>
