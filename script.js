@@ -330,7 +330,8 @@ async function processConversion(input, isFromHistory) {
         
         // Show first chunk
         showChunk(0);
-        
+        if (!isFromHistory) copyToClipboardModern(currentChunks[0]).catch(() => {});
+
         // Update stats
         document.getElementById('lineCount').textContent = lines.length;
         document.getElementById('charCount').textContent = currentChunks.join('\n').length;
@@ -346,12 +347,15 @@ async function processConversion(input, isFromHistory) {
         document.getElementById('chunkCountStat').style.display = 'none';
         
         document.getElementById('outputText').value = result;
-        
+
         // Update stats
         document.getElementById('lineCount').textContent = lines.length;
         document.getElementById('charCount').textContent = result.length;
-        
-        if (!isFromHistory) showToast(t('toastConvertSuccess'), 'success');
+
+        if (!isFromHistory) {
+            copyToClipboardModern(result).catch(() => {});
+            showToast(t('toastConvertSuccess'), 'success');
+        }
     }
     
     // Save to history (save first chunk or full result)
