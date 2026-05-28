@@ -21,6 +21,11 @@
             </div>
             <div class="header-actions">
                 <div class="header-clock" id="headerClock" aria-label="Clock"></div>
+                <button id="themeToggleBtn" class="btn btn-secondary btn-theme-toggle" title="Toggle Theme" aria-label="Toggle Theme">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
                 <div class="lang-switcher">
                     <select id="langSelect" aria-label="Language"></select>
                 </div>
@@ -111,6 +116,11 @@
                     </div>
                     <div class="card-body">
                         <div class="options-list">
+                            <label class="control-checkbox">
+                                <input type="checkbox" id="autoTheme" checked>
+                                <span class="control-indicator"></span>
+                                <span data-i18n="optAutoTheme">Auto Theme (18h - 7h)</span>
+                            </label>
                             <label class="control-checkbox">
                                 <input type="checkbox" id="removeEmpty" checked>
                                 <span class="control-indicator"></span>

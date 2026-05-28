@@ -41,6 +41,17 @@
     --font-ui: 'Open Sans', system-ui, -apple-system, sans-serif;
     --font-heading: 'Poppins', system-ui, -apple-system, sans-serif;
     --font-code: 'Consolas', 'Courier New', monospace;
+
+    /* New Variables for Dark Mode Fluidity */
+    --gradient-start: #FFFFFF;
+    --gradient-end: var(--brand-bg);
+    --textarea-focus-bg: #FFFFFF;
+    --output-textarea-bg: #F0FDFA;
+    --output-textarea-border: #99F6E4;
+    --select-bg: #FFFFFF;
+    --btn-danger-hover-bg: #fff5f5;
+    --btn-secondary-hover-border: #ced4da;
+    --btn-secondary-hover-bg: var(--surface-bg);
 }
 
 /* Base Styles */
@@ -52,10 +63,68 @@
 
 body.theme-enterprise {
     font-family: var(--font-ui);
-    background: linear-gradient(135deg, #FFFFFF 0%, var(--brand-bg) 100%);
+    background: linear-gradient(135deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
     color: var(--text-primary);
     line-height: 1.6;
     min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Premium Theme Toggle Button */
+.btn-theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    background: var(--surface-light);
+    border: 1px solid var(--border-light);
+    color: var(--text-primary);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-theme-toggle:hover {
+    background: var(--btn-secondary-hover-bg);
+    border-color: var(--btn-secondary-hover-border);
+    transform: rotate(30deg) scale(1.05);
+}
+
+.btn-theme-toggle svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.5s ease;
+}
+
+/* Dark Mode Override Rules */
+body.dark {
+    /* Brand Colors - Sleek dark mode colors */
+    --brand-bg: #0F172A;           /* Slate 900 */
+    --brand-text: #38BDF8;         /* Cyan-sky accent text */
+    --brand-primary: #0EA5E9;      /* Sky primary */
+    --brand-secondary: #0284C7;    /* Sky secondary */
+
+    /* Neutrals for Dark Mode */
+    --surface-bg: #0B0F19;         /* Very dark slate/blue */
+    --surface-card: #1E293B;       /* Slate 800 */
+    --surface-light: #0F172A;      /* Slate 900 */
+    --border-light: #334155;       /* Slate 700 */
+    --border-medium: #475569;      /* Slate 600 */
+    --text-primary: #F8FAFC;       /* Slate 50 */
+    --text-secondary: #94A3B8;     /* Slate 400 */
+    --text-tertiary: #64748B;      /* Slate 500 */
+
+    /* Dynamic elements custom variables */
+    --gradient-start: #0F172A;
+    --gradient-end: #0B0F19;
+    --textarea-focus-bg: #1E293B;
+    --output-textarea-bg: #042F2E; /* Dark teal/cyan tint for output area */
+    --output-textarea-border: #0D9488;
+    --select-bg: #1E293B;
+    --btn-danger-hover-bg: rgba(239, 68, 68, 0.15);
+    --btn-secondary-hover-border: var(--border-medium);
+    --btn-secondary-hover-bg: var(--surface-light);
 }
 
 /* Layout */
@@ -229,16 +298,16 @@ body.theme-enterprise {
     outline: none;
     border-color: var(--brand-primary);
     box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.15);
-    background-color: #fff;
+    background-color: var(--textarea-focus-bg);
 }
 
 .output-textarea {
-    background-color: #F0FDFA;
-    border-color: #99F6E4;
+    background-color: var(--output-textarea-bg);
+    border-color: var(--output-textarea-border);
 }
 
 .output-textarea:focus {
-    background-color: #fff;
+    background-color: var(--textarea-focus-bg);
 }
 
 /* Buttons */
@@ -308,8 +377,8 @@ body.theme-enterprise {
 }
 
 .btn-secondary:hover:not(:disabled) {
-    background-color: var(--surface-bg);
-    border-color: #ced4da;
+    background-color: var(--btn-secondary-hover-bg);
+    border-color: var(--btn-secondary-hover-border);
 }
 
 .btn-success {
@@ -330,7 +399,7 @@ body.theme-enterprise {
 }
 
 .btn-danger:hover:not(:disabled) {
-    background-color: #fff5f5;
+    background-color: var(--btn-danger-hover-bg);
     color: #c82333;
 }
 
@@ -375,7 +444,7 @@ body.theme-enterprise {
     position: relative;
     height: 18px;
     width: 18px;
-    background-color: #fff;
+    background-color: var(--select-bg);
     border: 1px solid var(--border-medium);
     border-radius: 3px;
     transition: all 0.2s ease;
@@ -431,7 +500,7 @@ body.theme-enterprise {
     font-family: var(--font-ui);
     font-size: 0.875rem;
     color: var(--text-primary);
-    background-color: #fff;
+    background-color: var(--select-bg);
     border: 1px solid var(--border-medium);
     border-radius: var(--radius-sm);
     appearance: none;
@@ -574,7 +643,7 @@ body.theme-enterprise {
 .history-item:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
-    background: #fff;
+    background: var(--surface-card);
 }
 
 .history-header {
@@ -603,7 +672,7 @@ body.theme-enterprise {
     font-family: var(--font-code);
     font-size: 0.75rem;
     color: var(--text-primary);
-    background: #fff;
+    background: var(--surface-light);
     border: 1px solid var(--border-light);
     border-radius: 3px;
     padding: 8px;
