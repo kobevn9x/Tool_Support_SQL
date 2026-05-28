@@ -9,6 +9,12 @@ yarn-debug.log
 .pnp
 .pnp.js
 
+#Folder
+.claude/
+.codegraph/
+.cursor/
+*.md
+
 # Electron build output
 dist/
 dist_rebuild/
