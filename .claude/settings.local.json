@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "PowerShell(python .claude/skills/ui-ux-pro-max/scripts/search.py \"white green clean professional\" --design-system -p \"SQL Data Formatter\" -f markdown)"
+      "PowerShell(python .claude/skills/ui-ux-pro-max/scripts/search.py \"white green clean professional\" --design-system -p \"SQL Data Formatter\" -f markdown)",
+      "PowerShell(Remove-Item *)",
+      "PowerShell(npm run *)"
     ]
   }
 }

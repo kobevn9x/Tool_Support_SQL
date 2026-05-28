@@ -3,10 +3,10 @@ const path = require('path');
 
 function createWindow() {
     const win = new BrowserWindow({
-        width: 1200,
-        height: 850,
-        minWidth: 900,
-        minHeight: 600,
+        width: 1400,
+        height: 1000,
+        minWidth: 1200,
+        minHeight: 800,
         icon: path.join(__dirname, 'icon.ico'),
         webPreferences: {
             nodeIntegration: false,
