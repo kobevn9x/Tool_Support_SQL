@@ -44,3 +44,7 @@ build/
 ehthumbs.db
 Thumbs.db
 .cursor/rules/codegraph.mdc
+node_modules/
+.claude/
+.codegraph/
+AGENT.md
