@@ -2,12 +2,18 @@
 CLAUDE.md
 
 # Node.js
-node_modules/
+node_modules/*
 npm-debug.log
 yarn-error.log
 yarn-debug.log
 .pnp
 .pnp.js
+
+#Folder
+.claude/
+.codegraph/
+.cursor/
+*.md
 
 # Electron build output
 dist/
@@ -38,7 +44,7 @@ build/
 ehthumbs.db
 Thumbs.db
 .cursor/rules/codegraph.mdc
-node_modules/
-.claude/
-.codegraph/
+node_modules/*
+.claude/*
+.codegraph/*
 AGENT.md
