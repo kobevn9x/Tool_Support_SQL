@@ -37,3 +37,4 @@ build/
 .Trashes
 ehthumbs.db
 Thumbs.db
+.cursor/rules/codegraph.mdc
