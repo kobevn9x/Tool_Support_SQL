@@ -19,6 +19,8 @@ const languages = {
         // Header
         headerTitle: '⚡SQL Data Formatter - Kobe⚡',
         headerSubtitle: 'Công cụ định dạng dữ liệu SQL nhanh và hiệu quả',
+        themeLight: 'Chuyển sang giao diện sáng',
+        themeDark: 'Chuyển sang giao diện tối',
 
         // Input card
         inputTitle: '📝 Dữ liệu đầu vào',
@@ -41,6 +43,7 @@ const languages = {
 
         // Options panel
         optionsTitle: '⚙️ Tùy chọn',
+        optAutoTheme: 'Tự động chuyển giao diện (18h - 7h)',
         optRemoveEmpty: 'Xóa dòng trống',
         optRemoveDuplicates: 'Xóa giá trị trùng lặp',
         optAddQuotes: 'Thêm dấu ngoặc đơn',
@@ -62,6 +65,8 @@ const languages = {
         // Toast messages
         toastPleaseEnterData: 'Vui lòng nhập dữ liệu',
         toastConvertSuccess: 'Chuyển đổi thành công!',
+        toastAutoThemeEnabled: 'Đã bật tự động chuyển giao diện theo thời gian!',
+        toastAutoThemeDisabled: 'Đã tắt tự động chuyển giao diện (đã chuyển sang thủ công)',
         toastChunked: (count) => `Đã tách thành ${count} blocks (mỗi block 999 dòng)`,
         toastCopiedBlock: (index) => `Đã copy Block ${index}!`,
         toastCopiedAllBlocks: (count) => `Đã copy tất cả ${count} blocks!`,
@@ -87,6 +92,8 @@ const languages = {
         // Header
         headerTitle: '⚡SQL Data Formatter - Kobe⚡',
         headerSubtitle: 'Fast and efficient SQL data formatting tool',
+        themeLight: 'Switch to light mode',
+        themeDark: 'Switch to dark mode',
 
         // Input card
         inputTitle: '📝 Input Data',
@@ -109,6 +116,7 @@ const languages = {
 
         // Options panel
         optionsTitle: '⚙️ Options',
+        optAutoTheme: 'Auto Theme (18:00 - 07:00)',
         optRemoveEmpty: 'Remove empty lines',
         optRemoveDuplicates: 'Remove duplicates',
         optAddQuotes: 'Add single quotes',
@@ -130,6 +138,8 @@ const languages = {
         // Toast messages
         toastPleaseEnterData: 'Please enter data',
         toastConvertSuccess: 'Conversion successful!',
+        toastAutoThemeEnabled: 'Auto theme schedule enabled!',
+        toastAutoThemeDisabled: 'Auto theme schedule disabled (switched to manual)',
         toastChunked: (count) => `Split into ${count} blocks (999 lines each)`,
         toastCopiedBlock: (index) => `Copied Block ${index}!`,
         toastCopiedAllBlocks: (count) => `Copied all ${count} blocks!`,
@@ -223,6 +233,8 @@ const languages = {
         // Header
         headerTitle: '⚡SQL Data Formatter - Kobe⚡',
         headerSubtitle: '빠르고 효율적인 SQL 데이터 포맷 도구',
+        themeLight: '라이트 모드로 전환',
+        themeDark: '다크 모드로 전환',
 
         // Input card
         inputTitle: '📝 입력 데이터',
@@ -245,6 +257,7 @@ const languages = {
 
         // Options panel
         optionsTitle: '⚙️ 옵션',
+        optAutoTheme: '자동 테마 전환 (18:00 - 07:00)',
         optRemoveEmpty: '빈 줄 제거',
         optRemoveDuplicates: '중복 제거',
         optAddQuotes: '따옴표 추가',
@@ -266,6 +279,8 @@ const languages = {
         // Toast messages
         toastPleaseEnterData: '데이터를 입력해주세요',
         toastConvertSuccess: '변환 성공!',
+        toastAutoThemeEnabled: '자동 테마 전환이 활성화되었습니다!',
+        toastAutoThemeDisabled: '자동 테마 전환이 비활성화되었습니다 (수동으로 전환됨)',
         toastChunked: (count) => `${count}개의 블록으로 분할됨 (각 999줄)`,
         toastCopiedBlock: (index) => `블록 ${index} 복사됨!`,
         toastCopiedAllBlocks: (count) => `모든 ${count}개 블록 복사됨!`,
@@ -328,6 +343,20 @@ function applyLanguage(lang) {
             el.placeholder = value;
         }
     });
+
+    // Update all elements with data-i18n-title
+    document.querySelectorAll('[data-i18n-title]').forEach(el => {
+        const key = el.getAttribute('data-i18n-title');
+        const value = t(key);
+        if (typeof value === 'string') {
+            el.title = value;
+        }
+    });
+
+    // Ensure the theme toggle button texts are translated correctly
+    if (typeof applyTheme === 'function' && typeof currentTheme !== 'undefined') {
+        applyTheme(currentTheme);
+    }
 
     // Update the language selector display
     const selector = document.getElementById('langSelect');

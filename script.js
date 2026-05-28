@@ -18,8 +18,135 @@ let currentChunks = [];
 let currentChunkIndex = 0;
 let isProcessing = false;
 
+// --- Theme Manager (Light / Dark Mode with Auto Schedule) ---
+let currentTheme = localStorage.getItem('appTheme') || 'light';
+let autoThemeEnabled = localStorage.getItem('sqlFormatterAutoTheme') !== 'false'; // default to true
+let autoThemeTimer = null;
+
+function initTheme() {
+    // 1. Initialize Auto Theme checkbox state from localStorage
+    const autoThemeCheckbox = document.getElementById('autoTheme');
+    if (autoThemeCheckbox) {
+        autoThemeCheckbox.checked = autoThemeEnabled;
+        autoThemeCheckbox.addEventListener('change', handleAutoThemeCheckboxChange);
+    }
+
+    // 2. Set theme based on active configurations
+    if (autoThemeEnabled) {
+        checkAutoTheme();
+    } else {
+        // Detect system preference if no user preference is stored
+        if (!localStorage.getItem('appTheme')) {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            currentTheme = prefersDark ? 'dark' : 'light';
+        }
+        applyTheme(currentTheme);
+    }
+
+    // 3. Register manual switch trigger
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', toggleTheme);
+    }
+
+    // 4. Start low-frequency tick to switch theme automatically when open
+    startAutoThemeTimer();
+}
+
+function checkAutoTheme() {
+    const currentHour = new Date().getHours();
+    const isNight = currentHour >= 18 || currentHour < 7; // Night is 18:00 (6 PM) to 07:00 AM
+    const targetTheme = isNight ? 'dark' : 'light';
+    
+    if (currentTheme !== targetTheme) {
+        currentTheme = targetTheme;
+        applyTheme(currentTheme);
+    }
+}
+
+function startAutoThemeTimer() {
+    if (autoThemeTimer) clearInterval(autoThemeTimer);
+    autoThemeTimer = setInterval(() => {
+        if (autoThemeEnabled) {
+            checkAutoTheme();
+        }
+    }, 15000); // Check every 15 seconds
+}
+
+function handleAutoThemeCheckboxChange(e) {
+    autoThemeEnabled = e.target.checked;
+    localStorage.setItem('sqlFormatterAutoTheme', autoThemeEnabled);
+
+    if (autoThemeEnabled) {
+        checkAutoTheme();
+        showToast(t('toastAutoThemeEnabled'), 'success');
+    } else {
+        showToast(t('toastAutoThemeDisabled'), 'info');
+    }
+}
+
+function toggleTheme() {
+    // If auto theme is active, clicking manual theme toggle overrides/disables the schedule
+    if (autoThemeEnabled) {
+        autoThemeEnabled = false;
+        localStorage.setItem('sqlFormatterAutoTheme', 'false');
+        
+        const autoThemeCheckbox = document.getElementById('autoTheme');
+        if (autoThemeCheckbox) {
+            autoThemeCheckbox.checked = false;
+        }
+        
+        showToast(t('toastAutoThemeDisabled'), 'info');
+    }
+
+    currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+    localStorage.setItem('appTheme', currentTheme);
+    applyTheme(currentTheme);
+}
+
+function applyTheme(theme) {
+    const body = document.body;
+    const btn = document.getElementById('themeToggleBtn');
+    
+    if (theme === 'dark') {
+        body.classList.add('dark');
+    } else {
+        body.classList.remove('dark');
+    }
+
+    if (btn) {
+        // Update SVG icon inside the button and its tooltips/aria-labels
+        if (theme === 'dark') {
+            btn.innerHTML = `
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+            `;
+            btn.title = t('themeLight');
+            btn.setAttribute('aria-label', t('themeLight'));
+        } else {
+            btn.innerHTML = `
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            `;
+            btn.title = t('themeDark');
+            btn.setAttribute('aria-label', t('themeDark'));
+        }
+    }
+}
+
 // Display history on load + init language
 window.addEventListener('DOMContentLoaded', () => {
+    initTheme();
     initLanguageSelector();
     applyLanguage(currentLang);
     displayHistory();
