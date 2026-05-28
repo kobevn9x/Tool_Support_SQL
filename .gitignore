@@ -13,7 +13,7 @@ yarn-debug.log
 .claude/
 .codegraph/
 .cursor/
-*.md
+AGENTS.md
 
 # Electron build output
 dist/
@@ -45,3 +45,4 @@ ehthumbs.db
 Thumbs.db
 .cursor/rules/codegraph.mdc
 AGENT.md
+CHANGELOG_PHASE3.md
