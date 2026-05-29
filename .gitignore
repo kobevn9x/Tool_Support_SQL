@@ -1,7 +1,14 @@
-#Claude
+# ── AI / assistant tooling ──────────────────
+.claude/
+.codegraph/
+.cursor/
+.reasonix/
 CLAUDE.md
+AGENTS.md
+AGENT.md
+REASONIX.md
 
-# Node.js
+# ── Node.js ─────────────────────────────────
 node_modules/
 npm-debug.log
 yarn-error.log
@@ -9,13 +16,9 @@ yarn-debug.log
 .pnp
 .pnp.js
 
-#Folder
-.claude/
-.codegraph/
-.cursor/
-AGENTS.md
-
-# Electron build output
+# ── Neutralino runtime & build ──────────────
+bin/
+.tmp/
 dist/
 dist_rebuild/
 release/
@@ -25,8 +28,9 @@ build/
 *.AppImage
 *.zip
 *.tar.gz
+neutralinojs.log
 
-# IDE / Editor
+# ── IDE / Editor ────────────────────────────
 .vscode/
 .idea/
 *.suo
@@ -35,7 +39,18 @@ build/
 *.sln
 *.sw?
 
-# OS generated files
+# ── Secrets & credentials ───────────────────
+.env
+.env.*
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+credentials*
+secrets*
+
+# ── OS generated ────────────────────────────
 .DS_Store
 .DS_Store?
 ._*
@@ -43,6 +58,6 @@ build/
 .Trashes
 ehthumbs.db
 Thumbs.db
-.cursor/rules/codegraph.mdc
-AGENT.md
+
+# ── Project-local dev logs ──────────────────
 CHANGELOG_PHASE3.md
