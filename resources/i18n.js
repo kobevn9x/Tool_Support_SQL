@@ -23,18 +23,18 @@ const languages = {
         themeDark: 'Chuyển sang giao diện tối',
 
         // Input card
-        inputTitle: '📝 Dữ liệu đầu vào',
-        inputPlaceholder: 'Nhập dữ liệu của bạn vào đây (mỗi giá trị một dòng)...\n\n💡 Phím tắt: Ctrl + Enter để chuyển đổi nhanh',
-        btnConvert: '🔄 Chuyển đổi',
-        btnClear: '🗑️ Xóa',
+        inputTitle: 'Dữ liệu đầu vào',
+        inputPlaceholder: 'Nhập dữ liệu của bạn vào đây (mỗi giá trị một dòng)...\n\nPhím tắt: Ctrl + Enter để chuyển đổi nhanh',
+        btnConvert: 'Chuyển đổi',
+        btnClear: 'Xóa',
 
         // Output card
-        outputTitle: '✨ Kết quả',
+        outputTitle: 'Kết quả',
         outputPlaceholder: 'Kết quả sẽ hiển thị ở đây...',
         btnCopy: '📋 Copy',
-        btnDownload: '💾 Tải xuống',
-        btnCopyCurrentBlock: '📋 Copy Block hiện tại',
-        btnCopyAllBlocks: '📋 Copy TẤT CẢ Blocks',
+        btnDownload: 'Tải xuống',
+        btnCopyCurrentBlock: 'Copy Block hiện tại',
+        btnCopyAllBlocks: 'Copy TẤT CẢ Blocks',
 
         // Stats
         statLines: 'Dòng',
@@ -42,7 +42,7 @@ const languages = {
         statBlocks: 'Blocks',
 
         // Options panel
-        optionsTitle: '⚙️ Tùy chọn',
+        optionsTitle: 'Tùy chọn',
         optAutoTheme: 'Tự động chuyển giao diện (18h - 7h)',
         optRemoveEmpty: 'Xóa dòng trống',
         optRemoveDuplicates: 'Xóa giá trị trùng lặp',
@@ -57,10 +57,10 @@ const languages = {
         optInCaseLower: 'Lowercase',
 
         // History panel
-        historyTitle: '📚 Lịch sử chuyển đổi',
-        btnClearAll: '🗑️ Xóa tất cả',
+        historyTitle: 'Lịch sử chuyển đổi',
+        btnClearAll: 'Xóa tất cả',
         historyEmpty: 'Chưa có lịch sử nào',
-        btnLoad: '📥 Tải',
+        btnLoad: 'Tải',
 
         // Toast messages
         toastPleaseEnterData: 'Vui lòng nhập dữ liệu',
@@ -90,24 +90,24 @@ const languages = {
         meta: { name: 'English', flag: '🇺🇸' },
 
         // Header
-        headerTitle: '⚡SQL Data Formatter - Kobe⚡',
+        headerTitle: 'SQL Data Formatter',
         headerSubtitle: 'Fast and efficient SQL data formatting tool',
         themeLight: 'Switch to light mode',
         themeDark: 'Switch to dark mode',
 
         // Input card
-        inputTitle: '📝 Input Data',
-        inputPlaceholder: 'Enter your data here (one value per line)...\n\n💡 Keyboard Shortcut: Ctrl + Enter to convert quickly',
-        btnConvert: '🔄 Convert',
-        btnClear: '🗑️ Clear',
+        inputTitle: 'Input Data',
+        inputPlaceholder: 'Enter your data here (one value per line)...\n\nKeyboard Shortcut: Ctrl + Enter to convert quickly',
+        btnConvert: 'Convert',
+        btnClear: 'Clear',
 
         // Output card
-        outputTitle: '✨ Result',
+        outputTitle: 'Result',
         outputPlaceholder: 'Results will be displayed here...',
-        btnCopy: '📋 Copy',
-        btnDownload: '💾 Download',
-        btnCopyCurrentBlock: '📋 Copy Current Block',
-        btnCopyAllBlocks: '📋 Copy ALL Blocks',
+        btnCopy: 'Copy',
+        btnDownload: 'Download',
+        btnCopyCurrentBlock: 'Copy Current Block',
+        btnCopyAllBlocks: 'Copy ALL Blocks',
 
         // Stats
         statLines: 'Lines',
@@ -115,7 +115,7 @@ const languages = {
         statBlocks: 'Blocks',
 
         // Options panel
-        optionsTitle: '⚙️ Options',
+        optionsTitle: 'Options',
         optAutoTheme: 'Auto Theme (18:00 - 07:00)',
         optRemoveEmpty: 'Remove empty lines',
         optRemoveDuplicates: 'Remove duplicates',
@@ -130,10 +130,10 @@ const languages = {
         optInCaseLower: 'Lowercase',
 
         // History panel
-        historyTitle: '📚 Conversion History',
-        btnClearAll: '🗑️ Clear All',
+        historyTitle: 'Conversion History',
+        btnClearAll: 'Clear All',
         historyEmpty: 'No history yet',
-        btnLoad: '📥 Load',
+        btnLoad: 'Load',
 
         // Toast messages
         toastPleaseEnterData: 'Please enter data',
@@ -231,24 +231,24 @@ const languages = {
         meta: { name: '한국어', flag: '🇰🇷' },
 
         // Header
-        headerTitle: '⚡SQL Data Formatter - Kobe⚡',
+        headerTitle: 'SQL Data Formatter',
         headerSubtitle: '빠르고 효율적인 SQL 데이터 포맷 도구',
         themeLight: '라이트 모드로 전환',
         themeDark: '다크 모드로 전환',
 
         // Input card
-        inputTitle: '📝 입력 데이터',
+        inputTitle: '입력 데이터',
         inputPlaceholder: '여기에 데이터를 입력하세요 (줄당 하나의 값)...',
-        btnConvert: '🔄 변환',
-        btnClear: '🗑️ 지우기',
+        btnConvert: '변환',
+        btnClear: '지우기',
 
         // Output card
-        outputTitle: '✨ 결과',
+        outputTitle: '결과',
         outputPlaceholder: '결과가 여기에 표시됩니다...',
-        btnCopy: '📋 복사',
-        btnDownload: '💾 다운로드',
-        btnCopyCurrentBlock: '📋 현재 블록 복사',
-        btnCopyAllBlocks: '📋 모든 블록 복사',
+        btnCopy: '복사',
+        btnDownload: '다운로드',
+        btnCopyCurrentBlock: '현재 블록 복사',
+        btnCopyAllBlocks: '모든 블록 복사',
 
         // Stats
         statLines: '줄',
@@ -256,7 +256,7 @@ const languages = {
         statBlocks: '블록',
 
         // Options panel
-        optionsTitle: '⚙️ 옵션',
+        optionsTitle: '옵션',
         optAutoTheme: '자동 테마 전환 (18:00 - 07:00)',
         optRemoveEmpty: '빈 줄 제거',
         optRemoveDuplicates: '중복 제거',
@@ -271,10 +271,10 @@ const languages = {
         optInCaseLower: '소문자',
 
         // History panel
-        historyTitle: '📚 변환 기록',
-        btnClearAll: '🗑️ 전체 삭제',
+        historyTitle: '변환 기록',
+        btnClearAll: '전체 삭제',
         historyEmpty: '기록이 없습니다',
-        btnLoad: '📥 불러오기',
+        btnLoad: '불러오기',
 
         // Toast messages
         toastPleaseEnterData: '데이터를 입력해주세요',

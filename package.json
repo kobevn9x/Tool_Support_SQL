@@ -2,11 +2,10 @@
   "name": "sql-data-formatter",
   "version": "1.1.0",
   "description": "SQL Data Formatter Tool - Kobe",
-  "main": "main.js",
   "scripts": {
-    "start": "electron .",
-    "build": "electron-builder --win --x64",
-    "build:portable": "electron-builder --win portable --x64"
+    "start": "neu run",
+    "build": "neu build",
+    "build:portable": "neu build --release"
   },
   "keywords": [
     "sql",
@@ -16,40 +15,9 @@
   "author": "Kobe",
   "license": "MIT",
   "devDependencies": {
-    "@electron/packager": "^19.1.0",
-    "electron": "^41.2.0",
-    "electron-builder": "^26.8.1",
-    "png-to-ico": "^3.0.1",
-    "sharp": "^0.34.5"
+    "@neutralinojs/neu": "^11.0.0"
   },
-  "build": {
-    "appId": "com.kobe.sqlformatter",
-    "productName": "SQL Data Formatter",
-    "directories": {
-      "output": "dist"
-    },
-    "files": [
-      "main.js",
-      "i18n.js",
-      "sql-formatter.html",
-      "style.css",
-      "script.js",
-      "icon.ico"
-    ],
-    "win": {
-      "target": [
-        {
-          "target": "portable",
-          "arch": [
-            "x64"
-          ]
-        }
-      ],
-      "icon": "icon.ico",
-      "forceCodeSigning": false
-    },
-    "portable": {
-      "artifactName": "SQLDataFormatter.exe"
-    }
+  "dependencies": {
+    "@neutralinojs/lib": "^6.7.0"
   }
 }
