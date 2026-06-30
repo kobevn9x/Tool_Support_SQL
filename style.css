@@ -512,7 +512,19 @@ body.dark {
     transition: all 0.2s ease;
 }
 
-.control-select:focus, #langSelect:focus {
+.control-input {
+    padding: 8px 12px;
+    font-family: var(--font-ui);
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    background-color: var(--select-bg);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+    width: 100%;
+}
+
+.control-select:focus, #langSelect:focus, .control-input:focus {
     outline: none;
     border-color: var(--brand-primary);
     box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.15);
