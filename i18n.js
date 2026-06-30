@@ -55,6 +55,7 @@ const languages = {
         optInKeywordCase: '"IN" Keyword Case:',
         optInCaseUpper: 'Uppercase',
         optInCaseLower: 'Lowercase',
+        optItemsPerLine: 'Số phần tử trên 1 dòng:',
 
         // History panel
         historyTitle: '📚 Lịch sử chuyển đổi',
@@ -128,6 +129,7 @@ const languages = {
         optInKeywordCase: '"IN" Keyword Case:',
         optInCaseUpper: 'Uppercase',
         optInCaseLower: 'Lowercase',
+        optItemsPerLine: 'Items per line:',
 
         // History panel
         historyTitle: '📚 Conversion History',
@@ -269,6 +271,7 @@ const languages = {
         optInKeywordCase: '"IN" 키워드:',
         optInCaseUpper: '대문자',
         optInCaseLower: '소문자',
+        optItemsPerLine: '한 줄당 항목 수:',
 
         // History panel
         historyTitle: '📚 변환 기록',
