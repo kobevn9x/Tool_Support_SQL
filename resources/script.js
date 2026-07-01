@@ -417,7 +417,8 @@ async function processConversion(input, isFromHistory) {
         lowercase: document.getElementById('lowercase')?.checked ?? false,
         separator: document.getElementById('separator')?.value ?? ',',
         outputFormat: document.getElementById('outputFormat')?.value ?? 'inclause',
-        inKeywordCase: document.getElementById('inKeywordCase')?.value ?? 'upper'
+        inKeywordCase: document.getElementById('inKeywordCase')?.value ?? 'upper',
+        itemsPerLine: parseInt(document.getElementById('itemsPerLine')?.value || '0', 10)
     };
 
     // Process lines using optimized single-pass pipeline
@@ -429,13 +430,32 @@ async function processConversion(input, isFromHistory) {
 
     // Helper function to format lines based on output format
     const formatLines = (lineArray) => {
+        const itemsPerLine = options.itemsPerLine > 0 ? options.itemsPerLine : 0;
+        
         if (options.outputFormat === 'inclause') {
-            // IN Clause format: IN ('val1', 'val2', 'val3')
             const inKeyword = options.inKeywordCase === 'upper' ? 'IN' : 'in';
-            return `${inKeyword} (${lineArray.join(',')})`;
+            if (itemsPerLine > 0) {
+                const groups = [];
+                for (let i = 0; i < lineArray.length; i += itemsPerLine) {
+                    groups.push(lineArray.slice(i, i + itemsPerLine).join(', '));
+                }
+                return `${inKeyword} (\n  ${groups.join(',\n  ')}\n)`;
+            } else {
+                // IN Clause format: IN ('val1', 'val2', 'val3')
+                return `${inKeyword} (${lineArray.join(',')})`;
+            }
         } else {
             // DataByRow format: each value on separate line with separator
-            return lineArray.join(`${options.separator}\n`);
+            if (itemsPerLine > 0) {
+                const groups = [];
+                for (let i = 0; i < lineArray.length; i += itemsPerLine) {
+                    const joinSep = (options.separator === ' ') ? ' ' : `${options.separator} `;
+                    groups.push(lineArray.slice(i, i + itemsPerLine).join(joinSep));
+                }
+                return groups.join(`${options.separator}\n`);
+            } else {
+                return lineArray.join(`${options.separator}\n`);
+            }
         }
     };
 
@@ -693,7 +713,8 @@ function saveToHistory(input, output) {
             lowercase: document.getElementById('lowercase')?.checked ?? false,
             separator: document.getElementById('separator')?.value ?? ',',
             outputFormat: document.getElementById('outputFormat')?.value ?? 'inclause',
-            inKeywordCase: document.getElementById('inKeywordCase')?.value ?? 'upper'
+            inKeywordCase: document.getElementById('inKeywordCase')?.value ?? 'upper',
+            itemsPerLine: document.getElementById('itemsPerLine')?.value ?? ''
         }
     };
     
@@ -784,6 +805,9 @@ function loadHistory(id) {
         if (document.getElementById('separator')) document.getElementById('separator').value = item.options.separator;
         if (item.options.outputFormat && document.getElementById('outputFormat')) document.getElementById('outputFormat').value = item.options.outputFormat;
         if (item.options.inKeywordCase && document.getElementById('inKeywordCase')) document.getElementById('inKeywordCase').value = item.options.inKeywordCase;
+        if (document.getElementById('itemsPerLine')) {
+            document.getElementById('itemsPerLine').value = item.options.itemsPerLine !== undefined ? item.options.itemsPerLine : '';
+        }
         
         // Handle proper output rendering logic including chunked mode splitting
         convertData(true);
