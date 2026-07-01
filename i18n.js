@@ -23,15 +23,15 @@ const languages = {
         themeDark: 'Chuyển sang giao diện tối',
 
         // Input card
-        inputTitle: 'Dữ liệu đầu vào',
-        inputPlaceholder: 'Nhập dữ liệu của bạn vào đây (mỗi giá trị một dòng)...\n\nPhím tắt: Ctrl + Enter để chuyển đổi nhanh',
+        inputTitle: '📝 Dữ liệu đầu vào',
+        inputPlaceholder: 'Nhập dữ liệu của bạn vào đây (mỗi giá trị một dòng)...\n\n💡 Phím tắt: Ctrl + Enter để chuyển đổi nhanh',
         btnConvert: 'Chuyển đổi',
         btnClear: 'Xóa',
 
         // Output card
-        outputTitle: 'Kết quả',
+        outputTitle: '✨ Kết quả',
         outputPlaceholder: 'Kết quả sẽ hiển thị ở đây...',
-        btnCopy: '📋 Copy',
+        btnCopy: 'Copy',
         btnDownload: 'Tải xuống',
         btnCopyCurrentBlock: 'Copy Block hiện tại',
         btnCopyAllBlocks: 'Copy TẤT CẢ Blocks',
@@ -42,7 +42,7 @@ const languages = {
         statBlocks: 'Blocks',
 
         // Options panel
-        optionsTitle: 'Tùy chọn',
+        optionsTitle: '⚙️ Tùy chọn',
         optAutoTheme: 'Tự động chuyển giao diện (18h - 7h)',
         optRemoveEmpty: 'Xóa dòng trống',
         optRemoveDuplicates: 'Xóa giá trị trùng lặp',
@@ -58,7 +58,7 @@ const languages = {
         optItemsPerLine: 'Số phần tử trên 1 dòng:',
 
         // History panel
-        historyTitle: 'Lịch sử chuyển đổi',
+        historyTitle: '📚 Lịch sử chuyển đổi',
         btnClearAll: 'Xóa tất cả',
         historyEmpty: 'Chưa có lịch sử nào',
         btnLoad: 'Tải',
@@ -91,19 +91,19 @@ const languages = {
         meta: { name: 'English', flag: '🇺🇸' },
 
         // Header
-        headerTitle: 'SQL Data Formatter',
+        headerTitle: '⚡SQL Data Formatter - Kobe⚡',
         headerSubtitle: 'Fast and efficient SQL data formatting tool',
         themeLight: 'Switch to light mode',
         themeDark: 'Switch to dark mode',
 
         // Input card
-        inputTitle: 'Input Data',
-        inputPlaceholder: 'Enter your data here (one value per line)...\n\nKeyboard Shortcut: Ctrl + Enter to convert quickly',
+        inputTitle: '📝 Input Data',
+        inputPlaceholder: 'Enter your data here (one value per line)...\n\n💡 Keyboard Shortcut: Ctrl + Enter to convert quickly',
         btnConvert: 'Convert',
-        btnClear: 'Clear',
+        btnClear: ' Clear',
 
         // Output card
-        outputTitle: 'Result',
+        outputTitle: '✨ Result',
         outputPlaceholder: 'Results will be displayed here...',
         btnCopy: 'Copy',
         btnDownload: 'Download',
@@ -116,7 +116,7 @@ const languages = {
         statBlocks: 'Blocks',
 
         // Options panel
-        optionsTitle: 'Options',
+        optionsTitle: '⚙️ Options',
         optAutoTheme: 'Auto Theme (18:00 - 07:00)',
         optRemoveEmpty: 'Remove empty lines',
         optRemoveDuplicates: 'Remove duplicates',
@@ -132,8 +132,8 @@ const languages = {
         optItemsPerLine: 'Items per line:',
 
         // History panel
-        historyTitle: 'Conversion History',
-        btnClearAll: 'Clear All',
+        historyTitle: '📚 Conversion History',
+        btnClearAll: ' Clear All',
         historyEmpty: 'No history yet',
         btnLoad: 'Load',
 
@@ -159,93 +159,24 @@ const languages = {
         confirmDeleteItem: 'Are you sure you want to delete this item?',
         confirmClearHistory: 'Are you sure you want to clear all history?',
     },
-
-    // ─── Japanese ────────────────────────────────────────────
-    // ja: {
-    //     meta: { name: '日本語', flag: '🇯🇵' },
-
-    //     // Header
-    //     headerTitle: '⚡SQL Data Formatter - Kobe⚡',
-    //     headerSubtitle: '高速で効率的なSQLデータフォーマットツール',
-
-    //     // Input card
-    //     inputTitle: '📝 入力データ',
-    //     inputPlaceholder: 'データを入力してください（1行に1つの値）... \nCtrl + Enterで変換',
-    //     btnConvert: '🔄 変換',
-    //     btnClear: '🗑️ クリア',
-
-    //     // Output card
-    //     outputTitle: '✨ 結果',
-    //     outputPlaceholder: '結果はここに表示されます...',
-    //     btnCopy: '📋 コピー',
-    //     btnDownload: '💾 ダウンロード',
-    //     btnCopyCurrentBlock: '📋 現在のブロックをコピー',
-    //     btnCopyAllBlocks: '📋 全ブロックをコピー',
-
-    //     // Stats
-    //     statLines: '行',
-    //     statChars: '文字',
-    //     statBlocks: 'ブロック',
-
-    //     // Options panel
-    //     optionsTitle: '⚙️ オプション',
-    //     optRemoveEmpty: '空行を削除',
-    //     optRemoveDuplicates: '重複を削除',
-    //     optAddQuotes: 'シングルクォートを追加',
-    //     optUppercase: '大文字に変換',
-    //     optLowercase: '小文字に変換',
-    //     optSeparator: '区切り文字:',
-    //     optSqlDialect: 'SQL方言:',
-    //     optOutputFormat: '出力形式:',
-    //     optInKeywordCase: '"IN" キーワード:',
-    //     optInCaseUpper: '大文字',
-    //     optInCaseLower: '小文字',
-
-    //     // History panel
-    //     historyTitle: '📚 変換履歴',
-    //     btnClearAll: '🗑️ 全て削除',
-    //     historyEmpty: '履歴はまだありません',
-    //     btnLoad: '📥 読込',
-
-    //     // Toast messages
-    //     toastPleaseEnterData: 'データを入力してください',
-    //     toastConvertSuccess: '変換成功！',
-    //     toastChunked: (count) => `${count}ブロックに分割しました（各999行）`,
-    //     toastCopiedBlock: (index) => `ブロック${index}をコピーしました！`,
-    //     toastCopiedAllBlocks: (count) => `全${count}ブロックをコピーしました！`,
-    //     toastNoDataCopy: 'コピーするデータがありません',
-    //     toastNoDataDownload: 'ダウンロードするデータがありません',
-    //     toastCleared: 'データを削除しました！',
-    //     toastCopied: 'クリップボードにコピーしました！',
-    //     toastDownloaded: 'ダウンロードしました！',
-    //     toastHistoryLoaded: '履歴を読み込みました！',
-    //     toastHistoryCopied: '履歴をコピーしました！',
-    //     toastHistoryItemDeleted: '履歴項目を削除しました',
-    //     toastHistoryCleared: '全履歴を削除しました',
-
-    //     // Confirm dialogs
-    //     confirmDeleteItem: 'この項目を削除しますか？',
-    //     confirmClearHistory: '全ての履歴を削除しますか？',
-    // },
-
     // ─── Korean ──────────────────────────────────────────────
     ko: {
         meta: { name: '한국어', flag: '🇰🇷' },
 
         // Header
-        headerTitle: 'SQL Data Formatter',
+        headerTitle: '⚡SQL Data Formatter - Kobe⚡',
         headerSubtitle: '빠르고 효율적인 SQL 데이터 포맷 도구',
         themeLight: '라이트 모드로 전환',
         themeDark: '다크 모드로 전환',
 
         // Input card
-        inputTitle: '입력 데이터',
+        inputTitle: '📝 입력 데이터',
         inputPlaceholder: '여기에 데이터를 입력하세요 (줄당 하나의 값)...',
         btnConvert: '변환',
-        btnClear: '지우기',
+        btnClear: ' 지우기',
 
         // Output card
-        outputTitle: '결과',
+        outputTitle: '✨ 결과',
         outputPlaceholder: '결과가 여기에 표시됩니다...',
         btnCopy: '복사',
         btnDownload: '다운로드',
@@ -258,7 +189,7 @@ const languages = {
         statBlocks: '블록',
 
         // Options panel
-        optionsTitle: '옵션',
+        optionsTitle: '⚙️ 옵션',
         optAutoTheme: '자동 테마 전환 (18:00 - 07:00)',
         optRemoveEmpty: '빈 줄 제거',
         optRemoveDuplicates: '중복 제거',
@@ -274,8 +205,8 @@ const languages = {
         optItemsPerLine: '한 줄당 항목 수:',
 
         // History panel
-        historyTitle: '변환 기록',
-        btnClearAll: '전체 삭제',
+        historyTitle: '📚 변환 기록',
+        btnClearAll: ' 전체 삭제',
         historyEmpty: '기록이 없습니다',
         btnLoad: '불러오기',
 
