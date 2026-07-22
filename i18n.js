@@ -25,16 +25,16 @@ const languages = {
         // Input card
         inputTitle: '📝 Dữ liệu đầu vào',
         inputPlaceholder: 'Nhập dữ liệu của bạn vào đây (mỗi giá trị một dòng)...\n\n💡 Phím tắt: Ctrl + Enter để chuyển đổi nhanh',
-        btnConvert: '🔄 Chuyển đổi',
-        btnClear: '🗑️ Xóa',
+        btnConvert: 'Chuyển đổi',
+        btnClear: 'Xóa',
 
         // Output card
         outputTitle: '✨ Kết quả',
         outputPlaceholder: 'Kết quả sẽ hiển thị ở đây...',
-        btnCopy: '📋 Copy',
-        btnDownload: '💾 Tải xuống',
-        btnCopyCurrentBlock: '📋 Copy Block hiện tại',
-        btnCopyAllBlocks: '📋 Copy TẤT CẢ Blocks',
+        btnCopy: 'Copy',
+        btnDownload: 'Tải xuống',
+        btnCopyCurrentBlock: 'Copy Block hiện tại',
+        btnCopyAllBlocks: 'Copy TẤT CẢ Blocks',
 
         // Stats
         statLines: 'Dòng',
@@ -59,9 +59,9 @@ const languages = {
 
         // History panel
         historyTitle: '📚 Lịch sử chuyển đổi',
-        btnClearAll: '🗑️ Xóa tất cả',
+        btnClearAll: 'Xóa tất cả',
         historyEmpty: 'Chưa có lịch sử nào',
-        btnLoad: '📥 Tải',
+        btnLoad: 'Tải',
 
         // Toast messages
         toastPleaseEnterData: 'Vui lòng nhập dữ liệu',
@@ -99,16 +99,16 @@ const languages = {
         // Input card
         inputTitle: '📝 Input Data',
         inputPlaceholder: 'Enter your data here (one value per line)...\n\n💡 Keyboard Shortcut: Ctrl + Enter to convert quickly',
-        btnConvert: '🔄 Convert',
-        btnClear: '🗑️ Clear',
+        btnConvert: 'Convert',
+        btnClear: ' Clear',
 
         // Output card
         outputTitle: '✨ Result',
         outputPlaceholder: 'Results will be displayed here...',
-        btnCopy: '📋 Copy',
-        btnDownload: '💾 Download',
-        btnCopyCurrentBlock: '📋 Copy Current Block',
-        btnCopyAllBlocks: '📋 Copy ALL Blocks',
+        btnCopy: 'Copy',
+        btnDownload: 'Download',
+        btnCopyCurrentBlock: 'Copy Current Block',
+        btnCopyAllBlocks: 'Copy ALL Blocks',
 
         // Stats
         statLines: 'Lines',
@@ -133,9 +133,9 @@ const languages = {
 
         // History panel
         historyTitle: '📚 Conversion History',
-        btnClearAll: '🗑️ Clear All',
+        btnClearAll: ' Clear All',
         historyEmpty: 'No history yet',
-        btnLoad: '📥 Load',
+        btnLoad: 'Load',
 
         // Toast messages
         toastPleaseEnterData: 'Please enter data',
@@ -159,75 +159,6 @@ const languages = {
         confirmDeleteItem: 'Are you sure you want to delete this item?',
         confirmClearHistory: 'Are you sure you want to clear all history?',
     },
-
-    // ─── Japanese ────────────────────────────────────────────
-    // ja: {
-    //     meta: { name: '日本語', flag: '🇯🇵' },
-
-    //     // Header
-    //     headerTitle: '⚡SQL Data Formatter - Kobe⚡',
-    //     headerSubtitle: '高速で効率的なSQLデータフォーマットツール',
-
-    //     // Input card
-    //     inputTitle: '📝 入力データ',
-    //     inputPlaceholder: 'データを入力してください（1行に1つの値）... \nCtrl + Enterで変換',
-    //     btnConvert: '🔄 変換',
-    //     btnClear: '🗑️ クリア',
-
-    //     // Output card
-    //     outputTitle: '✨ 結果',
-    //     outputPlaceholder: '結果はここに表示されます...',
-    //     btnCopy: '📋 コピー',
-    //     btnDownload: '💾 ダウンロード',
-    //     btnCopyCurrentBlock: '📋 現在のブロックをコピー',
-    //     btnCopyAllBlocks: '📋 全ブロックをコピー',
-
-    //     // Stats
-    //     statLines: '行',
-    //     statChars: '文字',
-    //     statBlocks: 'ブロック',
-
-    //     // Options panel
-    //     optionsTitle: '⚙️ オプション',
-    //     optRemoveEmpty: '空行を削除',
-    //     optRemoveDuplicates: '重複を削除',
-    //     optAddQuotes: 'シングルクォートを追加',
-    //     optUppercase: '大文字に変換',
-    //     optLowercase: '小文字に変換',
-    //     optSeparator: '区切り文字:',
-    //     optSqlDialect: 'SQL方言:',
-    //     optOutputFormat: '出力形式:',
-    //     optInKeywordCase: '"IN" キーワード:',
-    //     optInCaseUpper: '大文字',
-    //     optInCaseLower: '小文字',
-
-    //     // History panel
-    //     historyTitle: '📚 変換履歴',
-    //     btnClearAll: '🗑️ 全て削除',
-    //     historyEmpty: '履歴はまだありません',
-    //     btnLoad: '📥 読込',
-
-    //     // Toast messages
-    //     toastPleaseEnterData: 'データを入力してください',
-    //     toastConvertSuccess: '変換成功！',
-    //     toastChunked: (count) => `${count}ブロックに分割しました（各999行）`,
-    //     toastCopiedBlock: (index) => `ブロック${index}をコピーしました！`,
-    //     toastCopiedAllBlocks: (count) => `全${count}ブロックをコピーしました！`,
-    //     toastNoDataCopy: 'コピーするデータがありません',
-    //     toastNoDataDownload: 'ダウンロードするデータがありません',
-    //     toastCleared: 'データを削除しました！',
-    //     toastCopied: 'クリップボードにコピーしました！',
-    //     toastDownloaded: 'ダウンロードしました！',
-    //     toastHistoryLoaded: '履歴を読み込みました！',
-    //     toastHistoryCopied: '履歴をコピーしました！',
-    //     toastHistoryItemDeleted: '履歴項目を削除しました',
-    //     toastHistoryCleared: '全履歴を削除しました',
-
-    //     // Confirm dialogs
-    //     confirmDeleteItem: 'この項目を削除しますか？',
-    //     confirmClearHistory: '全ての履歴を削除しますか？',
-    // },
-
     // ─── Korean ──────────────────────────────────────────────
     ko: {
         meta: { name: '한국어', flag: '🇰🇷' },
@@ -241,16 +172,16 @@ const languages = {
         // Input card
         inputTitle: '📝 입력 데이터',
         inputPlaceholder: '여기에 데이터를 입력하세요 (줄당 하나의 값)...',
-        btnConvert: '🔄 변환',
-        btnClear: '🗑️ 지우기',
+        btnConvert: '변환',
+        btnClear: ' 지우기',
 
         // Output card
         outputTitle: '✨ 결과',
         outputPlaceholder: '결과가 여기에 표시됩니다...',
-        btnCopy: '📋 복사',
-        btnDownload: '💾 다운로드',
-        btnCopyCurrentBlock: '📋 현재 블록 복사',
-        btnCopyAllBlocks: '📋 모든 블록 복사',
+        btnCopy: '복사',
+        btnDownload: '다운로드',
+        btnCopyCurrentBlock: '현재 블록 복사',
+        btnCopyAllBlocks: '모든 블록 복사',
 
         // Stats
         statLines: '줄',
@@ -275,9 +206,9 @@ const languages = {
 
         // History panel
         historyTitle: '📚 변환 기록',
-        btnClearAll: '🗑️ 전체 삭제',
+        btnClearAll: ' 전체 삭제',
         historyEmpty: '기록이 없습니다',
-        btnLoad: '📥 불러오기',
+        btnLoad: '불러오기',
 
         // Toast messages
         toastPleaseEnterData: '데이터를 입력해주세요',
