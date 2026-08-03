@@ -13,6 +13,7 @@ yarn-debug.log
 .claude/
 .codegraph/
 .cursor/
+.pi/
 AGENTS.md
 
 # Electron build output
@@ -34,7 +35,7 @@ build/
 *.njsproj
 *.sln
 *.sw?
-
+.reasonix/
 # OS generated files
 .DS_Store
 .DS_Store?
@@ -46,3 +47,5 @@ Thumbs.db
 .cursor/rules/codegraph.mdc
 AGENT.md
 CHANGELOG_PHASE3.md
+nul
+reasonix.toml

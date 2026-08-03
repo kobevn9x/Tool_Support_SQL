@@ -56,6 +56,8 @@ const languages = {
         optInCaseUpper: 'Uppercase',
         optInCaseLower: 'Lowercase',
         optItemsPerLine: 'Số phần tử trên 1 dòng:',
+        optSqlTemplate: 'SQL Template (dùng <code>{values}</code> làm placeholder):',
+        templatePlaceholder: "Ví dụ:\nSELECT * FROM users WHERE id IN ({values})\nINSERT INTO users (id, name) VALUES ({values})\nUPDATE users SET active = 1 WHERE id IN ({values})",
 
         // History panel
         historyTitle: '📚 Lịch sử chuyển đổi',
@@ -80,6 +82,8 @@ const languages = {
         toastHistoryCopied: 'Đã copy lịch sử!',
         toastHistoryItemDeleted: 'Đã xóa mục lịch sử',
         toastHistoryCleared: 'Đã xóa toàn bộ lịch sử',
+        toastTemplateEmpty: 'Vui lòng nhập SQL template',
+        toastTemplateNoPlaceholder: 'Template phải chứa {values}',
 
         // Confirm dialogs
         confirmDeleteItem: 'Bạn có chắc muốn xóa mục này?',
@@ -130,6 +134,8 @@ const languages = {
         optInCaseUpper: 'Uppercase',
         optInCaseLower: 'Lowercase',
         optItemsPerLine: 'Items per line:',
+        optSqlTemplate: 'SQL Template (use <code>{values}</code> as placeholder):',
+        templatePlaceholder: 'Examples:\nSELECT * FROM users WHERE id IN ({values})\nINSERT INTO users (id, name) VALUES ({values})\nUPDATE users SET active = 1 WHERE id IN ({values})',
 
         // History panel
         historyTitle: '📚 Conversion History',
@@ -154,6 +160,8 @@ const languages = {
         toastHistoryCopied: 'History copied!',
         toastHistoryItemDeleted: 'History item deleted',
         toastHistoryCleared: 'All history cleared',
+        toastTemplateEmpty: 'Please enter a SQL template',
+        toastTemplateNoPlaceholder: 'Template must contain {values}',
 
         // Confirm dialogs
         confirmDeleteItem: 'Are you sure you want to delete this item?',
@@ -203,6 +211,8 @@ const languages = {
         optInCaseUpper: '대문자',
         optInCaseLower: '소문자',
         optItemsPerLine: '한 줄당 항목 수:',
+        optSqlTemplate: 'SQL 템플릿 (<code>{values}</code>를 placeholder로 사용):',
+        templatePlaceholder: '예시:\nSELECT * FROM users WHERE id IN ({values})\nINSERT INTO users (id, name) VALUES ({values})\nUPDATE users SET active = 1 WHERE id IN ({values})',
 
         // History panel
         historyTitle: '📚 변환 기록',
@@ -227,6 +237,8 @@ const languages = {
         toastHistoryCopied: '기록이 복사되었습니다!',
         toastHistoryItemDeleted: '기록 항목 삭제됨',
         toastHistoryCleared: '모든 기록이 삭제되었습니다',
+        toastTemplateEmpty: 'SQL 템플릿을 입력해주세요',
+        toastTemplateNoPlaceholder: '템플릿에 {values}가 포함되어야 합니다',
 
         // Confirm dialogs
         confirmDeleteItem: '이 항목을 삭제하시겠습니까?',
