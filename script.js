@@ -34,6 +34,9 @@ function initTheme() {
     // 2. Set theme based on active configurations
     if (autoThemeEnabled) {
         checkAutoTheme();
+        // Always apply theme to ensure body class and button icon are in sync,
+        // even when auto theme doesn't change (e.g. reload with same stored theme)
+        applyTheme(currentTheme);
     } else {
         // Detect system preference if no user preference is stored
         if (!localStorage.getItem('appTheme')) {
@@ -60,6 +63,7 @@ function checkAutoTheme() {
     
     if (currentTheme !== targetTheme) {
         currentTheme = targetTheme;
+        localStorage.setItem('appTheme', currentTheme);
         applyTheme(currentTheme);
     }
 }
@@ -81,6 +85,8 @@ function handleAutoThemeCheckboxChange(e) {
         checkAutoTheme();
         showToast(t('toastAutoThemeEnabled'), 'success');
     } else {
+        // Persist the current theme so it survives reloads
+        localStorage.setItem('appTheme', currentTheme);
         showToast(t('toastAutoThemeDisabled'), 'info');
     }
 }
@@ -150,6 +156,7 @@ window.addEventListener('DOMContentLoaded', () => {
     initLanguageSelector();
     applyLanguage(currentLang);
     displayHistory();
+    initTemplateMode();
 
     const clockEl = document.getElementById('headerClock');
     const tickClock = () => {
@@ -164,124 +171,6 @@ window.addEventListener('DOMContentLoaded', () => {
     setInterval(tickClock, 1000);
 });
 
-/*
-=============================================================================
-BUG REPORT & CODE AUDIT
-=============================================================================
-1. [CRITICAL] Lines 91-92: Delimiter Consistency. Assumes `split('\n')`. Fails on mixed delimiters like `,`, `;`, `|`.
-   - Expected: Handle mixed delimiters properly.
-   - Test case: "val1,val2;val3|val4" should be 4 items.
-
-2. [CRITICAL] Lines 97-100: Empty/Null Handling. Trims whitespace, but "NULL" strings pass through, and if empty string slips through and `addQuotes` wraps it, it becomes `''`.
-   - Expected: Explicitly reject blank strings or literal "NULL"/"null".
-   - Test case: "val1\n\n\nNULL\n" -> should drop the blanks and NULL.
-
-3. [CRITICAL] Lines 94-117: Performance with Large Datasets. Chained map/filter/Set on entire array.
-   - Expected: Single-pass processing to avoid multiple iterations.
-   - Performance issue: 10k+ rows causes UI freeze.
-
-4. [HIGH] Line 116: Quote Escaping Edge Cases. Only handles single quotes. Control chars, CRLF, tabs are not sanitized.
-   - Expected: Strip control chars, CRLF, and tabs before wrapping in quotes.
-   - Test case: "O'Reilly\r\n" -> "O''Reilly".
-
-5. [MEDIUM] Lines 102-105: Duplicate Detection Determinism. `Set` runs before case conversion.
-   - Expected: Normalize case BEFORE deduplication.
-   - Issue: 'Value' and 'value' become duplicate 'VALUE' if uppercase is true.
-
-=============================================================================
-PERFORMANCE NOTES
-=============================================================================
-- Slowest operation: Chained `.map()`, `.filter()`, `new Set()` combinations iterated multiple times.
-- Chunking strategy: We process the single-pass loop in synchronous blocks of 5,000 using requestAnimationFrame if array size > 5000, ensuring the UI thread isn't blocked.
-- Result: UI remains responsive during large conversions.
-
-=============================================================================
-VALIDATION & TEST STUBS
-=============================================================================
-// ASSERT: validateLine(' ', true) -> null
-// ASSERT: validateLine('NULL', true) -> null
-// ASSERT: validateLine('value', true) -> 'value'
-// ASSERT: detectDelimiters('a,b;c|d\ne') -> ['a', 'b', 'c', 'd', 'e']
-// ASSERT: sanitizeForSQL("O'Reilly\t") -> "O''Reilly"
-=============================================================================
-*/
-
-// --- Helper Functions for Data Processing Pipeline ---
-
-function detectDelimiters(input) {
-    // Replace commas, semicolons, pipes, and carriage returns with newline
-    return input.replace(/[,;|]/g, '\n').replace(/\r/g, '').split('\n');
-}
-
-function validateLine(line, removeEmpty) {
-    if (line === undefined || line === null) return null;
-    const trimmed = String(line).trim();
-    if (trimmed.toUpperCase() === 'NULL') return null;
-    if (trimmed.length === 0) return removeEmpty ? null : '';
-    return trimmed;
-}
-
-function sanitizeForSQL(line) {
-    // Remove control characters (including tabs, newlines)
-    let sanitized = line.replace(/[\x00-\x1F\x7F]/g, '');
-    // Escape single quotes
-    return sanitized.replace(/'/g, "''");
-}
-
-function buildProcessingPipeline(input, options) {
-    return new Promise((resolve) => {
-        const rawItems = detectDelimiters(input);
-        const totalItems = rawItems.length;
-        let index = 0;
-        
-        const processedSet = new Set();
-        const processedList = [];
-        
-        const CHUNK_SIZE = 5000;
-
-        function processNextChunk() {
-            const end = Math.min(index + CHUNK_SIZE, totalItems);
-            
-            for (; index < end; index++) {
-                let item = rawItems[index];
-                
-                // 1. Validate & Trim
-                item = validateLine(item, options.removeEmpty);
-                if (item === null) continue;
-                
-                // 2. Case Conversion (Normalize BEFORE deduplication)
-                if (options.uppercase) {
-                    item = item.toUpperCase();
-                } else if (options.lowercase) {
-                    item = item.toLowerCase();
-                }
-                
-                // 3. Deduplication (Deterministic order since case is already normalized)
-                if (options.removeDuplicates) {
-                    if (processedSet.has(item)) continue;
-                    processedSet.add(item);
-                }
-                
-                // 4. Sanitize and Quotes
-                let finalItem = sanitizeForSQL(item);
-                if (options.addQuotes) {
-                    finalItem = `'${finalItem}'`;
-                }
-                
-                processedList.push(finalItem);
-            }
-
-            if (index < totalItems) {
-                requestAnimationFrame(processNextChunk);
-            } else {
-                resolve(processedList);
-            }
-        }
-
-        processNextChunk();
-    });
-}
-
 function convertData(isFromHistory = false) {
     // Prevent concurrent processing
     if (isProcessing) {
@@ -289,10 +178,24 @@ function convertData(isFromHistory = false) {
     }
 
     const input = document.getElementById('inputText').value;
-    
+
     if (!input.trim()) {
         if (!isFromHistory) showToast(t('toastPleaseEnterData'), 'error');
         return;
+    }
+
+    // Template mode requires both a non-empty template and the {values} placeholder.
+    const outputFormatEl = document.getElementById('outputFormat');
+    if (outputFormatEl?.value === 'template') {
+        const tpl = (document.getElementById('sqlTemplate')?.value || '').trim();
+        if (!tpl) {
+            if (!isFromHistory) showToast(t('toastTemplateEmpty'), 'error');
+            return;
+        }
+        if (!tpl.includes('{values}')) {
+            if (!isFromHistory) showToast(t('toastTemplateNoPlaceholder'), 'error');
+            return;
+        }
     }
 
     // Show loading state
@@ -326,6 +229,31 @@ function convertData(isFromHistory = false) {
             }
         }
     }, 50);
+}
+
+// --- SQL TEMPLATE MODE ---
+// Toggle the template textarea visibility based on the output format select.
+function initTemplateMode() {
+    const select = document.getElementById('outputFormat');
+    const group = document.getElementById('templateGroup');
+    if (!select || !group) return;
+    const sync = () => {
+        group.style.display = select.value === 'template' ? 'flex' : 'none';
+    };
+    select.addEventListener('change', sync);
+    sync();
+}
+
+// Wrap a formatted value body with the user's SQL template.
+// Returns the body unchanged when template mode is off or the template is empty.
+function wrapWithTemplate(body) {
+    const select = document.getElementById('outputFormat');
+    if (!select || select.value !== 'template') return body;
+
+    const tplEl = document.getElementById('sqlTemplate');
+    const template = (tplEl?.value || '').trim();
+    if (!template) return body;
+    return template.replace(/\{values\}/g, body);
 }
 
 // --- OPTIMIZED PROCESSING PIPELINE ---
@@ -431,7 +359,11 @@ async function processConversion(input, isFromHistory) {
     // Helper function to format lines based on output format
     const formatLines = (lineArray) => {
         const itemsPerLine = options.itemsPerLine > 0 ? options.itemsPerLine : 0;
-        
+
+        if (options.outputFormat === 'template') {
+            return buildTemplateBody(lineArray);
+        }
+
         if (options.outputFormat === 'inclause') {
             const inKeyword = options.inKeywordCase === 'upper' ? 'IN' : 'in';
             if (itemsPerLine > 0) {
@@ -444,6 +376,12 @@ async function processConversion(input, isFromHistory) {
                 // IN Clause format: IN ('val1', 'val2', 'val3')
                 return `${inKeyword} (${lineArray.join(',')})`;
             }
+        }
+
+        if (options.outputFormat === 'valuerows') {
+            return lineArray.map((val, i) =>
+                i < lineArray.length - 1 ? `(${val}),` : `(${val})`
+            ).join('\n');
         } else {
             // DataByRow format: each value on separate line with separator
             if (itemsPerLine > 0) {
@@ -459,12 +397,31 @@ async function processConversion(input, isFromHistory) {
         }
     };
 
+    // Build the body that fills the {values} placeholder in the SQL template.
+    // Items-per-line applies here too: when set, items wrap like the IN-clause form.
+    const buildTemplateBody = (lineArray) => {
+        if (!lineArray || lineArray.length === 0) return '';
+        const itemsPerLine = options.itemsPerLine > 0 ? options.itemsPerLine : 0;
+        if (itemsPerLine > 0) {
+            const groups = [];
+            for (let i = 0; i < lineArray.length; i += itemsPerLine) {
+                groups.push(lineArray.slice(i, i + itemsPerLine).join(', '));
+            }
+            return `(\n  ${groups.join(',\n  ')}\n)`;
+        }
+        return lineArray.join(', ');
+    };
+
     if (shouldChunk) {
         // Split into chunks
         currentChunks = [];
+        const isTemplateMode = options.outputFormat === 'template';
         for (let i = 0; i < lines.length; i += chunkSize) {
             const chunk = lines.slice(i, i + chunkSize);
-            currentChunks.push(formatLines(chunk));
+            const body = formatLines(chunk);
+            // For template mode, wrap each chunk separately (useful for batch INSERT/UPDATE)
+            // For non-template modes, wrap normally
+            currentChunks.push(wrapWithTemplate(body));
         }
         
         // Show chunked mode
@@ -487,7 +444,7 @@ async function processConversion(input, isFromHistory) {
         if (!isFromHistory) showToast(t('toastChunked')(currentChunks.length), 'success');
     } else {
         // Single output mode
-        const result = formatLines(lines);
+        const result = wrapWithTemplate(formatLines(lines));
         
         document.getElementById('singleOutputMode').style.display = 'block';
         document.getElementById('chunkedOutputMode').style.display = 'none';
@@ -714,7 +671,8 @@ function saveToHistory(input, output) {
             separator: document.getElementById('separator')?.value ?? ',',
             outputFormat: document.getElementById('outputFormat')?.value ?? 'inclause',
             inKeywordCase: document.getElementById('inKeywordCase')?.value ?? 'upper',
-            itemsPerLine: document.getElementById('itemsPerLine')?.value ?? ''
+            itemsPerLine: document.getElementById('itemsPerLine')?.value ?? '',
+            sqlTemplate: document.getElementById('sqlTemplate')?.value ?? ''
         }
     };
     
@@ -808,6 +766,13 @@ function loadHistory(id) {
         if (document.getElementById('itemsPerLine')) {
             document.getElementById('itemsPerLine').value = item.options.itemsPerLine !== undefined ? item.options.itemsPerLine : '';
         }
+        if (item.options.sqlTemplate !== undefined && document.getElementById('sqlTemplate')) {
+            document.getElementById('sqlTemplate').value = item.options.sqlTemplate;
+        }
+        // Re-sync template visibility with restored output format
+        const formatEl = document.getElementById('outputFormat');
+        const groupEl = document.getElementById('templateGroup');
+        if (formatEl && groupEl) groupEl.style.display = formatEl.value === 'template' ? 'flex' : 'none';
         
         // Handle proper output rendering logic including chunked mode splitting
         convertData(true);
@@ -830,8 +795,8 @@ async function copyHistoryItem(id) {
     }
 }
 
-function deleteHistoryItem(id) {
-    if (confirm(t('confirmDeleteItem'))) {
+async function deleteHistoryItem(id) {
+    if (await showConfirm(t('confirmDeleteItem'))) {
         history = history.filter(h => h.id !== id);
         localStorage.setItem('sqlFormatterHistory', JSON.stringify(history));
         displayHistory();
@@ -840,12 +805,14 @@ function deleteHistoryItem(id) {
 }
 
 function clearHistory() {
-    if (confirm(t('confirmClearHistory'))) {
-        history = [];
-        localStorage.setItem('sqlFormatterHistory', JSON.stringify(history));
-        displayHistory();
-        showToast(t('toastHistoryCleared'), 'success');
-    }
+    showConfirm(t('confirmClearHistory')).then(confirmed => {
+        if (confirmed) {
+            history = [];
+            localStorage.setItem('sqlFormatterHistory', JSON.stringify(history));
+            displayHistory();
+            showToast(t('toastHistoryCleared'), 'success');
+        }
+    });
 }
 
 function showToast(message, type = 'success') {
@@ -861,9 +828,79 @@ function showToast(message, type = 'success') {
     }, 3000);
 }
 
+// Custom confirm dialog (styled to match theme)
+function showConfirm(message) {
+    return new Promise((resolve) => {
+        const overlay = document.getElementById('confirmOverlay');
+        const msgEl = document.getElementById('confirmMessage');
+        const cancelBtn = document.getElementById('confirmCancel');
+        const okBtn = document.getElementById('confirmOk');
+
+        msgEl.textContent = message;
+        overlay.style.display = 'flex';
+        okBtn.focus();
+
+        function cleanup() {
+            overlay.style.display = 'none';
+            cancelBtn.removeEventListener('click', onCancel);
+            okBtn.removeEventListener('click', onOk);
+        }
+
+        function onCancel() {
+            cleanup();
+            resolve(false);
+        }
+
+        function onOk() {
+            cleanup();
+            resolve(true);
+        }
+
+        cancelBtn.addEventListener('click', onCancel);
+        okBtn.addEventListener('click', onOk);
+
+        // Close on Escape
+        overlay.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                cleanup();
+                resolve(false);
+            }
+        }, { once: true });
+    });
+}
+
 // Keyboard shortcuts
 document.addEventListener('keydown', (e) => {
     if (e.ctrlKey && e.key === 'Enter') {
         convertData();
     }
+});
+
+// ============================================
+// MOBILE SIDEBAR TOGGLE
+// ============================================
+
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('active');
+}
+
+function closeSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    sidebar.classList.remove('open');
+    overlay.classList.remove('active');
+}
+
+// Close sidebar when a nav item is clicked on mobile
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                closeSidebar();
+            }
+        });
+    });
 });
