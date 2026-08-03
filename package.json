@@ -1,6 +1,6 @@
 {
-  "name": "sql-data-formatter",
-  "version": "1.1.0",
+  "name": "toolsql",
+  "version": "2.0.0",
   "description": "SQL Data Formatter Tool - Kobe",
   "main": "main.js",
   "scripts": {
@@ -34,6 +34,7 @@
       "sql-formatter.html",
       "style.css",
       "script.js",
+      "sql-tools.js",
       "icon.ico"
     ],
     "win": {

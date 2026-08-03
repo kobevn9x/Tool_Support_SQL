@@ -161,8 +161,15 @@
                                 <label for="outputFormat" data-i18n="optOutputFormat">Output Format:</label>
                                 <select id="outputFormat" class="control-select">
                                     <option value="databyrow">Data By Row</option>
+                                    <option value="valuerows">Value Rows</option>
                                     <option value="inclause">IN Clause</option>
+                                    <!-- <option value="template">SQL Template</option> -->
                                 </select>
+                            </div>
+
+                            <div class="control-group" id="templateGroup" style="display: none;">
+                                <label for="sqlTemplate" data-i18n="optSqlTemplate">SQL Template (use <code>{values}</code> as placeholder):</label>
+                                <textarea id="sqlTemplate" class="code-textarea template-textarea" data-i18n-placeholder="templatePlaceholder" placeholder="Examples:\nSELECT * FROM users WHERE id IN ({values})\nINSERT INTO users (id, name) VALUES ({values})\nUPDATE users SET active = 1 WHERE id IN ({values})"></textarea>
                             </div>
 
                             <div class="control-group">
