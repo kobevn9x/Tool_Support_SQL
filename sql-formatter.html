@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SQL Data Formatter - Enterprise</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2349A078' stroke-width='2'><path d='M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4'></path></svg>">
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="theme-enterprise">
@@ -250,6 +251,22 @@
     <!-- TOAST NOTIFICATION -->
     <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true">
         <span id="toastMessage"></span>
+    </div>
+
+    <!-- CONFIRM DIALOG OVERLAY -->
+    <div class="confirm-overlay" id="confirmOverlay" style="display: none;">
+        <div class="confirm-modal card">
+            <div class="card-header">
+                <h3 data-i18n="confirmTitle">Xác nhận</h3>
+            </div>
+            <div class="card-body">
+                <p id="confirmMessage"></p>
+            </div>
+            <div class="card-footer">
+                <button id="confirmCancel" class="confirm-btn-cancel" data-i18n="confirmCancel">Hủy</button>
+                <button id="confirmOk" class="confirm-btn-ok" data-i18n="confirmOk">Đồng ý</button>
+            </div>
+        </div>
     </div>
 
     <script src="i18n.js"></script>

@@ -86,6 +86,9 @@ const languages = {
         toastTemplateNoPlaceholder: 'Template phải chứa {values}',
 
         // Confirm dialogs
+        confirmTitle: 'Xác nhận',
+        confirmCancel: 'Hủy',
+        confirmOk: 'Đồng ý',
         confirmDeleteItem: 'Bạn có chắc muốn xóa mục này?',
         confirmClearHistory: 'Bạn có chắc muốn xóa toàn bộ lịch sử?',
     },
@@ -164,6 +167,9 @@ const languages = {
         toastTemplateNoPlaceholder: 'Template must contain {values}',
 
         // Confirm dialogs
+        confirmTitle: 'Confirmation',
+        confirmCancel: 'Cancel',
+        confirmOk: 'Confirm',
         confirmDeleteItem: 'Are you sure you want to delete this item?',
         confirmClearHistory: 'Are you sure you want to clear all history?',
     },
@@ -241,6 +247,9 @@ const languages = {
         toastTemplateNoPlaceholder: '템플릿에 {values}가 포함되어야 합니다',
 
         // Confirm dialogs
+        confirmTitle: '확인',
+        confirmCancel: '취소',
+        confirmOk: '확인',
         confirmDeleteItem: '이 항목을 삭제하시겠습니까?',
         confirmClearHistory: '모든 기록을 삭제하시겠습니까?',
     },

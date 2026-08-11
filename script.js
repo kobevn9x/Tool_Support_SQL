@@ -836,6 +836,11 @@ function showConfirm(message) {
         const cancelBtn = document.getElementById('confirmCancel');
         const okBtn = document.getElementById('confirmOk');
 
+        if (!overlay || !msgEl || !cancelBtn || !okBtn) {
+            resolve(window.confirm(message));
+            return;
+        }
+
         msgEl.textContent = message;
         overlay.style.display = 'flex';
         okBtn.focus();
@@ -844,6 +849,8 @@ function showConfirm(message) {
             overlay.style.display = 'none';
             cancelBtn.removeEventListener('click', onCancel);
             okBtn.removeEventListener('click', onOk);
+            overlay.removeEventListener('click', onOverlayClick);
+            document.removeEventListener('keydown', onKeyDown);
         }
 
         function onCancel() {
@@ -856,16 +863,22 @@ function showConfirm(message) {
             resolve(true);
         }
 
+        function onOverlayClick(e) {
+            if (e.target === overlay) {
+                onCancel();
+            }
+        }
+
+        function onKeyDown(e) {
+            if (e.key === 'Escape') {
+                onCancel();
+            }
+        }
+
         cancelBtn.addEventListener('click', onCancel);
         okBtn.addEventListener('click', onOk);
-
-        // Close on Escape
-        overlay.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                cleanup();
-                resolve(false);
-            }
-        }, { once: true });
+        overlay.addEventListener('click', onOverlayClick);
+        document.addEventListener('keydown', onKeyDown);
     });
 }
 
