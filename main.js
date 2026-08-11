@@ -15,7 +15,7 @@ function createWindow() {
         // Cửa sổ đẹp hơn
         titleBarStyle: 'default',
         show: false, // Ẩn cho đến khi sẵn sàng
-        backgroundColor: '#ffffff'
+        backgroundColor: '#f4f4f8'
     });
 
     win.loadFile('sql-formatter.html');
