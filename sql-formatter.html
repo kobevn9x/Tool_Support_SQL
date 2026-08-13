@@ -37,6 +37,7 @@
         <nav class="app-nav" aria-label="Main">
             <button type="button" class="nav-item active" data-page="formatter" onclick="switchPage('formatter')">Data Formatter</button>
             <button type="button" class="nav-item" data-page="sql-comment" onclick="switchPage('sql-comment')">Add Comment</button>
+            <button type="button" class="nav-item" data-page="cs-column" onclick="switchPage('cs-column')" data-i18n="navCsColumn">C# Column Align</button>
         </nav>
 
         <!-- PAGE: DATA FORMATTER -->
@@ -317,6 +318,84 @@
             </main>
         </div><!-- /page-sql-comment -->
 
+        <!-- PAGE: C# COLUMN ALIGN -->
+        <div id="page-cs-column" class="page-content" style="display: none;">
+            <main class="app-main csfmt-main">
+                <div class="panel-left csfmt-panel">
+                    <section class="card section-input">
+                        <div class="card-header">
+                            <h2>
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 17l6-6-6-6"></path><path d="M12 19h8"></path></svg>
+                                <span data-i18n="csInputTitle">C# Source Input</span>
+                            </h2>
+                            <div class="card-actions">
+                                <button class="btn btn-danger btn-sm" onclick="clearCsInput()">
+                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                    <span data-i18n="btnClear">Clear</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <textarea id="csInput" class="code-textarea" data-i18n-placeholder="csInputPlaceholder" placeholder="Paste C# method call statements here...&#10;&#10;_GridUtil.InitColumn(grid2, &quot;PLANT_CD&quot;, &quot;사업장&quot;, 140, 0, false, false, 2, GridColDataType_emu.VarChar, HAlign.Left, string.Empty, string.Empty);&#10;_GridUtil.InitColumn(grid2, &quot;REC_DT&quot;, &quot;생산일자&quot;, 90, 0, true, false, 2, GridColDataType_emu.YearMonthDay, HAlign.Center, string.Empty, string.Empty);"></textarea>
+                        </div>
+                    </section>
+
+                    <section class="card section-output interactive-border">
+                        <div class="card-header">
+                            <h2>
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="8 17 12 21 16 17"></polyline><line x1="12" y1="12" x2="12" y2="21"></line><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"></path></svg>
+                                <span data-i18n="csOutputTitle">Column-Aligned Result</span>
+                            </h2>
+                        </div>
+                        <div class="card-body">
+                            <textarea id="csOutput" class="code-textarea output-textarea" readonly data-i18n-placeholder="outputPlaceholder" placeholder="Result will appear here..."></textarea>
+                            <div class="controls-row">
+                                <button class="btn btn-success" onclick="copyCsResult()">
+                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    <span data-i18n="btnCopy">Copy</span>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="panel-right">
+                    <section class="card section-options">
+                        <div class="card-header">
+                            <h3>
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                                <span data-i18n="csOptionsTitle">Alignment Options</span>
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="comment-help" data-i18n="csHelpText">Aligns consecutive calls to the same method by argument column, using East-Asian display width so Korean/CJK columns line up in the editor.</p>
+                            <div class="options-list">
+                                <label class="control-checkbox">
+                                    <input type="checkbox" id="csAlignNumbersRight" checked>
+                                    <span class="control-indicator"></span>
+                                    <span data-i18n="csOptAlignNumbersRight">Right-align numeric literals</span>
+                                </label>
+                                <div class="control-group">
+                                    <label for="csMinGroupSize" data-i18n="csOptMinGroupSize">Minimum group size:</label>
+                                    <input type="number" id="csMinGroupSize" class="control-input" min="2" value="2">
+                                </div>
+                                <div class="control-group">
+                                    <label for="csMaxLineLength" data-i18n="csOptMaxLineLength">Max line length (0 = off):</label>
+                                    <input type="number" id="csMaxLineLength" class="control-input" min="0" value="240">
+                                </div>
+                            </div>
+                            <div class="action-convert-container">
+                                <button class="btn btn-primary btn-large btn-block" onclick="csAlignColumns()">
+                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"></path><path d="M8 4v16M12 4v16M16 4v16"></path></svg>
+                                    <span data-i18n="csBtnAlign">Align Columns</span>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </main>
+        </div><!-- /page-cs-column -->
+
         <footer class="app-footer">
             <p>&copy; 2026 SQL Data Formatter. Enterprise Precision Edition.</p>
         </footer>
@@ -345,5 +424,6 @@
 
     <script src="i18n.js"></script>
     <script src="script.js"></script>
+    <script src="cs-formatter.js"></script>
 </body>
 </html>

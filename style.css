@@ -301,7 +301,7 @@ body.theme-enterprise.dark.orange {
 
 /* Layout */
 .app-container {
-    max-width: 1280px;
+    max-width: 1530px;
     margin: 0 auto;
     padding: 24px;
     display: flex;
@@ -440,6 +440,10 @@ body.theme-enterprise.dark.orange {
 }
 
 .comment-main .comment-panel .code-textarea {
+    min-height: 220px;
+}
+
+.csfmt-main .csfmt-panel .code-textarea {
     min-height: 220px;
 }
 

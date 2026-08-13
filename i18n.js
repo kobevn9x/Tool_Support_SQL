@@ -91,6 +91,24 @@ const languages = {
         confirmOk: 'Đồng ý',
         confirmDeleteItem: 'Bạn có chắc muốn xóa mục này?',
         confirmClearHistory: 'Bạn có chắc muốn xóa toàn bộ lịch sử?',
+
+        // C# Column Align
+        navCsColumn: 'Căn cột C#',
+        csInputTitle: '📝 Mã nguồn C#',
+        csInputPlaceholder: 'Dán các câu lệnh gọi phương thức C# vào đây...\n\n_GridUtil.InitColumn(grid2, "PLANT_CD", "사업장", 140, 0, false, false, 2, GridColDataType_emu.VarChar, HAlign.Left, string.Empty, string.Empty);',
+        csOutputTitle: '✨ Kết quả căn cột',
+        csOptionsTitle: '⚙️ Tùy chọn căn cột',
+        csOptAlignNumbersRight: 'Căn phải các số',
+        csOptMinGroupSize: 'Số lệnh tối thiểu trong nhóm:',
+        csOptMaxLineLength: 'Độ dài dòng tối đa (0 = tắt):',
+        csHelpText: 'Căn cột các lệnh gọi liên tiếp tới cùng một phương thức theo từng tham số. Dùng độ rộng hiển thị East-Asian để cột tiếng Hàn/CJK thẳng hàng trong editor.',
+        csBtnAlign: 'Căn cột',
+        csToastEmpty: 'Vui lòng nhập mã nguồn C#',
+        csToastNoGroup: 'Không tìm thấy nhóm lệnh gọi nào để căn cột',
+        csToastSuccess: (groups, calls) => `Đã căn cột ${groups} nhóm (${calls} lệnh gọi)`,
+        csToastCleared: 'Đã xóa!',
+        csToastNoCopy: 'Không có kết quả để copy',
+        csToastCopied: 'Đã copy vào clipboard!',
     },
 
     // ─── English ─────────────────────────────────────────────
@@ -172,6 +190,24 @@ const languages = {
         confirmOk: 'Confirm',
         confirmDeleteItem: 'Are you sure you want to delete this item?',
         confirmClearHistory: 'Are you sure you want to clear all history?',
+
+        // C# Column Align
+        navCsColumn: 'C# Column Align',
+        csInputTitle: '📝 C# Source Input',
+        csInputPlaceholder: 'Paste C# method call statements here...\n\n_GridUtil.InitColumn(grid2, "PLANT_CD", "사업장", 140, 0, false, false, 2, GridColDataType_emu.VarChar, HAlign.Left, string.Empty, string.Empty);',
+        csOutputTitle: '✨ Column-Aligned Result',
+        csOptionsTitle: '⚙️ Alignment Options',
+        csOptAlignNumbersRight: 'Right-align numeric literals',
+        csOptMinGroupSize: 'Minimum group size:',
+        csOptMaxLineLength: 'Max line length (0 = off):',
+        csHelpText: 'Aligns consecutive calls to the same method by argument column, using East-Asian display width so Korean/CJK columns line up in the editor.',
+        csBtnAlign: 'Align Columns',
+        csToastEmpty: 'Please enter C# source code',
+        csToastNoGroup: 'No alignable method-call groups found',
+        csToastSuccess: (groups, calls) => `Aligned ${groups} group(s) (${calls} calls)`,
+        csToastCleared: 'Cleared!',
+        csToastNoCopy: 'No result to copy',
+        csToastCopied: 'Copied to clipboard!',
     },
     // ─── Korean ──────────────────────────────────────────────
     ko: {
@@ -252,6 +288,24 @@ const languages = {
         confirmOk: '확인',
         confirmDeleteItem: '이 항목을 삭제하시겠습니까?',
         confirmClearHistory: '모든 기록을 삭제하시겠습니까?',
+
+        // C# Column Align
+        navCsColumn: 'C# 열 정렬',
+        csInputTitle: '📝 C# 소스 입력',
+        csInputPlaceholder: '여기에 C# 메서드 호출문을 붙여넣으세요...\n\n_GridUtil.InitColumn(grid2, "PLANT_CD", "사업장", 140, 0, false, false, 2, GridColDataType_emu.VarChar, HAlign.Left, string.Empty, string.Empty);',
+        csOutputTitle: '✨ 열 정렬 결과',
+        csOptionsTitle: '⚙️ 정렬 옵션',
+        csOptAlignNumbersRight: '숫자 오른쪽 정렬',
+        csOptMinGroupSize: '최소 그룹 크기:',
+        csOptMaxLineLength: '최대 줄 길이 (0 = 끄기):',
+        csHelpText: '동일 메서드의 연속 호출을 인자 열로 정렬합니다. 한국어/CJK는 동아시아 표시 너비(2칸)를 사용하여 편집기에서 열이 맞춰집니다.',
+        csBtnAlign: '열 정렬',
+        csToastEmpty: 'C# 소스 코드를 입력해주세요',
+        csToastNoGroup: '정렬할 메서드 호출 그룹이 없습니다',
+        csToastSuccess: (groups, calls) => `${groups}개 그룹(${calls}개 호출) 정렬됨`,
+        csToastCleared: '삭제되었습니다!',
+        csToastNoCopy: '복사할 결과가 없습니다',
+        csToastCopied: '클립보드에 복사되었습니다!',
     },
 };
 
