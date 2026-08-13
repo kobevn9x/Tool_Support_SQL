@@ -1109,8 +1109,11 @@ async function copyCommentResult() {
 document.addEventListener('keydown', (e) => {
     if (e.ctrlKey && e.key === 'Enter') {
         const commentPage = document.getElementById('page-sql-comment');
+        const csPage = document.getElementById('page-cs-column');
         if (commentPage && commentPage.style.display !== 'none') {
             generateTableComments();
+        } else if (csPage && csPage.style.display !== 'none') {
+            csAlignColumns();
         } else {
             convertData();
         }
