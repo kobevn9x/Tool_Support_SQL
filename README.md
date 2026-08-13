@@ -35,6 +35,8 @@ A fast, efficient, and user-friendly web application designed to format raw inpu
 
 ## 🚀 How to Use
 
+This is a static web application — no build step and no runtime dependencies required. Just open `sql-formatter.html` in any modern browser (Chrome, Edge, Firefox, etc.) and start using it.
+
 1. Paste your raw list of data into the **Input** text area.
 2. Select your desired processing options (quotes, duplicates, case formatting, etc).
 3. Click **Chuyển đổi** (Convert) or press `Ctrl + Enter`.
