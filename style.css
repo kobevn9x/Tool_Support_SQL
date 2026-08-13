@@ -100,7 +100,60 @@ body.theme-enterprise {
     background-position: center center;
 }
 
-/* Premium Theme Toggle Button */
+/* ─── Orange palette — active while on the Add Comment tab ─── */
+body.theme-enterprise.orange {
+    /* Brand Colors — Orange system */
+    --brand-primary: #F97316;      /* Orange-500 */
+    --brand-secondary: #C2410C;    /* Orange-700 */
+    --brand-accent: #FDBA74;       /* Orange-300 */
+    --brand-bg: #FDE7CB;           /* Light orange tint */
+    --brand-text: #431407;         /* Deep orange-black */
+
+    /* Gradients */
+    --gradient-brand: linear-gradient(135deg, #F97316 0%, #C2410C 100%);
+    --gradient-brand-hover: linear-gradient(135deg, #FDBA74 0%, #F97316 100%);
+    --gradient-surface: linear-gradient(135deg, rgba(253,231,203,0.85) 0%, rgba(253,186,116,0.35) 100%);
+    --gradient-card-border: linear-gradient(135deg, #FDBA74 0%, #F97316 50%, #FDBA74 100%);
+
+    /* Neutrals */
+    --surface-light: rgba(253, 231, 203, 0.55);
+    --border-light: rgba(253, 186, 116, 0.45);
+    --border-medium: rgba(249, 115, 22, 0.3);
+    --text-secondary: #7C4A1E;
+    --text-tertiary: #A16A33;
+
+    /* Gradients & surfaces */
+    --gradient-start: #FDF3E3;
+    --gradient-end: #FDE7CB;
+    --textarea-focus-bg: rgba(253, 243, 227, 0.9);
+    --output-textarea-bg: rgba(253, 231, 203, 0.45);
+    --output-textarea-border: rgba(249, 115, 22, 0.25);
+    --select-bg: rgba(253, 243, 227, 0.85);
+    --btn-secondary-hover-border: rgba(249, 115, 22, 0.35);
+    --btn-secondary-hover-bg: rgba(253, 231, 203, 0.65);
+
+    /* Background — orange dot grid */
+    background-color: #FDF3E3;
+    background-image:
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 47px,
+            rgba(249, 115, 22, 0.08) 47px,
+            rgba(249, 115, 22, 0.08) 48px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 47px,
+            rgba(249, 115, 22, 0.08) 47px,
+            rgba(249, 115, 22, 0.08) 48px
+        ),
+        radial-gradient(circle, rgba(249, 115, 22, 0.15) 1.5px, transparent 1.5px);
+    background-size: 48px 48px;
+    background-position: center center;
+}
+
 .btn-theme-toggle {
     display: inline-flex;
     align-items: center;
@@ -195,6 +248,57 @@ body.dark {
     background-position: center center;
 }
 
+/* Dark mode + orange tab — warm orange-on-dark palette */
+body.theme-enterprise.dark.orange {
+    --brand-bg: #1a0e04;
+    --brand-text: #FDBA74;         /* Orange-300 accent text */
+    --brand-primary: #F97316;      /* Orange-500 */
+    --brand-secondary: #C2410C;    /* Orange-700 */
+
+    --gradient-brand: linear-gradient(135deg, #FF8A3C 0%, #D94A0B 100%);
+    --gradient-brand-hover: linear-gradient(135deg, #FDBA74 0%, #F97316 100%);
+    --gradient-surface: linear-gradient(135deg, rgba(30,14,4,0.85) 0%, rgba(60,30,10,0.65) 100%);
+    --gradient-card-border: linear-gradient(135deg, rgba(249,115,22,0.45) 0%, rgba(194,65,12,0.25) 50%, rgba(249,115,22,0.45) 100%);
+
+    --surface-bg: #140a03;
+    --surface-card: rgba(30, 14, 4, 0.72);
+    --surface-light: rgba(50, 25, 10, 0.62);
+    --border-light: rgba(249, 115, 22, 0.18);
+    --border-medium: rgba(249, 115, 22, 0.28);
+    --text-secondary: #E3A05E;
+    --text-tertiary: #A86B35;
+
+    --gradient-start: #1a0e04;
+    --gradient-end: #2a1507;
+    --textarea-focus-bg: rgba(30, 14, 4, 0.92);
+    --output-textarea-bg: rgba(50, 25, 10, 0.55);
+    --output-textarea-border: rgba(249, 115, 22, 0.28);
+    --select-bg: rgba(30, 14, 4, 0.85);
+    --btn-secondary-hover-border: rgba(249, 115, 22, 0.4);
+    --btn-secondary-hover-bg: rgba(50, 25, 10, 0.65);
+    --shadow-hover: 0 8px 30px rgba(249, 115, 22, 0.12);
+
+    background-color: #140a03;
+    background-image:
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 47px,
+            rgba(249, 115, 22, 0.07) 47px,
+            rgba(249, 115, 22, 0.07) 48px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 47px,
+            rgba(249, 115, 22, 0.07) 47px,
+            rgba(249, 115, 22, 0.07) 48px
+        ),
+        radial-gradient(circle, rgba(249, 115, 22, 0.15) 1.5px, transparent 1.5px);
+    background-size: 48px 48px;
+    background-position: center center;
+}
+
 /* Layout */
 .app-container {
     max-width: 1280px;
@@ -250,6 +354,93 @@ body.dark {
     display: flex;
     align-items: center;
     gap: 16px;
+}
+
+/* Page navigation tabs */
+.app-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 4px;
+    background: var(--surface-card);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.app-nav .nav-item {
+    appearance: none;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: var(--font-ui);
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 10px 18px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.app-nav .nav-item:hover {
+    color: var(--brand-primary);
+    background: var(--btn-secondary-hover-bg);
+    border-color: var(--border-light);
+}
+
+.app-nav .nav-item.active {
+    color: #fff;
+    background: var(--gradient-brand);
+    border-color: transparent;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Add Comment tab — hover accent (whole-page orange palette applies when active) */
+.app-nav .nav-item[data-page="sql-comment"]:hover {
+    color: #EA580C;
+}
+
+.app-nav .nav-item[data-page="sql-comment"].active:hover {
+    color: #fff;
+    background: linear-gradient(135deg, #FBBF24 0%, #EA580C 100%);
+}
+
+.page-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.comment-help {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0 0 12px;
+    line-height: 1.5;
+}
+
+.comment-help code {
+    font-family: var(--font-code);
+    color: var(--brand-primary);
+    font-size: 0.85em;
+}
+
+.comment-format-sample {
+    font-family: var(--font-code);
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    background: var(--output-textarea-bg);
+    border: 1px solid var(--output-textarea-border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    margin: 0 0 16px;
+    white-space: pre-wrap;
+    overflow-x: auto;
+}
+
+.comment-main .comment-panel .code-textarea {
+    min-height: 220px;
 }
 
 .header-clock {
@@ -495,6 +686,17 @@ body.dark {
 .btn-success:hover:not(:disabled) {
     box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35);
     transform: translateY(-1px);
+}
+
+/* On the orange (Add Comment) tab, turn success buttons orange too */
+body.theme-enterprise.orange .btn-success {
+    background: var(--gradient-brand);
+    box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
+}
+
+body.theme-enterprise.orange .btn-success:hover:not(:disabled) {
+    background: var(--gradient-brand-hover);
+    box-shadow: 0 4px 14px rgba(249, 115, 22, 0.4);
 }
 
 .btn-danger {

@@ -33,6 +33,14 @@
             </div>
         </header>
 
+        <!-- PAGE NAV -->
+        <nav class="app-nav" aria-label="Main">
+            <button type="button" class="nav-item active" data-page="formatter" onclick="switchPage('formatter')">Data Formatter</button>
+            <button type="button" class="nav-item" data-page="sql-comment" onclick="switchPage('sql-comment')">Add Comment</button>
+        </nav>
+
+        <!-- PAGE: DATA FORMATTER -->
+        <div id="page-formatter" class="page-content">
         <!-- MAIN LAYOUT -->
         <main class="app-main">
             <!-- LEFT PANEL -->
@@ -242,6 +250,72 @@
                 </div>
             </div>
         </section>
+        </div><!-- /page-formatter -->
+
+        <!-- PAGE: ADD COMMENT -->
+        <div id="page-sql-comment" class="page-content" style="display: none;">
+            <main class="app-main comment-main">
+                <div class="panel-left comment-panel">
+                    <section class="card section-input">
+                        <div class="card-header">
+                            <h2>
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                                SQL Query Input
+                            </h2>
+                            <div class="card-actions">
+                                <button class="btn btn-danger btn-sm" onclick="clearCommentInput()">
+                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                    <span>Clear</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <textarea id="commentSqlInput" class="code-textarea" placeholder="Paste your SQL query here...&#10;&#10;Example:&#10;SELECT * FROM users u&#10;JOIN orders o ON o.user_id = u.id"></textarea>
+                        </div>
+                    </section>
+
+                    <section class="card section-output interactive-border">
+                        <div class="card-header">
+                            <h2>
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="8 17 12 21 16 17"></polyline><line x1="12" y1="12" x2="12" y2="21"></line><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"></path></svg>
+                                Query with Table Comments
+                            </h2>
+                        </div>
+                        <div class="card-body">
+                            <textarea id="commentSqlOutput" class="code-textarea output-textarea" readonly placeholder="Result will appear here..."></textarea>
+                            <div class="controls-row">
+                                <button class="btn btn-success" onclick="copyCommentResult()">
+                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    <span>Copy</span>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="panel-right">
+                    <section class="card section-options">
+                        <div class="card-header">
+                            <h3>
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                                Actions
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <p class="comment-help">Extracts tables and aliases from <code>FROM</code> / <code>JOIN</code> clauses and prepends a comment block:</p>
+                            <pre class="comment-format-sample">-- users | u
+-- orders | o</pre>
+                            <div class="action-convert-container">
+                                <button class="btn btn-primary btn-large btn-block" onclick="generateTableComments()">
+                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                                    <span>Generate Comments</span>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </main>
+        </div><!-- /page-sql-comment -->
 
         <footer class="app-footer">
             <p>&copy; 2026 SQL Data Formatter. Enterprise Precision Edition.</p>
