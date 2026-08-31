@@ -38,6 +38,7 @@
             <button type="button" class="nav-item active" data-page="formatter" onclick="switchPage('formatter')">Data Formatter</button>
             <button type="button" class="nav-item" data-page="sql-comment" onclick="switchPage('sql-comment')">Add Comment</button>
             <button type="button" class="nav-item" data-page="cs-column" onclick="switchPage('cs-column')" data-i18n="navCsColumn">C# Column Align</button>
+            <button type="button" class="nav-item" data-page="code-generator" onclick="switchPage('code-generator')" data-i18n="codeNavTitle">QR / Data Matrix</button>
         </nav>
 
         <!-- PAGE: DATA FORMATTER -->
@@ -318,6 +319,110 @@
             </main>
         </div><!-- /page-sql-comment -->
 
+        <div id="page-code-generator" class="page-content" style="display: none;">
+            <main class="app-main code-generator-main">
+                <div class="panel-left code-generator-panel">
+                    <section class="card section-input">
+                        <div class="card-header">
+                            <h2>
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><path d="M14 14h3v3h-3zM18 18h3v3h-3zM14 21h3"></path></svg>
+                                <span data-i18n="codeInputTitle">Code List Input</span>
+                            </h2>
+                            <div class="card-actions">
+                                <button class="btn btn-danger btn-sm" onclick="clearCodeInput()">
+                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                    <span data-i18n="codeBtnClear">Clear</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <textarea id="codeInput" class="code-textarea code-generator-textarea" data-i18n-placeholder="codeInputPlaceholder" placeholder="Enter one value per line..."></textarea>
+                            <p class="code-generator-help" data-i18n="codeInputHelp">Each line becomes one code. Commas, tabs, and other characters are preserved.</p>
+                            <div id="codeInputStats" class="code-generator-stats" role="status" aria-live="polite"></div>
+                        </div>
+                    </section>
+
+                    <section class="card section-output interactive-border code-generator-output">
+                        <div class="card-header">
+                            <h2>
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M16 3h3a2 2 0 0 1 2 2v3"></path><path d="M8 21H5a2 2 0 0 1-2-2v-3"></path><path d="M16 21h3a2 2 0 0 0 2-2v-3"></path><rect x="8" y="8" width="8" height="8"></rect></svg>
+                                <span data-i18n="codeOutputTitle">Generated Codes</span>
+                            </h2>
+                            <button id="codePrintBtn" class="btn btn-secondary btn-sm" onclick="printCodes()" disabled>
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                                <span data-i18n="codeBtnPrint">Print</span>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="codeStatus" class="code-status" role="status" aria-live="polite" data-i18n="codeEmptyState">Enter values and generate codes.</div>
+                            <div id="codePreview" class="code-preview" aria-live="polite"></div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="panel-right">
+                    <section class="card section-options">
+                        <div class="card-header">
+                            <h3>
+                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82V9A1.65 1.65 0 0 0 3 8a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9A1.65 1.65 0 0 0 10 3.09V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.14.61.7 1 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09A1.65 1.65 0 0 0 19.4 15z"></path></svg>
+                                <span data-i18n="codeOptionsTitle">Code & Print Options</span>
+                            </h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="options-list">
+                                <div class="control-group">
+                                    <label for="codeType" data-i18n="codeTypeLabel">Code type:</label>
+                                    <select id="codeType" class="control-select">
+                                        <option value="qrcode" data-i18n="codeTypeQr">QR Code</option>
+                                        <option value="datamatrix" data-i18n="codeTypeDataMatrix">Data Matrix (DMC)</option>
+                                    </select>
+                                </div>
+                                <div class="control-group" id="qrErrorGroup">
+                                    <label for="qrErrorCorrection" data-i18n="codeQrErrorLabel">QR error correction:</label>
+                                    <select id="qrErrorCorrection" class="control-select">
+                                        <option value="L">L — 7%</option>
+                                        <option value="M" selected>M — 15%</option>
+                                        <option value="Q">Q — 25%</option>
+                                        <option value="H">H — 30%</option>
+                                    </select>
+                                </div>
+                                <div class="code-options-grid">
+                                    <div class="control-group">
+                                        <label for="gridColumns" data-i18n="codeColumnsLabel">Columns:</label>
+                                        <input type="number" id="gridColumns" class="control-input" min="1" max="8" value="3">
+                                    </div>
+                                    <div class="control-group">
+                                        <label for="gridRows" data-i18n="codeRowsLabel">Rows:</label>
+                                        <input type="number" id="gridRows" class="control-input" min="1" max="20" value="8">
+                                    </div>
+                                    <div class="control-group">
+                                        <label for="codeSize" data-i18n="codeSizeLabel">Code size (mm):</label>
+                                        <input type="number" id="codeSize" class="control-input" min="8" max="60" step="1" value="28">
+                                    </div>
+                                    <div class="control-group">
+                                        <label for="labelSpacing" data-i18n="codeSpacingLabel">Spacing (mm):</label>
+                                        <input type="number" id="labelSpacing" class="control-input" min="0" max="20" step="1" value="4">
+                                    </div>
+                                </div>
+                                <label class="control-checkbox">
+                                    <input type="checkbox" id="codeRemoveEmpty" checked>
+                                    <span class="control-indicator"></span>
+                                    <span data-i18n="codeRemoveEmpty">Remove empty lines</span>
+                                </label>
+                            </div>
+                            <p class="code-generator-help" data-i18n="codePrintHelp">Print uses the configured grid. Choose actual size in the print dialog for physical dimensions.</p>
+                            <div class="action-convert-container">
+                                <button id="codeGenerateBtn" class="btn btn-primary btn-large btn-block" onclick="generateCodes()">
+                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M3 12h18"></path><rect x="4" y="4" width="16" height="16" rx="2"></rect></svg>
+                                    <span data-i18n="codeBtnGenerate">Generate Codes</span>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </main>
+        </div>
+
         <!-- PAGE: C# COLUMN ALIGN -->
         <div id="page-cs-column" class="page-content" style="display: none;">
             <main class="app-main csfmt-main">
@@ -422,6 +527,7 @@
         </div>
     </div>
 
+    <script src="vendor/bwip-js-min.js"></script>
     <script src="i18n.js"></script>
     <script src="script.js"></script>
     <script src="cs-formatter.js"></script>

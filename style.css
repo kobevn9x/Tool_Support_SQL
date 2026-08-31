@@ -48,6 +48,7 @@
     --font-ui: 'Open Sans', system-ui, -apple-system, sans-serif;
     --font-heading: 'Poppins', system-ui, -apple-system, sans-serif;
     --font-code: 'Consolas', 'Courier New', monospace;
+    --font-mono: var(--font-code);
 
     /* Gradient background & surface helpers */
     --gradient-start: #f4f4f8;
@@ -1240,4 +1241,260 @@ body.theme-enterprise.orange .btn-success:hover:not(:disabled) {
 }
 ::-webkit-scrollbar-thumb:hover {
     background: var(--gradient-brand);
+}
+
+.code-generator-main {
+    align-items: start;
+}
+
+.code-generator-textarea {
+    min-height: 260px;
+}
+
+.code-generator-help {
+    margin: 12px 0 0;
+    color: var(--text-secondary);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+}
+
+.code-generator-stats,
+.code-status {
+    margin-top: 12px;
+    color: var(--text-tertiary);
+    font-size: 0.8125rem;
+}
+
+.code-status.info {
+    color: var(--brand-primary);
+}
+
+.code-status.success {
+    color: var(--status-success);
+}
+
+.code-status.error {
+    color: var(--status-error);
+}
+
+.code-options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.code-preview {
+    --code-columns: 3;
+    --code-rows: 8;
+    --code-size: 28mm;
+    --code-spacing: 4mm;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-height: 180px;
+}
+
+.code-print-page {
+    display: grid;
+    grid-template-columns: repeat(var(--code-columns), minmax(0, 1fr));
+    grid-template-rows: repeat(var(--code-rows), minmax(0, 1fr));
+    gap: var(--code-spacing);
+    align-items: center;
+    justify-items: center;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px dashed var(--border-medium);
+    border-radius: var(--radius-sm);
+}
+
+.code-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+    min-height: calc(var(--code-size) + 42px);
+    padding: 8px;
+    text-align: center;
+    break-inside: avoid;
+}
+
+.code-symbol {
+    display: block;
+    width: var(--code-size);
+    max-width: 100%;
+    height: auto;
+    image-rendering: pixelated;
+    background: #fff;
+}
+
+.code-label-text {
+    width: 100%;
+    color: var(--text-primary);
+    font-family: var(--font-code);
+    font-size: 0.75rem;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    white-space: pre-wrap;
+}
+
+.code-label-error {
+    border: 1px solid var(--status-error);
+    border-radius: var(--radius-sm);
+}
+
+.code-label-error-message {
+    color: var(--status-error);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+#codePrintBtn:disabled {
+    opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+    .code-options-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .code-print-page {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-rows: none;
+    }
+
+    .code-label {
+        min-height: 0;
+    }
+}
+
+@media print {
+    @page {
+        size: A4;
+        margin: 12mm;
+    }
+
+    html,
+    body,
+    body.theme-enterprise,
+    body.dark,
+    body.theme-enterprise.orange,
+    body.theme-enterprise.dark.orange {
+        min-height: 0 !important;
+        background: #fff !important;
+        background-image: none !important;
+        color: #111 !important;
+    }
+
+    body * {
+        visibility: hidden !important;
+    }
+
+    #page-code-generator,
+    #page-code-generator * {
+        visibility: visible !important;
+    }
+
+    .app-container {
+        display: block !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .app-header,
+    .app-nav,
+    .app-footer,
+    .toast,
+    .confirm-overlay,
+    #page-code-generator .panel-right,
+    #page-code-generator .section-input,
+    #page-code-generator .code-generator-help,
+    #page-code-generator .code-generator-stats,
+    #page-code-generator .card-header,
+    #page-code-generator .code-status {
+        display: none !important;
+    }
+
+    #page-code-generator {
+        display: block !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    #page-code-generator .app-main,
+    #page-code-generator .panel-left,
+    #page-code-generator .code-generator-output,
+    #page-code-generator .code-generator-output .card-body {
+        display: block !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        animation: none !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        background: #fff !important;
+    }
+
+    #codePreview {
+        display: block !important;
+        width: 100% !important;
+        min-height: 0 !important;
+        gap: 0 !important;
+    }
+
+    .code-print-page {
+        display: grid !important;
+        width: 100% !important;
+        min-height: calc(297mm - 24mm) !important;
+        grid-template-columns: repeat(var(--code-columns), minmax(0, 1fr)) !important;
+        grid-template-rows: repeat(var(--code-rows), minmax(0, 1fr)) !important;
+        gap: var(--code-spacing) !important;
+        padding: 0 !important;
+        background: #fff !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        break-after: page;
+        page-break-after: always;
+        break-inside: avoid;
+    }
+
+    .code-print-page:last-child {
+        break-after: auto;
+        page-break-after: auto;
+    }
+
+    .code-label {
+        min-height: 0 !important;
+        padding: 0 !important;
+        gap: 2mm !important;
+        color: #111 !important;
+        break-inside: avoid;
+    }
+
+    .code-symbol {
+        width: var(--code-size) !important;
+        max-width: 100% !important;
+        background: #fff !important;
+    }
+
+    .code-label-text {
+        color: #111 !important;
+        font-family: Arial, sans-serif !important;
+        font-size: 9pt !important;
+        line-height: 1.25 !important;
+        overflow-wrap: anywhere !important;
+    }
+
+    .code-label-error {
+        border: 1px solid #b91c1c !important;
+    }
+
+    .code-label-error-message {
+        color: #b91c1c !important;
+    }
 }
