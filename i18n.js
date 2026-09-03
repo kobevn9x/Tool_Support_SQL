@@ -419,7 +419,7 @@ const languages = {
 
 // ─── i18n Engine ──────────────────────────────────────────────
 
-let currentLang = localStorage.getItem('appLanguage') || 'vi';
+let currentLang = localStorage.getItem('appLanguage') || 'en';
 
 /**
  * Get translated text by key. If the value is a function (for

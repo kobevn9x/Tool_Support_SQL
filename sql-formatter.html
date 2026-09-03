@@ -36,9 +36,9 @@
         <!-- PAGE NAV -->
         <nav class="app-nav" aria-label="Main">
             <button type="button" class="nav-item active" data-page="formatter" onclick="switchPage('formatter')">Data Formatter</button>
-            <button type="button" class="nav-item" data-page="sql-comment" onclick="switchPage('sql-comment')">Add Comment</button>
             <button type="button" class="nav-item" data-page="cs-column" onclick="switchPage('cs-column')" data-i18n="navCsColumn">C# Column Align</button>
             <button type="button" class="nav-item" data-page="code-generator" onclick="switchPage('code-generator')" data-i18n="codeNavTitle">QR / Data Matrix</button>
+            <button type="button" class="nav-item" data-page="sql-comment" onclick="switchPage('sql-comment')">Add Comment</button>
         </nav>
 
         <!-- PAGE: DATA FORMATTER -->
@@ -128,7 +128,7 @@
                     <div class="card-body">
                         <div class="options-list">
                             <label class="control-checkbox">
-                                <input type="checkbox" id="autoTheme" checked>
+                                <input type="checkbox" id="autoTheme">
                                 <span class="control-indicator"></span>
                                 <span data-i18n="optAutoTheme">Auto Theme (18h - 7h)</span>
                             </label>

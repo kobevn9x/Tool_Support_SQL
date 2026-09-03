@@ -19,8 +19,8 @@ let currentChunkIndex = 0;
 let isProcessing = false;
 
 // --- Theme Manager (Light / Dark Mode with Auto Schedule) ---
-let currentTheme = localStorage.getItem('appTheme') || 'light';
-let autoThemeEnabled = localStorage.getItem('sqlFormatterAutoTheme') !== 'false'; // default to true
+let currentTheme = localStorage.getItem('appTheme') || 'dark';
+let autoThemeEnabled = localStorage.getItem('sqlFormatterAutoTheme') === 'true'; // default to false
 let autoThemeTimer = null;
 
 function initTheme() {
@@ -38,11 +38,6 @@ function initTheme() {
         // even when auto theme doesn't change (e.g. reload with same stored theme)
         applyTheme(currentTheme);
     } else {
-        // Detect system preference if no user preference is stored
-        if (!localStorage.getItem('appTheme')) {
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            currentTheme = prefersDark ? 'dark' : 'light';
-        }
         applyTheme(currentTheme);
     }
 
