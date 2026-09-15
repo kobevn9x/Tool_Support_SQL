@@ -1,12 +1,12 @@
 // Load history from localStorage with validation
-let history = [];
+let formatterHistory = [];
 try {
     const stored = localStorage.getItem('sqlFormatterHistory');
     if (stored) {
         const parsed = JSON.parse(stored);
         // Validate it's an array
         if (Array.isArray(parsed)) {
-            history = parsed;
+            formatterHistory = parsed;
         }
     }
 } catch (error) {
@@ -146,8 +146,10 @@ function applyTheme(theme) {
 }
 
 // ============================================
-// PAGE NAVIGATION
+// PAGE NAVIGATION & LIQUID GLASS GLIDER
 // ============================================
+
+let currentActiveNavIndex = 0;
 
 function switchPage(pageId) {
     document.querySelectorAll('.page-content').forEach(p => {
@@ -162,8 +164,113 @@ function switchPage(pageId) {
     // Orange theme is active only while on the Add Comment tab
     document.body.classList.toggle('orange', pageId === 'sql-comment');
 
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.classList.toggle('active', item.dataset.page === pageId);
+    const navItems = Array.from(document.querySelectorAll('.app-nav .nav-item'));
+    const prevIndex = currentActiveNavIndex;
+    let newIndex = -1;
+
+    navItems.forEach((item, index) => {
+        const isActive = item.dataset.page === pageId;
+        item.classList.toggle('active', isActive);
+        if (isActive) {
+            item.setAttribute('aria-current', 'page');
+            newIndex = index;
+        } else {
+            item.removeAttribute('aria-current');
+        }
+    });
+
+    if (newIndex !== -1) {
+        currentActiveNavIndex = newIndex;
+        updateNavGlider(prevIndex, newIndex);
+    }
+}
+
+/**
+ * Apple Fluid Liquid Glass Glider positioning and physical spring animation
+ */
+function updateNavGlider(prevIndex = -1, newIndex = -1, immediate = false) {
+    const nav = document.querySelector('.app-nav');
+    const glider = document.getElementById('navGlider');
+    if (!nav || !glider) return;
+
+    nav.classList.add('has-glider');
+
+    const activeItem = nav.querySelector('.nav-item.active');
+    if (!activeItem) {
+        glider.style.opacity = '0';
+        return;
+    }
+
+    const navRect = nav.getBoundingClientRect();
+    const itemRect = activeItem.getBoundingClientRect();
+
+    const targetX = itemRect.left - navRect.left;
+    const targetY = itemRect.top - navRect.top;
+    const targetW = itemRect.width;
+    const targetH = itemRect.height;
+
+    // Direct immediate placement without animation (on load, resize, i18n change)
+    if (immediate || prevIndex === -1 || prevIndex === newIndex) {
+        glider.style.transition = 'none';
+        glider.style.transform = `translate3d(${targetX}px, ${targetY}px, 0)`;
+        glider.style.width = `${targetW}px`;
+        glider.style.height = `${targetH}px`;
+        glider.style.opacity = '1';
+        void glider.offsetHeight; // force reflow
+        glider.style.transition = '';
+        return;
+    }
+
+    const jumpCount = Math.abs(newIndex - prevIndex);
+    const isMovingRight = newIndex > prevIndex;
+
+    // Reset previous animation classes to retrigger keyframe animation cleanly
+    glider.classList.remove('gliding-right', 'gliding-left', 'gliding-jump-1', 'gliding-jump-multi');
+    void glider.offsetWidth; // force reflow
+
+    const dirClass = isMovingRight ? 'gliding-right' : 'gliding-left';
+    const jumpClass = jumpCount > 1 ? 'gliding-jump-multi' : 'gliding-jump-1';
+    glider.classList.add(dirClass, jumpClass);
+
+    // Apply hardware-accelerated spring translate and dimensions
+    glider.style.opacity = '1';
+    glider.style.transform = `translate3d(${targetX}px, ${targetY}px, 0)`;
+    glider.style.width = `${targetW}px`;
+    glider.style.height = `${targetH}px`;
+
+    // Clean up animation classes once spring oscillation settles
+    clearTimeout(glider._gliderTimer);
+    glider._gliderTimer = setTimeout(() => {
+        glider.classList.remove('gliding-right', 'gliding-left', 'gliding-jump-1', 'gliding-jump-multi');
+    }, 500);
+}
+
+/**
+ * Initialize tactile interactions and window observers for nav glider
+ */
+function initNavGlider() {
+    const nav = document.querySelector('.app-nav');
+    const glider = document.getElementById('navGlider');
+    if (!nav || !glider) return;
+
+    // Tactile press squish on pointer events
+    nav.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('pointerdown', () => {
+            glider.classList.add('is-pressing');
+        });
+        const endPress = () => glider.classList.remove('is-pressing');
+        item.addEventListener('pointerup', endPress);
+        item.addEventListener('pointercancel', endPress);
+        item.addEventListener('pointerleave', endPress);
+    });
+
+    // Window resize handler with requestAnimationFrame
+    let resizeRaf = null;
+    window.addEventListener('resize', () => {
+        if (resizeRaf) cancelAnimationFrame(resizeRaf);
+        resizeRaf = requestAnimationFrame(() => {
+            updateNavGlider(-1, -1, true);
+        });
     });
 }
 
@@ -174,8 +281,15 @@ window.addEventListener('DOMContentLoaded', () => {
     applyLanguage(currentLang);
     displayHistory();
     initTemplateMode();
-    initCodeGenerator();
+    if (typeof initCodeGenerator === 'function') {
+        initCodeGenerator();
+    }
+    initNavGlider();
     switchPage('formatter');
+    // Ensure accurate glider position after initial fonts/styles settle
+    requestAnimationFrame(() => {
+        updateNavGlider(-1, 0, true);
+    });
 
     const clockEl = document.getElementById('headerClock');
     const tickClock = () => {
@@ -695,14 +809,14 @@ function saveToHistory(input, output) {
         }
     };
     
-    history.unshift(historyItem);
+    formatterHistory.unshift(historyItem);
     
     // Keep only last 20 items
-    if (history.length > 20) {
-        history = history.slice(0, 20);
+    if (formatterHistory.length > 20) {
+        formatterHistory = formatterHistory.slice(0, 20);
     }
     
-    localStorage.setItem('sqlFormatterHistory', JSON.stringify(history));
+    localStorage.setItem('sqlFormatterHistory', JSON.stringify(formatterHistory));
     displayHistory();
 }
 
@@ -710,7 +824,7 @@ function saveToHistory(input, output) {
 function displayHistory() {
     const historyList = document.getElementById('historyList');
     
-    if (history.length === 0) {
+    if (formatterHistory.length === 0) {
         historyList.innerHTML = `<p style="text-align: center; color: #9ca3af; padding: 40px;">${t('historyEmpty')}</p>`;
         return;
     }
@@ -718,7 +832,7 @@ function displayHistory() {
     // Use DocumentFragment for better performance
     const fragment = document.createDocumentFragment();
     
-    history.forEach(item => {
+    formatterHistory.forEach(item => {
         const div = document.createElement('div');
         div.className = 'history-item';
         
@@ -769,7 +883,7 @@ function displayHistory() {
 }
 
 function loadHistory(id) {
-    const item = history.find(h => h.id === id);
+    const item = formatterHistory.find(h => h.id === id);
     if (item) {
         document.getElementById('inputText').value = item.fullInput || item.input;
         
@@ -802,7 +916,7 @@ function loadHistory(id) {
 }
 
 async function copyHistoryItem(id) {
-    const item = history.find(h => h.id === id);
+    const item = formatterHistory.find(h => h.id === id);
     if (item) {
         try {
             await copyToClipboardModern(item.fullOutput);
@@ -816,8 +930,8 @@ async function copyHistoryItem(id) {
 
 async function deleteHistoryItem(id) {
     if (await showConfirm(t('confirmDeleteItem'))) {
-        history = history.filter(h => h.id !== id);
-        localStorage.setItem('sqlFormatterHistory', JSON.stringify(history));
+        formatterHistory = formatterHistory.filter(h => h.id !== id);
+        localStorage.setItem('sqlFormatterHistory', JSON.stringify(formatterHistory));
         displayHistory();
         showToast(t('toastHistoryItemDeleted'), 'success');
     }
@@ -826,8 +940,8 @@ async function deleteHistoryItem(id) {
 function clearHistory() {
     showConfirm(t('confirmClearHistory')).then(confirmed => {
         if (confirmed) {
-            history = [];
-            localStorage.setItem('sqlFormatterHistory', JSON.stringify(history));
+            formatterHistory = [];
+            localStorage.setItem('sqlFormatterHistory', JSON.stringify(formatterHistory));
             displayHistory();
             showToast(t('toastHistoryCleared'), 'success');
         }
@@ -902,466 +1016,10 @@ function showConfirm(message) {
 }
 
 // ============================================
-// ADD COMMENT — TABLE | ALIAS
+// MODULAR EXTENSIONS (Moved to standalone modules)
+// - SQL Comment Generator: sql-comment.js
+// - QR & Data Matrix Generator: code-generator.js
 // ============================================
-
-const SQL_COMMENT_RESERVED = new Set([
-    'ON', 'WHERE', 'JOIN', 'INNER', 'LEFT', 'RIGHT', 'FULL', 'OUTER', 'CROSS',
-    'GROUP', 'ORDER', 'HAVING', 'LIMIT', 'OFFSET', 'UNION', 'EXCEPT', 'INTERSECT',
-    'SET', 'INTO', 'VALUES', 'SELECT', 'FROM', 'AS', 'AND', 'OR', 'NOT', 'IN',
-    'USING', 'WITH', 'BY', 'ASC', 'DESC', 'FETCH', 'ONLY', 'ROWS', 'ROW',
-    'NATURAL', 'APPLY', 'LATERAL', 'WHEN', 'THEN', 'ELSE', 'END', 'CASE'
-]);
-
-function stripSqlLiteralsAndComments(sql) {
-    let out = '';
-    let i = 0;
-    while (i < sql.length) {
-        // Line comment
-        if (sql[i] === '-' && sql[i + 1] === '-') {
-            out += '  ';
-            i += 2;
-            while (i < sql.length && sql[i] !== '\n') {
-                out += ' ';
-                i++;
-            }
-            continue;
-        }
-        // Block comment
-        if (sql[i] === '/' && sql[i + 1] === '*') {
-            out += '  ';
-            i += 2;
-            while (i < sql.length && !(sql[i] === '*' && sql[i + 1] === '/')) {
-                out += sql[i] === '\n' ? '\n' : ' ';
-                i++;
-            }
-            if (i < sql.length) {
-                out += '  ';
-                i += 2;
-            }
-            continue;
-        }
-        // Single-quoted string
-        if (sql[i] === "'") {
-            out += ' ';
-            i++;
-            while (i < sql.length) {
-                if (sql[i] === "'" && sql[i + 1] === "'") {
-                    out += '  ';
-                    i += 2;
-                    continue;
-                }
-                if (sql[i] === "'") {
-                    out += ' ';
-                    i++;
-                    break;
-                }
-                out += sql[i] === '\n' ? '\n' : ' ';
-                i++;
-            }
-            continue;
-        }
-        // Double-quoted identifier — keep content for matching via brackets later; blank for safety
-        if (sql[i] === '"') {
-            let chunk = '"';
-            i++;
-            while (i < sql.length && sql[i] !== '"') {
-                chunk += sql[i];
-                i++;
-            }
-            if (i < sql.length) {
-                chunk += '"';
-                i++;
-            }
-            out += chunk;
-            continue;
-        }
-        // Bracket identifier [name]
-        if (sql[i] === '[') {
-            let chunk = '[';
-            i++;
-            while (i < sql.length && sql[i] !== ']') {
-                chunk += sql[i];
-                i++;
-            }
-            if (i < sql.length) {
-                chunk += ']';
-                i++;
-            }
-            out += chunk;
-            continue;
-        }
-        // Backtick identifier
-        if (sql[i] === '`') {
-            let chunk = '`';
-            i++;
-            while (i < sql.length && sql[i] !== '`') {
-                chunk += sql[i];
-                i++;
-            }
-            if (i < sql.length) {
-                chunk += '`';
-                i++;
-            }
-            out += chunk;
-            continue;
-        }
-
-        out += sql[i];
-        i++;
-    }
-    return out;
-}
-
-function extractTableAliases(sql) {
-    const scrubbed = stripSqlLiteralsAndComments(sql);
-    // Capture FROM / JOIN + table (+ optional AS alias)
-    // Table: schema.table or table, optional quotes/brackets/backticks
-    const ident = '(?:`[^`]+`|"[^"]+"|\\[[^\\]]+\\]|[A-Za-z_][\\w$#]*)';
-    const tableRef = `(${ident}(?:\\s*\\.\\s*${ident})*)`;
-    const aliasRef = `(${ident})`;
-    const pattern = new RegExp(
-        `(?:\\bFROM\\b|\\b(?:(?:LEFT|RIGHT|FULL)(?:\\s+OUTER)?|INNER|CROSS|OUTER|NATURAL)?\\s*JOIN\\b)\\s+${tableRef}` +
-        `(?:\\s+(?:AS\\s+)?${aliasRef})?`,
-        'gi'
-    );
-
-    const pairs = [];
-    const seen = new Set();
-    let match;
-    while ((match = pattern.exec(scrubbed)) !== null) {
-        const table = match[1].replace(/\s+/g, '');
-        let alias = match[2] ? match[2].replace(/\s+/g, '') : '';
-
-        // Drop false-positive aliases that are SQL keywords (e.g. FROM t WHERE)
-        if (alias) {
-            const aliasBare = alias.replace(/^[`"\[]/, '').replace(/[`"\]]$/, '').toUpperCase();
-            if (SQL_COMMENT_RESERVED.has(aliasBare)) {
-                alias = '';
-            }
-        }
-
-        // Skip subquery open paren mistaken as table (pattern shouldn't match, but guard)
-        if (!table || table === '(') continue;
-
-        const key = table.toLowerCase() + '|' + alias.toLowerCase();
-        if (seen.has(key)) continue;
-        seen.add(key);
-        pairs.push({ table, alias });
-    }
-    return pairs;
-}
-
-function generateTableComments() {
-    const inputEl = document.getElementById('commentSqlInput');
-    const outputEl = document.getElementById('commentSqlOutput');
-    if (!inputEl || !outputEl) return;
-
-    const sql = inputEl.value;
-    if (!sql.trim()) {
-        showToast('Please enter a SQL query', 'error');
-        return;
-    }
-
-    const pairs = extractTableAliases(sql);
-    if (pairs.length === 0) {
-        showToast('No tables found in query', 'error');
-        outputEl.value = '';
-        return;
-    }
-
-    const commentBlock = pairs
-        .map(({ table, alias }) => `-- ${table} | ${alias}`)
-        .join('\n');
-
-    outputEl.value = commentBlock + '\n\n' + sql;
-    showToast(`Added comments for ${pairs.length} table(s)`, 'success');
-}
-
-function clearCommentInput() {
-    const inputEl = document.getElementById('commentSqlInput');
-    const outputEl = document.getElementById('commentSqlOutput');
-    if (inputEl) inputEl.value = '';
-    if (outputEl) outputEl.value = '';
-    showToast('Cleared', 'success');
-}
-
-async function copyCommentResult() {
-    const outputEl = document.getElementById('commentSqlOutput');
-    const text = outputEl ? outputEl.value : '';
-    if (!text) {
-        showToast('Nothing to copy', 'error');
-        return;
-    }
-    try {
-        await copyToClipboardModern(text);
-        showToast('Copied to clipboard!', 'success');
-    } catch (err) {
-        showToast('Copy failed', 'error');
-    }
-}
-
-let codeGeneratorState = {
-    payloads: [],
-    options: null,
-    generated: false,
-    errors: [],
-    generating: false
-};
-
-const CODE_OPTION_LIMITS = {
-    columns: { min: 1, max: 8 },
-    rows: { min: 1, max: 20 },
-    size: { min: 8, max: 60 },
-    spacing: { min: 0, max: 20 }
-};
-
-function getCodeMessage(key, ...args) {
-    const message = t(key);
-    return typeof message === 'function' ? message(...args) : message;
-}
-
-function setCodeStatus(message, type = '') {
-    const statusEl = document.getElementById('codeStatus');
-    if (!statusEl) return;
-    statusEl.textContent = message;
-    statusEl.className = `code-status${type ? ` ${type}` : ''}`;
-}
-
-function parseCodeInput(input, removeEmpty = true) {
-    const lines = input.split(/\r?\n/);
-    return removeEmpty ? lines.filter(line => line.length > 0) : lines;
-}
-
-function readCodeOptions() {
-    const values = {
-        type: document.getElementById('codeType')?.value || 'qrcode',
-        errorCorrection: document.getElementById('qrErrorCorrection')?.value || 'M',
-        columns: Number.parseInt(document.getElementById('gridColumns')?.value || '', 10),
-        rows: Number.parseInt(document.getElementById('gridRows')?.value || '', 10),
-        size: Number.parseInt(document.getElementById('codeSize')?.value || '', 10),
-        spacing: Number.parseInt(document.getElementById('labelSpacing')?.value || '', 10),
-        removeEmpty: document.getElementById('codeRemoveEmpty')?.checked ?? true
-    };
-
-    if (!['qrcode', 'datamatrix'].includes(values.type)) {
-        throw new Error(getCodeMessage('codeInvalidOptions'));
-    }
-
-    for (const key of ['columns', 'rows', 'size', 'spacing']) {
-        const limits = CODE_OPTION_LIMITS[key];
-        if (!Number.isInteger(values[key]) || values[key] < limits.min || values[key] > limits.max) {
-            throw new Error(getCodeMessage('codeInvalidOptions'));
-        }
-    }
-
-    return values;
-}
-
-function updateCodeInputStats() {
-    const inputEl = document.getElementById('codeInput');
-    const statsEl = document.getElementById('codeInputStats');
-    if (!inputEl || !statsEl) return;
-    const removeEmpty = document.getElementById('codeRemoveEmpty')?.checked ?? true;
-    statsEl.textContent = getCodeMessage('codeInputStats', parseCodeInput(inputEl.value, removeEmpty).length);
-}
-
-function invalidateCodeGeneration() {
-    codeGeneratorState.generated = false;
-    const printBtn = document.getElementById('codePrintBtn');
-    if (printBtn) printBtn.disabled = true;
-    if (codeGeneratorState.payloads.length > 0) {
-        setCodeStatus(getCodeMessage('codeStaleState'), 'info');
-    }
-}
-
-function renderCodeCanvas(canvas, payload, options) {
-    if (!window.bwipjs || typeof window.bwipjs.toCanvas !== 'function') {
-        throw new Error(getCodeMessage('codeLibraryMissing'));
-    }
-
-    window.bwipjs.toCanvas(canvas, {
-        bcid: options.type,
-        text: payload,
-        scale: 4,
-        padding: 2,
-        includetext: false,
-        eclevel: options.type === 'qrcode' ? options.errorCorrection : undefined
-    });
-}
-
-function createCodeLabel(payload, index, options) {
-    const label = document.createElement('article');
-    label.className = 'code-label';
-    label.setAttribute('aria-label', getCodeMessage('codeLabelAria', index + 1));
-
-    const canvas = document.createElement('canvas');
-    canvas.className = 'code-symbol';
-    canvas.setAttribute('aria-label', getCodeMessage('codeSymbolAria', options.type));
-    label.appendChild(canvas);
-
-    const text = document.createElement('div');
-    text.className = 'code-label-text';
-    text.textContent = payload;
-    label.appendChild(text);
-
-    try {
-        renderCodeCanvas(canvas, payload, options);
-    } catch (error) {
-        label.classList.add('code-label-error');
-        canvas.remove();
-        const errorEl = document.createElement('div');
-        errorEl.className = 'code-label-error-message';
-        errorEl.textContent = getCodeMessage('codeEncodingError', index + 1);
-        label.insertBefore(errorEl, text);
-        return { label, error };
-    }
-
-    canvas.style.width = `${options.size}mm`;
-    canvas.style.height = 'auto';
-    return { label, error: null };
-}
-
-async function renderCodeGrid(payloads, options) {
-    const previewEl = document.getElementById('codePreview');
-    if (!previewEl) return [];
-
-    previewEl.textContent = '';
-    previewEl.style.setProperty('--code-columns', options.columns);
-    previewEl.style.setProperty('--code-rows', options.rows);
-    previewEl.style.setProperty('--code-size', `${options.size}mm`);
-    previewEl.style.setProperty('--code-spacing', `${options.spacing}mm`);
-
-    const errors = [];
-    const perPage = options.columns * options.rows;
-    let page;
-
-    for (let index = 0; index < payloads.length; index++) {
-        if (index % 12 === 0) {
-            await new Promise(resolve => requestAnimationFrame(resolve));
-        }
-
-        if (index % perPage === 0) {
-            page = document.createElement('section');
-            page.className = 'code-print-page';
-            page.setAttribute('aria-label', getCodeMessage('codePageAria', Math.floor(index / perPage) + 1));
-            page.style.setProperty('--code-columns', options.columns);
-            page.style.setProperty('--code-rows', options.rows);
-            page.style.setProperty('--code-size', `${options.size}mm`);
-            page.style.setProperty('--code-spacing', `${options.spacing}mm`);
-            previewEl.appendChild(page);
-        }
-
-        const result = createCodeLabel(payloads[index], index, options);
-        page.appendChild(result.label);
-        if (result.error) errors.push({ index, error: result.error });
-    }
-
-    return errors;
-}
-
-async function generateCodes() {
-    if (codeGeneratorState.generating) return;
-
-    const inputEl = document.getElementById('codeInput');
-    const generateBtn = document.getElementById('codeGenerateBtn');
-    const printBtn = document.getElementById('codePrintBtn');
-    if (!inputEl) return;
-
-    let options;
-    try {
-        options = readCodeOptions();
-    } catch (error) {
-        setCodeStatus(error.message, 'error');
-        showToast(error.message, 'error');
-        return;
-    }
-
-    const payloads = parseCodeInput(inputEl.value, options.removeEmpty);
-    if (payloads.length === 0) {
-        setCodeStatus(getCodeMessage('codeEmptyInput'), 'error');
-        showToast(getCodeMessage('codeEmptyInput'), 'error');
-        return;
-    }
-
-    codeGeneratorState.generating = true;
-    codeGeneratorState.generated = false;
-    codeGeneratorState.payloads = payloads;
-    codeGeneratorState.options = options;
-    codeGeneratorState.errors = [];
-    if (generateBtn) generateBtn.disabled = true;
-    if (printBtn) printBtn.disabled = true;
-    setCodeStatus(getCodeMessage('codeGenerating', payloads.length), 'info');
-
-    try {
-        const errors = await renderCodeGrid(payloads, options);
-        codeGeneratorState.errors = errors;
-        codeGeneratorState.generated = errors.length === 0;
-        if (errors.length > 0) {
-            setCodeStatus(getCodeMessage('codeGeneratedWithErrors', payloads.length, errors.length), 'error');
-            showToast(getCodeMessage('codeGeneratedWithErrors', payloads.length, errors.length), 'error');
-        } else {
-            setCodeStatus(getCodeMessage('codeGenerated', payloads.length), 'success');
-            showToast(getCodeMessage('codeGenerated', payloads.length), 'success');
-        }
-        if (printBtn) printBtn.disabled = !codeGeneratorState.generated;
-    } catch (error) {
-        codeGeneratorState.payloads = [];
-        codeGeneratorState.options = null;
-        document.getElementById('codePreview').textContent = '';
-        setCodeStatus(error.message || getCodeMessage('codeGenerationFailed'), 'error');
-        showToast(error.message || getCodeMessage('codeGenerationFailed'), 'error');
-    } finally {
-        codeGeneratorState.generating = false;
-        if (generateBtn) generateBtn.disabled = false;
-    }
-}
-
-function clearCodeInput() {
-    const inputEl = document.getElementById('codeInput');
-    const previewEl = document.getElementById('codePreview');
-    if (inputEl) inputEl.value = '';
-    if (previewEl) previewEl.textContent = '';
-    codeGeneratorState = { payloads: [], options: null, generated: false, errors: [], generating: false };
-    const printBtn = document.getElementById('codePrintBtn');
-    if (printBtn) printBtn.disabled = true;
-    updateCodeInputStats();
-    setCodeStatus(getCodeMessage('codeEmptyState'));
-    showToast(getCodeMessage('codeCleared'), 'success');
-}
-
-function printCodes() {
-    if (!codeGeneratorState.generated || codeGeneratorState.errors.length > 0) {
-        setCodeStatus(getCodeMessage('codeNotReadyToPrint'), 'error');
-        showToast(getCodeMessage('codeNotReadyToPrint'), 'error');
-        return;
-    }
-    window.print();
-}
-
-function initCodeGenerator() {
-    const inputEl = document.getElementById('codeInput');
-    const removeEmptyEl = document.getElementById('codeRemoveEmpty');
-    const typeEl = document.getElementById('codeType');
-    const qrErrorGroup = document.getElementById('qrErrorGroup');
-    if (!inputEl) return;
-
-    const sync = () => {
-        updateCodeInputStats();
-        invalidateCodeGeneration();
-        if (qrErrorGroup) qrErrorGroup.style.display = typeEl?.value === 'qrcode' ? 'flex' : 'none';
-    };
-
-    inputEl.addEventListener('input', sync);
-    removeEmptyEl?.addEventListener('change', sync);
-    typeEl?.addEventListener('change', sync);
-    document.getElementById('qrErrorCorrection')?.addEventListener('change', sync);
-    ['gridColumns', 'gridRows', 'codeSize', 'labelSpacing'].forEach(id => {
-        document.getElementById(id)?.addEventListener('change', sync);
-    });
-    updateCodeInputStats();
-    if (qrErrorGroup) qrErrorGroup.style.display = typeEl?.value === 'qrcode' ? 'flex' : 'none';
-}
 
 // Keyboard shortcuts
 document.addEventListener('keydown', (e) => {
@@ -1369,13 +1027,25 @@ document.addEventListener('keydown', (e) => {
         const commentPage = document.getElementById('page-sql-comment');
         const csPage = document.getElementById('page-cs-column');
         const codePage = document.getElementById('page-code-generator');
+        const bulkUpdatePage = document.getElementById('page-bulk-update');
+        const sqlExportPage = document.getElementById('page-sql-export');
         if (commentPage && commentPage.style.display !== 'none') {
+            e.preventDefault();
             generateTableComments();
         } else if (csPage && csPage.style.display !== 'none') {
+            e.preventDefault();
             csAlignColumns();
         } else if (codePage && codePage.style.display !== 'none') {
+            e.preventDefault();
             generateCodes();
+        } else if (bulkUpdatePage && bulkUpdatePage.style.display !== 'none') {
+            e.preventDefault();
+            generateBulkUpdate();
+        } else if (sqlExportPage && sqlExportPage.style.display !== 'none') {
+            e.preventDefault();
+            exportSelectedSqlObjects();
         } else {
+            e.preventDefault();
             convertData();
         }
     }

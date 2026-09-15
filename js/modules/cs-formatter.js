@@ -13,11 +13,12 @@
  * ============================================================
  */
 
-'use strict';
+(function (global) {
+    'use strict';
 
-// ============================================================
+// ============================================
 // DISPLAY WIDTH  (wcwidth-style)
-// ============================================================
+// ============================================
 
 // Unicode combining marks, ZWJ/ZWNJ, variation selectors, and
 // emoji skin-tone modifiers occupy zero display cells.
@@ -756,3 +757,18 @@ function runCsFormatterTests() {
     }
     return failures.length === 0;
 }
+
+    // Export public API to global scope (preserving backward compatibility)
+    global.formatCSharpColumnAlignment = formatCSharpColumnAlignment;
+    global.csGetOptions = csGetOptions;
+    global.csAlignColumns = csAlignColumns;
+    global.clearCsInput = clearCsInput;
+    global.runCsFormatterTests = runCsFormatterTests;
+    global.CsFormatter = {
+        format: formatCSharpColumnAlignment,
+        getOptions: csGetOptions,
+        align: csAlignColumns,
+        clear: clearCsInput,
+        runTests: runCsFormatterTests
+    };
+})(typeof window !== 'undefined' ? window : globalThis);

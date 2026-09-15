@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SQL Data Formatter - Enterprise</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2349A078' stroke-width='2'><path d='M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4'></path></svg>">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="theme-enterprise">
     <div class="app-container">
@@ -35,12 +35,20 @@
 
         <!-- PAGE NAV -->
         <nav class="app-nav" aria-label="Main">
+            <div class="nav-glider" id="navGlider" aria-hidden="true">
+                <div class="glider-fluid-core"></div>
+                <div class="glider-glass-lens">
+                    <div class="glass-rim-caustic"></div>
+                    <div class="glass-specular-top"></div>
+                </div>
+            </div>
             <button type="button" class="nav-item active" data-page="formatter" onclick="switchPage('formatter')">Data Formatter</button>
+            <button type="button" class="nav-item" data-page="bulk-update" onclick="switchPage('bulk-update')" data-i18n="bulkUpdateNav">SQL Bulk Update</button>
             <button type="button" class="nav-item" data-page="cs-column" onclick="switchPage('cs-column')" data-i18n="navCsColumn">C# Column Align</button>
             <button type="button" class="nav-item" data-page="code-generator" onclick="switchPage('code-generator')" data-i18n="codeNavTitle">QR / Data Matrix</button>
             <button type="button" class="nav-item" data-page="sql-comment" onclick="switchPage('sql-comment')">Add Comment</button>
+            <button type="button" class="nav-item" data-page="sql-export" onclick="switchPage('sql-export')" data-i18n="sqlExportNav">SQL Server Export</button>
         </nav>
-
         <!-- PAGE: DATA FORMATTER -->
         <div id="page-formatter" class="page-content">
         <!-- MAIN LAYOUT -->
@@ -253,6 +261,85 @@
             </div>
         </section>
         </div><!-- /page-formatter -->
+
+        <!-- PAGE: BULK UPDATE -->
+        <div id="page-bulk-update" class="page-content bulk-update-page" style="display: none;">
+            <main class="bulk-update-main">
+                <div class="bulk-update-inputs">
+                    <section class="card bulk-update-card">
+                        <div class="card-header">
+                            <h2>
+                                <svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"></path></svg>
+                                <span data-i18n="bulkUpdateTemplateTitle">Update Template</span>
+                            </h2>
+                        </div>
+                        <div class="card-body">
+                            <label for="bulkUpdateTemplateInput" data-i18n="bulkUpdateTemplateLabel">UPDATE template</label>
+                            <textarea id="bulkUpdateTemplateInput" class="code-textarea bulk-update-template-input" data-i18n-placeholder="bulkUpdateTemplatePlaceholder" aria-describedby="bulkUpdateTemplateHelp bulkUpdateTemplateError" placeholder="UPDATE PP0041&#10;SET PACKAGING_LOT = {PACKAGING_LOT}&#10;WHERE LOT_NO = {LOT_NO}"></textarea>
+                            <p id="bulkUpdateTemplateHelp" class="bulk-update-help" data-i18n="bulkUpdateTemplateHelp">Use one SQL Server UPDATE with one SET placeholder and one WHERE equality placeholder.</p>
+                            <p id="bulkUpdateTemplateError" class="bulk-update-error" role="alert" hidden></p>
+                        </div>
+                    </section>
+
+                    <section class="card bulk-update-card">
+                        <div class="card-header">
+                            <h2>
+                                <svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"></path><path d="M4 9h16M9 4v16"></path></svg>
+                                <span data-i18n="bulkUpdateDataTitle">Data Input</span>
+                            </h2>
+                        </div>
+                        <div class="card-body">
+                            <label for="bulkUpdateRowsInput" data-i18n="bulkUpdateDataLabel">Rows from Excel</label>
+                            <textarea id="bulkUpdateRowsInput" class="code-textarea bulk-update-rows-input" data-i18n-placeholder="bulkUpdateRowsPlaceholder" aria-describedby="bulkUpdateRowsHelp bulkUpdateRowsStatus bulkUpdateRowsError" placeholder="LOT001&#9;PACK001&#10;LOT002&#9;PACK002"></textarea>
+                            <p id="bulkUpdateRowsHelp" class="bulk-update-help" data-i18n="bulkUpdateRowsHelp">Paste key first, then value. Tabs, commas, semicolons, or pipes are detected automatically.</p>
+                            <div id="bulkUpdateRowsStatus" class="code-status bulk-update-status" role="status" aria-live="polite"></div>
+                            <p id="bulkUpdateRowsError" class="bulk-update-error" role="alert" hidden></p>
+                            <div class="bulk-update-preview-wrap">
+                                <table id="bulkUpdatePreview" class="bulk-update-preview">
+                                    <caption class="sr-only" data-i18n="bulkUpdatePreviewCaption">Bulk update data preview</caption>
+                                    <thead></thead>
+                                    <tbody></tbody>
+                                </table>
+                                <p id="bulkUpdatePreviewEmpty" class="bulk-update-empty" data-i18n="bulkUpdatePreviewEmpty">Enter valid template and rows to preview the mapping.</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <section class="card bulk-update-card bulk-update-output-card">
+                    <div class="card-header">
+                        <h2>
+                            <svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M16 3h3a2 2 0 0 1 2 2v3"></path><path d="M8 21H5a2 2 0 0 1-2-2v-3"></path><path d="M16 21h3a2 2 0 0 0 2-2v-3"></path><path d="M8 8h8v8H8z"></path></svg>
+                            <span data-i18n="bulkUpdateOutputTitle">Generated SQL</span>
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        <fieldset class="bulk-update-mode">
+                            <legend data-i18n="bulkUpdateTransactionLabel">Transaction ending</legend>
+                            <label><input type="radio" name="bulkUpdateTransactionMode" value="rollback" checked><span data-i18n="bulkUpdateRollback">ROLLBACK (safe default)</span></label>
+                            <label><input type="radio" name="bulkUpdateTransactionMode" value="commit"><span data-i18n="bulkUpdateCommit">COMMIT</span></label>
+                            <p class="bulk-update-warning" data-i18n="bulkUpdateTransactionWarning">Generate defaults to ROLLBACK. Choose COMMIT only when you intend to save changes.</p>
+                        </fieldset>
+                        <label for="bulkUpdateSqlOutput" data-i18n="bulkUpdateSqlLabel">SQL script</label>
+                        <textarea id="bulkUpdateSqlOutput" class="code-textarea output-textarea bulk-update-sql-output" data-i18n-placeholder="bulkUpdateSqlPlaceholder" aria-describedby="bulkUpdateSqlHelp bulkUpdateOutputStatus" placeholder="Generated SQL will appear here..."></textarea>
+                        <p id="bulkUpdateSqlHelp" class="bulk-update-help" data-i18n="bulkUpdateSqlHelp">The generated script is editable. Format and copy the text currently shown.</p>
+                        <div id="bulkUpdateOutputStatus" class="code-status bulk-update-status" role="status" aria-live="polite"></div>
+                        <div class="controls-row bulk-update-actions">
+                            <button class="btn btn-primary btn-large" onclick="generateBulkUpdate()">
+                                <svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M3 12h18"></path><rect x="4" y="4" width="16" height="16" rx="2"></rect></svg>
+                                <span data-i18n="bulkUpdateGenerate">Generate SQL</span>
+                            </button>
+                            <button id="bulkUpdateCopyBtn" class="btn btn-success btn-large" onclick="copyBulkUpdateSql()" disabled>
+                                <span data-i18n="bulkUpdateCopy">Copy SQL</span>
+                            </button>
+                            <button id="bulkUpdateFormatBtn" class="btn btn-secondary btn-large" onclick="formatBulkUpdateSql()" disabled>
+                                <span data-i18n="bulkUpdateFormat">Format SQL</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div><!-- /page-bulk-update -->
 
         <!-- PAGE: ADD COMMENT -->
         <div id="page-sql-comment" class="page-content" style="display: none;">
@@ -501,6 +588,85 @@
             </main>
         </div><!-- /page-cs-column -->
 
+        <!-- PAGE: SQL SERVER EXPORT -->
+        <div id="page-sql-export" class="page-content sql-export-page" style="display: none;">
+            <main class="sql-export-main">
+                <section class="card">
+                    <div class="card-header">
+                        <h2 data-i18n="sqlExportConnectionTitle">Connection</h2>
+                        <button id="sqlExportTestBtn" type="button" class="btn btn-secondary btn-sm" data-i18n="sqlExportTest">Test connection</button>
+                    </div>
+                    <div class="card-body sql-export-connection">
+                        <form id="sqlExportSetupForm" class="sql-export-setup">
+                            <div class="control-group">
+                                <label for="sqlExportServer" data-i18n="sqlExportServer">Server / instance</label>
+                                <input id="sqlExportServer" class="control-input" required maxlength="256" autocomplete="off" data-i18n-placeholder="sqlExportServerPlaceholder" placeholder="SERVER\INSTANCE">
+                            </div>
+                            <div class="control-group">
+                                <label for="sqlExportDatabase" data-i18n="sqlExportDatabase">Database</label>
+                                <input id="sqlExportDatabase" class="control-input" required maxlength="128" autocomplete="off" data-i18n-placeholder="sqlExportDatabasePlaceholder" placeholder="Database name">
+                            </div>
+                            <div class="control-group">
+                                <label for="sqlExportUsername" data-i18n="sqlExportUsername">SQL user name</label>
+                                <input id="sqlExportUsername" class="control-input" required maxlength="128" autocomplete="username" data-i18n-placeholder="sqlExportUsernamePlaceholder" placeholder="SQL login">
+                            </div>
+                            <div class="control-group">
+                                <label for="sqlExportPassword" data-i18n="sqlExportPassword">Password</label>
+                                <input id="sqlExportPassword" class="control-input" type="password" required maxlength="256" autocomplete="current-password" data-i18n-placeholder="sqlExportPasswordPlaceholder" placeholder="SQL password">
+                            </div>
+                            <label class="control-checkbox sql-export-trust">
+                                <input id="sqlExportTrustCertificate" type="checkbox">
+                                <span class="control-indicator"></span>
+                                <span data-i18n="sqlExportTrustCertificate">Trust server certificate</span>
+                            </label>
+                            <button id="sqlExportSetupBtn" type="submit" class="btn btn-primary btn-sm" data-i18n="sqlExportSaveConnection">Save and connect</button>
+                        </form>
+                        <div class="sql-export-status">
+                            <span id="sqlExportStatusDot" class="sql-export-status-dot" aria-hidden="true"></span>
+                            <p id="sqlExportStatus" role="status" aria-live="polite" data-i18n="sqlExportChecking">Checking connection...</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <div class="card-header">
+                        <h2 data-i18n="sqlExportObjectsTitle">Database objects</h2>
+                        <span id="sqlExportSelectionCount" class="sql-export-count" aria-live="polite"></span>
+                    </div>
+                    <div class="card-body">
+                        <label class="sr-only" for="sqlExportSearch" data-i18n="sqlExportSearchLabel">Search database objects</label>
+                        <input id="sqlExportSearch" class="control-input sql-export-search" type="search" data-i18n-placeholder="sqlExportSearchPlaceholder" placeholder="Search schema or name...">
+                        <div class="sql-export-toolbar">
+                            <button id="sqlExportRefreshBtn" type="button" class="btn btn-secondary btn-sm" data-i18n="sqlExportRefresh">Refresh</button>
+                            <button id="sqlExportSelectVisibleBtn" type="button" class="btn btn-secondary btn-sm" data-i18n="sqlExportSelectVisible">Select visible</button>
+                            <button id="sqlExportClearBtn" type="button" class="btn btn-secondary btn-sm" data-i18n="sqlExportClearSelection">Clear selection</button>
+                        </div>
+                        <div class="sql-export-lists">
+                            <section aria-labelledby="sqlExportProceduresTitle">
+                                <h3 id="sqlExportProceduresTitle" data-i18n="sqlExportProcedures">Stored procedures</h3>
+                                <div id="sqlExportProceduresList" class="sql-export-object-list"></div>
+                            </section>
+                            <section aria-labelledby="sqlExportTablesTitle">
+                                <h3 id="sqlExportTablesTitle" data-i18n="sqlExportTables">Tables</h3>
+                                <div id="sqlExportTablesList" class="sql-export-object-list"></div>
+                            </section>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <div class="card-header">
+                        <h2 data-i18n="sqlExportDownloadTitle">Export scripts</h2>
+                    </div>
+                    <div class="card-body">
+                        <p class="comment-help" data-i18n="sqlExportDownloadHelp">Choose one or more objects. Supported browsers can save every script directly to a selected folder.</p>
+                        <button id="sqlExportDownloadBtn" type="button" class="btn btn-primary btn-large" disabled data-i18n="sqlExportDownload">Export selected</button>
+                        <div id="sqlExportDownloads" class="sql-export-downloads" aria-live="polite"></div>
+                    </div>
+                </section>
+            </main>
+        </div><!-- /page-sql-export -->
+
         <footer class="app-footer">
             <p>&copy; 2026 SQL Data Formatter. Enterprise Precision Edition.</p>
         </footer>
@@ -528,8 +694,12 @@
     </div>
 
     <script src="vendor/bwip-js-min.js"></script>
-    <script src="i18n.js"></script>
-    <script src="script.js"></script>
-    <script src="cs-formatter.js"></script>
+    <script src="js/core/i18n.js"></script>
+    <script src="js/core/script.js"></script>
+    <script src="js/modules/sql-comment.js"></script>
+    <script src="js/modules/code-generator.js"></script>
+    <script src="js/modules/bulk-update.js"></script>
+    <script src="js/modules/cs-formatter.js"></script>
+    <script src="js/modules/sql-export.js"></script>
 </body>
 </html>

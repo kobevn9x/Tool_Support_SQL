@@ -367,21 +367,26 @@ body.theme-enterprise.dark.orange {
     gap: 16px;
 }
 
-/* Page navigation tabs */
+/* Page navigation tabs container */
 .app-nav {
+    position: relative;
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 8px;
-    padding: 4px;
+    padding: 6px;
     background: var(--surface-card);
     backdrop-filter: blur(var(--glass-blur));
     -webkit-backdrop-filter: blur(var(--glass-blur));
     border: 1px solid var(--border-light);
-    border-radius: var(--radius-md);
+    border-radius: 999px;
     box-shadow: var(--shadow-sm);
+    isolation: isolate;
 }
 
 .app-nav .nav-item {
+    position: relative;
+    z-index: 2;
     appearance: none;
     border: 1px solid transparent;
     background: transparent;
@@ -389,10 +394,15 @@ body.theme-enterprise.dark.orange {
     font-family: var(--font-ui);
     font-size: 0.9rem;
     font-weight: 600;
-    padding: 10px 18px;
-    border-radius: var(--radius-sm);
+    padding: 10px 22px;
+    border-radius: 999px;
     cursor: pointer;
-    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: color 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+                background 0.25s ease,
+                border-color 0.25s ease,
+                transform 0.12s ease-out;
 }
 
 .app-nav .nav-item:hover {
@@ -401,21 +411,314 @@ body.theme-enterprise.dark.orange {
     border-color: var(--border-light);
 }
 
+.app-nav .nav-item:active {
+    transform: scale(0.96);
+}
+
 .app-nav .nav-item.active {
     color: #fff;
+    font-weight: 600;
     background: var(--gradient-brand);
     border-color: transparent;
     box-shadow: 0 0 0 1px var(--theme-glow-soft), 0 0 18px var(--theme-glow-medium);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
 }
 
-/* Add Comment tab — hover accent (whole-page orange palette applies when active) */
+/* When liquid glass glider is active, buttons become transparent windows */
+.app-nav.has-glider .nav-item.active {
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+
+.app-nav.has-glider .nav-item:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: transparent;
+}
+body:not(.dark) .app-nav.has-glider .nav-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+/* Add Comment tab — hover accent */
 .app-nav .nav-item[data-page="sql-comment"]:hover {
     color: #EA580C;
 }
 
-.app-nav .nav-item[data-page="sql-comment"].active:hover {
-    color: #fff;
-    background: linear-gradient(135deg, #FBBF24 0%, #EA580C 100%);
+/* ============================================================
+ * APPLE LIQUID GLASS GLIDER (PHYSICAL OPTICAL REFRACTION)
+ * Dual-layer: Fluid Color Core + 3D Liquid Glass Lens
+ * ============================================================ */
+
+.nav-glider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0;
+    border-radius: 999px;
+    will-change: transform, width, height;
+    /* Apple Spring Timing Curve for primary capsule */
+    transition: transform 0.44s cubic-bezier(0.18, 0.92, 0.25, 1.22),
+                width 0.38s cubic-bezier(0.18, 0.92, 0.25, 1),
+                height 0.35s ease;
+    transform-origin: center center;
+}
+
+/* ────────────────────────────────────────────────────────────
+ * 1. FLUID COLOR CORE (Clean Deep Emerald — No Fuzzy Glow)
+ * ──────────────────────────────────────────────────────────── */
+.nav-glider .glider-fluid-core {
+    position: absolute;
+    inset: 5px 12px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #15803D 0%, #0F766E 100%);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+    will-change: transform;
+    transform-origin: center center;
+    transition: background 0.4s ease, box-shadow 0.4s ease, transform 0.15s ease-out;
+}
+
+/* Orange Mode for Add Comment tab */
+body.orange .nav-glider .glider-fluid-core {
+    background: linear-gradient(135deg, #C2410C 0%, #9A3412 100%);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+}
+
+body.dark .nav-glider .glider-fluid-core {
+    background: linear-gradient(135deg, #10B981 0%, #047857 100%);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+}
+
+body.dark.orange .nav-glider .glider-fluid-core {
+    background: linear-gradient(135deg, #EA580C 0%, #9A3412 100%);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+}
+
+/* ────────────────────────────────────────────────────────────
+ * 2. THICK LIQUID GLASS LENS (Pure Physical Glass Refraction — Zero Glow)
+ * ──────────────────────────────────────────────────────────── */
+.nav-glider .glider-glass-lens {
+    position: absolute;
+    inset: -1px -2px;
+    border-radius: inherit;
+    /* Ultra-clear optical crystal interior */
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(8px) saturate(125%) contrast(1.1);
+    -webkit-backdrop-filter: blur(8px) saturate(125%) contrast(1.1);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+
+    /* Pure physical optics: ambient occlusion + razor specular bevel */
+    box-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.1),                        /* Ambient contact shadow */
+        0 1px 2px rgba(0, 0, 0, 0.06),                         /* Crisp ground contact */
+        inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.95),        /* Razor-sharp top specular rim */
+        inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.22);              /* Internal refraction occlusion */
+
+    will-change: transform;
+    transform-origin: center center;
+    overflow: hidden;
+    transition: box-shadow 0.4s ease, border-color 0.4s ease, transform 0.15s ease-out;
+}
+
+body.orange .nav-glider .glider-glass-lens {
+    border-color: rgba(255, 255, 255, 0.55);
+    box-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.1),
+        0 1px 2px rgba(0, 0, 0, 0.06),
+        inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.95),
+        inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.22);
+}
+
+body.dark .nav-glider .glider-glass-lens {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.35);
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.45),
+        0 1px 3px rgba(0, 0, 0, 0.3),
+        inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.9),
+        inset 0 -2px 3px 0 rgba(0, 0, 0, 0.4);
+}
+
+body.dark.orange .nav-glider .glider-glass-lens {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.35);
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.45),
+        0 1px 3px rgba(0, 0, 0, 0.3),
+        inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.9),
+        inset 0 -2px 3px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* Glass Specular Top Glare (thin optical crescent) */
+.glass-specular-top {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(ellipse 90% 40% at 50% 0%, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 65%);
+    pointer-events: none;
+}
+
+/* Glass Caustic Beam */
+.glass-rim-caustic {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    border-radius: 50%;
+    background: linear-gradient(
+        115deg,
+        transparent 35%,
+        rgba(255, 255, 255, 0.08) 45%,
+        rgba(255, 255, 255, 0.6) 50%,
+        rgba(255, 255, 255, 0.08) 55%,
+        transparent 65%
+    );
+    opacity: 0;
+    pointer-events: none;
+    transform: rotate(20deg);
+}
+
+/* Tactile press down feedback */
+.nav-glider.is-pressing .glider-glass-lens {
+    transform: scale(0.94);
+}
+.nav-glider.is-pressing .glider-fluid-core {
+    transform: scale(0.97);
+}
+
+/* ============================================================
+ * LIQUID FLUID SEPARATION & DRAG KEYFRAME ANIMATIONS
+ * Glass lens leads ahead, fluid color core trails & snaps
+ * ============================================================ */
+
+/* Single-tab Jump */
+.nav-glider.gliding-right.gliding-jump-1 .glider-glass-lens {
+    animation: lensLeadRight1 0.44s cubic-bezier(0.18, 0.95, 0.25, 1);
+}
+.nav-glider.gliding-right.gliding-jump-1 .glider-fluid-core {
+    animation: fluidTrailRight1 0.48s cubic-bezier(0.12, 0.85, 0.3, 1.18);
+}
+.nav-glider.gliding-left.gliding-jump-1 .glider-glass-lens {
+    animation: lensLeadLeft1 0.44s cubic-bezier(0.18, 0.95, 0.25, 1);
+}
+.nav-glider.gliding-left.gliding-jump-1 .glider-fluid-core {
+    animation: fluidTrailLeft1 0.48s cubic-bezier(0.12, 0.85, 0.3, 1.18);
+}
+
+/* Multi-tab Jump (e.g. Func 1 -> Func 3): Pronounced Liquid Stretch & Separation */
+.nav-glider.gliding-right.gliding-jump-multi .glider-glass-lens {
+    animation: lensLeadRightMulti 0.48s cubic-bezier(0.18, 0.95, 0.25, 1);
+}
+.nav-glider.gliding-right.gliding-jump-multi .glider-fluid-core {
+    animation: fluidTrailRightMulti 0.52s cubic-bezier(0.12, 0.85, 0.3, 1.18);
+}
+.nav-glider.gliding-left.gliding-jump-multi .glider-glass-lens {
+    animation: lensLeadLeftMulti 0.48s cubic-bezier(0.18, 0.95, 0.25, 1);
+}
+.nav-glider.gliding-left.gliding-jump-multi .glider-fluid-core {
+    animation: fluidTrailLeftMulti 0.52s cubic-bezier(0.12, 0.85, 0.3, 1.18);
+}
+
+/* Caustic Light Sweep */
+.nav-glider.gliding-right .glass-rim-caustic {
+    animation: causticSweepRight 0.46s cubic-bezier(0.2, 1, 0.3, 1);
+}
+.nav-glider.gliding-left .glass-rim-caustic {
+    animation: causticSweepLeft 0.46s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+/* Single-tab Keyframes */
+@keyframes lensLeadRight1 {
+    0% { transform: translateX(0) scale(1, 1); }
+    35% { transform: translateX(14px) scaleX(1.12) scaleY(0.94); }
+    70% { transform: translateX(-3px) scaleX(0.97) scaleY(1.02); }
+    88% { transform: translateX(1px) scale(1, 1); }
+    100% { transform: translateX(0) scale(1, 1); }
+}
+
+@keyframes fluidTrailRight1 {
+    0% { transform: translateX(0) scale(1, 1); }
+    35% { transform: translateX(-16px) scaleX(1.18) scaleY(0.9); }
+    70% { transform: translateX(4px) scaleX(0.96) scaleY(1.03); }
+    88% { transform: translateX(-1px) scale(1, 1); }
+    100% { transform: translateX(0) scale(1, 1); }
+}
+
+@keyframes lensLeadLeft1 {
+    0% { transform: translateX(0) scale(1, 1); }
+    35% { transform: translateX(-14px) scaleX(1.12) scaleY(0.94); }
+    70% { transform: translateX(3px) scaleX(0.97) scaleY(1.02); }
+    88% { transform: translateX(-1px) scale(1, 1); }
+    100% { transform: translateX(0) scale(1, 1); }
+}
+
+@keyframes fluidTrailLeft1 {
+    0% { transform: translateX(0) scale(1, 1); }
+    35% { transform: translateX(16px) scaleX(1.18) scaleY(0.9); }
+    70% { transform: translateX(-4px) scaleX(0.96) scaleY(1.03); }
+    88% { transform: translateX(1px) scale(1, 1); }
+    100% { transform: translateX(0) scale(1, 1); }
+}
+
+/* Multi-tab Keyframes (Extensive Fluid Separation as in reference image) */
+@keyframes lensLeadRightMulti {
+    0% { transform: translateX(0) scale(1, 1); }
+    35% { transform: translateX(28px) scaleX(1.22) scaleY(0.88); }
+    68% { transform: translateX(-5px) scaleX(0.93) scaleY(1.05); }
+    86% { transform: translateX(2px) scaleX(1.02) scaleY(0.99); }
+    100% { transform: translateX(0) scale(1, 1); }
+}
+
+@keyframes fluidTrailRightMulti {
+    0% { transform: translateX(0) scale(1, 1); }
+    35% { transform: translateX(-34px) scaleX(1.3) scaleY(0.84); }
+    68% { transform: translateX(8px) scaleX(0.92) scaleY(1.06); }
+    86% { transform: translateX(-3px) scaleX(1.02) scaleY(0.99); }
+    100% { transform: translateX(0) scale(1, 1); }
+}
+
+@keyframes lensLeadLeftMulti {
+    0% { transform: translateX(0) scale(1, 1); }
+    35% { transform: translateX(-28px) scaleX(1.22) scaleY(0.88); }
+    68% { transform: translateX(5px) scaleX(0.93) scaleY(1.05); }
+    86% { transform: translateX(-2px) scaleX(1.02) scaleY(0.99); }
+    100% { transform: translateX(0) scale(1, 1); }
+}
+
+@keyframes fluidTrailLeftMulti {
+    0% { transform: translateX(0) scale(1, 1); }
+    35% { transform: translateX(34px) scaleX(1.3) scaleY(0.84); }
+    68% { transform: translateX(-8px) scaleX(0.92) scaleY(1.06); }
+    86% { transform: translateX(3px) scaleX(1.02) scaleY(0.99); }
+    100% { transform: translateX(0) scale(1, 1); }
+}
+
+@keyframes causticSweepRight {
+    0% { transform: translateX(-80%) rotate(20deg); opacity: 0; }
+    30% { opacity: 0.95; }
+    70% { opacity: 0.85; }
+    100% { transform: translateX(85%) rotate(20deg); opacity: 0; }
+}
+
+@keyframes causticSweepLeft {
+    0% { transform: translateX(85%) rotate(20deg); opacity: 0; }
+    30% { opacity: 0.95; }
+    70% { opacity: 0.85; }
+    100% { transform: translateX(-80%) rotate(20deg); opacity: 0; }
+}
+
+/* Accessibility: Respect Reduced Motion Preference */
+@media (prefers-reduced-motion: reduce) {
+    .nav-glider {
+        transition: opacity 0.2s ease !important;
+    }
+    .nav-glider .glider-glass-lens,
+    .nav-glider .glider-fluid-core,
+    .glass-rim-caustic {
+        animation: none !important;
+    }
 }
 
 .page-content {
@@ -1228,6 +1531,25 @@ body.theme-enterprise.orange .btn-success:hover:not(:disabled) {
         gap: 8px;
     }
 
+    .app-header {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .header-actions {
+        flex-wrap: wrap;
+        min-width: 0;
+        gap: 8px;
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .lang-switcher,
+    #langSelect {
+        max-width: 100%;
+    }
+
     .controls-row {
         flex-direction: column;
     }
@@ -1506,5 +1828,325 @@ body.theme-enterprise.orange .btn-success:hover:not(:disabled) {
 
     .code-label-error-message {
         color: #b91c1c !important;
+    }
+}
+.bulk-update-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    gap: 24px;
+    align-items: start;
+    animation: fadeIn 0.6s ease-out 0.2s both;
+}
+
+.bulk-update-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-width: 0;
+}
+
+.bulk-update-card {
+    min-width: 0;
+}
+
+.bulk-update-card label,
+.bulk-update-mode legend {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.bulk-update-help {
+    margin: 10px 0 0;
+    color: var(--text-secondary);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+}
+
+.bulk-update-template-input,
+.bulk-update-rows-input {
+    min-height: 168px;
+}
+
+.bulk-update-sql-output {
+    min-height: 560px;
+}
+
+.bulk-update-status {
+    min-height: 1.3em;
+}
+
+.bulk-update-error {
+    margin: 8px 0 0;
+    color: var(--status-error);
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+.bulk-update-error[hidden] {
+    display: none;
+}
+
+.bulk-update-preview-wrap {
+    max-height: 280px;
+    margin-top: 16px;
+    overflow: auto;
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-sm);
+}
+
+.bulk-update-preview {
+    width: 100%;
+    min-width: 320px;
+    border-collapse: collapse;
+    font-family: var(--font-code);
+    font-size: 0.8125rem;
+}
+
+.bulk-update-preview th,
+.bulk-update-preview td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border-light);
+    text-align: left;
+    white-space: pre-wrap;
+    vertical-align: top;
+}
+
+.bulk-update-preview th {
+    position: sticky;
+    top: 0;
+    color: var(--text-primary);
+    background: var(--surface-light);
+    font-weight: 700;
+}
+
+.bulk-update-preview td {
+    color: var(--text-secondary);
+}
+
+.bulk-update-preview tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.bulk-update-empty {
+    margin: 0;
+    padding: 20px;
+    color: var(--text-tertiary);
+    font-size: 0.8125rem;
+    text-align: center;
+}
+
+.bulk-update-mode {
+    margin: 0 0 20px;
+    padding: 0;
+    border: 0;
+}
+
+.bulk-update-mode label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 20px 8px 0;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.bulk-update-mode input {
+    accent-color: var(--brand-primary);
+}
+
+.bulk-update-warning {
+    margin: 4px 0 0;
+    color: var(--status-warning);
+    font-size: 0.8125rem;
+}
+
+.bulk-update-actions .btn {
+    flex: 1 1 150px;
+}
+
+.bulk-update-page .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@media (max-width: 992px) {
+    .bulk-update-main {
+        grid-template-columns: 1fr;
+    }
+
+    .bulk-update-sql-output {
+        min-height: 400px;
+    }
+}
+
+@media (max-width: 768px) {
+    .bulk-update-actions {
+        flex-direction: column;
+    }
+
+    .bulk-update-actions .btn {
+        width: 100%;
+    }
+}
+
+/* SQL Server Export */
+.sql-export-main {
+    display: grid;
+    gap: 24px;
+    animation: fadeIn 0.6s ease-out 0.2s both;
+}
+
+.sql-export-page .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.sql-export-connection {
+    display: grid;
+    gap: 16px;
+}
+
+.sql-export-setup {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.sql-export-setup .control-input {
+    width: 100%;
+}
+
+.sql-export-setup .sql-export-trust,
+.sql-export-setup .btn {
+    align-self: end;
+}
+
+.sql-export-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sql-export-status p {
+    margin: 0;
+}
+
+.sql-export-status-dot {
+    width: 10px;
+    height: 10px;
+    flex: 0 0 10px;
+    border-radius: 50%;
+    background: var(--status-warning);
+}
+
+.sql-export-status-dot.connected {
+    background: var(--status-success);
+}
+
+.sql-export-status-dot.error {
+    background: var(--status-error);
+}
+
+.sql-export-count {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.sql-export-search {
+    width: 100%;
+}
+
+.sql-export-toolbar,
+.sql-export-downloads {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.sql-export-lists {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.sql-export-lists h3 {
+    margin: 0 0 8px;
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+}
+
+.sql-export-object-list {
+    max-height: 320px;
+    overflow: auto;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    background: var(--output-textarea-bg);
+}
+
+.sql-export-object {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border-light);
+    font-family: var(--font-code);
+    font-size: 0.8125rem;
+    cursor: pointer;
+}
+
+.sql-export-object:last-child {
+    border-bottom: 0;
+}
+
+.sql-export-object:hover {
+    background: var(--surface-light);
+}
+
+.sql-export-object input {
+    accent-color: var(--brand-primary);
+}
+
+.sql-export-empty {
+    padding: 18px;
+    color: var(--text-tertiary);
+    text-align: center;
+}
+
+.sql-export-downloads .comment-help {
+    flex-basis: 100%;
+    margin-bottom: 0;
+}
+
+.sql-export-download-link {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 768px) {
+    .sql-export-setup {
+        grid-template-columns: 1fr;
+    }
+
+    .sql-export-lists {
+        grid-template-columns: 1fr;
     }
 }

@@ -14,10 +14,10 @@ ToolSQL currently has 2 delivery modes:
 Most feature or UI changes happen in:
 
 - `sql-formatter.html`
-- `script.js`
-- `style.css`
-- `i18n.js`
-- `cs-formatter.js`
+- `css/style.css`
+- `js/core/script.js`
+- `js/core/i18n.js`
+- `js/modules/` (`bulk-update.js`, `cs-formatter.js`, `sql-comment.js`, `code-generator.js`)
 - `vendor/`
 
 If you add a new file that the portable app needs at runtime, you must also add it to `APP_FILES` in `portable/build.mjs`.
@@ -94,10 +94,13 @@ then update this array in `portable/build.mjs`:
 ```js
 const APP_FILES = [
   'sql-formatter.html',
-  'style.css',
-  'script.js',
-  'i18n.js',
-  'cs-formatter.js',
+  'css/style.css',
+  'js/core/script.js',
+  'js/core/i18n.js',
+  'js/modules/bulk-update.js',
+  'js/modules/cs-formatter.js',
+  'js/modules/sql-comment.js',
+  'js/modules/code-generator.js',
   'vendor/bwip-js-min.js',
   'vendor/LICENSE.bwip-js.txt',
 ];
