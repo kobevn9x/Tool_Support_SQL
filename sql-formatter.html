@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SQL Data Formatter - Enterprise</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2349A078' stroke-width='2'><path d='M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4'></path></svg>">
+<<<<<<< HEAD
     <link rel="stylesheet" href="css/style.css">
+=======
+    <link rel="stylesheet" href="style.css">
+>>>>>>> e512952bdbcf8b79d211fc413112283550ca90cb
 </head>
 <body class="theme-enterprise">
     <div class="app-container">
@@ -35,6 +39,7 @@
 
         <!-- PAGE NAV -->
         <nav class="app-nav" aria-label="Main">
+<<<<<<< HEAD
             <div class="nav-glider" id="navGlider" aria-hidden="true">
                 <div class="glider-fluid-core"></div>
                 <div class="glider-glass-lens">
@@ -49,6 +54,13 @@
             <button type="button" class="nav-item" data-page="sql-comment" onclick="switchPage('sql-comment')">Add Comment</button>
             <button type="button" class="nav-item" data-page="sql-export" onclick="switchPage('sql-export')" data-i18n="sqlExportNav">SQL Server Export</button>
         </nav>
+=======
+            <button type="button" class="nav-item active" data-page="formatter" onclick="switchPage('formatter')">Data Formatter</button>
+            <button type="button" class="nav-item" data-page="sql-comment" onclick="switchPage('sql-comment')">Add Comment</button>
+            <button type="button" class="nav-item" data-page="cs-column" onclick="switchPage('cs-column')" data-i18n="navCsColumn">C# Column Align</button>
+        </nav>
+
+>>>>>>> e512952bdbcf8b79d211fc413112283550ca90cb
         <!-- PAGE: DATA FORMATTER -->
         <div id="page-formatter" class="page-content">
         <!-- MAIN LAYOUT -->
@@ -136,7 +148,11 @@
                     <div class="card-body">
                         <div class="options-list">
                             <label class="control-checkbox">
+<<<<<<< HEAD
                                 <input type="checkbox" id="autoTheme">
+=======
+                                <input type="checkbox" id="autoTheme" checked>
+>>>>>>> e512952bdbcf8b79d211fc413112283550ca90cb
                                 <span class="control-indicator"></span>
                                 <span data-i18n="optAutoTheme">Auto Theme (18h - 7h)</span>
                             </label>
@@ -262,6 +278,7 @@
         </section>
         </div><!-- /page-formatter -->
 
+<<<<<<< HEAD
         <!-- PAGE: BULK UPDATE -->
         <div id="page-bulk-update" class="page-content bulk-update-page" style="display: none;">
             <main class="bulk-update-main">
@@ -341,6 +358,8 @@
             </main>
         </div><!-- /page-bulk-update -->
 
+=======
+>>>>>>> e512952bdbcf8b79d211fc413112283550ca90cb
         <!-- PAGE: ADD COMMENT -->
         <div id="page-sql-comment" class="page-content" style="display: none;">
             <main class="app-main comment-main">
@@ -406,6 +425,7 @@
             </main>
         </div><!-- /page-sql-comment -->
 
+<<<<<<< HEAD
         <div id="page-code-generator" class="page-content" style="display: none;">
             <main class="app-main code-generator-main">
                 <div class="panel-left code-generator-panel">
@@ -510,6 +530,8 @@
             </main>
         </div>
 
+=======
+>>>>>>> e512952bdbcf8b79d211fc413112283550ca90cb
         <!-- PAGE: C# COLUMN ALIGN -->
         <div id="page-cs-column" class="page-content" style="display: none;">
             <main class="app-main csfmt-main">
@@ -588,6 +610,7 @@
             </main>
         </div><!-- /page-cs-column -->
 
+<<<<<<< HEAD
         <!-- PAGE: SQL SERVER EXPORT -->
         <div id="page-sql-export" class="page-content sql-export-page" style="display: none;">
             <main class="sql-export-main">
@@ -682,6 +705,8 @@
             </main>
         </div><!-- /page-sql-export -->
 
+=======
+>>>>>>> e512952bdbcf8b79d211fc413112283550ca90cb
         <footer class="app-footer">
             <p>&copy; 2026 SQL Data Formatter. Enterprise Precision Edition.</p>
         </footer>
@@ -708,6 +733,7 @@
         </div>
     </div>
 
+<<<<<<< HEAD
     <!-- SQL EXPORT PROGRESS MODAL -->
     <div class="confirm-overlay" id="sqlExportProgressOverlay" style="display: none;">
         <div class="confirm-modal card">
@@ -740,5 +766,10 @@
     <script src="js/modules/cs-formatter.js"></script>
     <script src="js/modules/sql-server-sidecar.js"></script>
     <script src="js/modules/sql-export.js"></script>
+=======
+    <script src="i18n.js"></script>
+    <script src="script.js"></script>
+    <script src="cs-formatter.js"></script>
+>>>>>>> e512952bdbcf8b79d211fc413112283550ca90cb
 </body>
 </html>
