@@ -1,71 +1,69 @@
-/* GREEN-TEAL GRADIENT SaaS DESIGN
- * Tone: Fresh, modern, professional SaaS
- * Palette: #dce1de · #9cc5a1 · #49a078 · #216869 · #1f2421
+/* MODERN DEVELOPER TOOL ARCHITECTURE
+ * Palette: Dark Obsidian (#090D14) · Solid Card (#111827) · Cyber Mint (#10B981)
+ * High Contrast WCAG AAA Legibility
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap');
-
 :root {
-    /* Brand Colors — Green-Teal System */
-    --brand-primary: #49A078;      /* Medium green */
-    --brand-secondary: #216869;    /* Teal */
-    --brand-accent: #9CC5A1;       /* Sage green */
-    --brand-bg: #dce1de;           /* Light gray-green tint */
-    --brand-text: #1f2421;         /* Deep green-black */
+    /* Brand Colors — High Contrast Emerald */
+    --brand-primary: #059669;
+    --brand-secondary: #047857;
+    --brand-accent: #10B981;
+    --brand-bg: #F8FAFC;
+    --brand-text: #0F172A;
 
-    /* Gradients (no solid fills) */
-    --gradient-brand: linear-gradient(135deg, #49A078 0%, #216869 100%);
-    --gradient-brand-hover: linear-gradient(135deg, #9CC5A1 0%, #49A078 100%);
-    --gradient-success: linear-gradient(135deg, #22C55E 0%, #16A34A 100%);
-    --gradient-surface: linear-gradient(135deg, rgba(220,225,222,0.8) 0%, rgba(156,197,161,0.3) 100%);
-    --gradient-card-border: linear-gradient(135deg, #9CC5A1 0%, #49A078 50%, #9CC5A1 100%);
+    /* Gradients */
+    --gradient-brand: linear-gradient(135deg, #059669 0%, #047857 100%);
+    --gradient-brand-hover: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    --gradient-success: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    --gradient-surface: #F1F5F9;
+    --gradient-card-border: #E2E8F0;
 
     /* Semantic Colors */
-    --status-success: #22C55E;
+    --status-success: #10B981;
     --status-error: #EF4444;
     --status-warning: #F59E0B;
-    --status-info: #49A078;
+    --status-info: #059669;
 
-    /* Neutrals */
-    --surface-bg: #f4f4f8;
-    --surface-card: rgba(244, 244, 248, 0.65);
-    --surface-light: rgba(220, 225, 222, 0.5);
-    --border-light: rgba(156, 197, 161, 0.35);
-    --border-medium: rgba(73, 160, 120, 0.25);
-    --text-primary: #1f2421;
-    --text-secondary: #4a5e50;
-    --text-tertiary: #7a8f82;
+    /* Neutrals — Crisp High Contrast */
+    --surface-bg: #F8FAFC;
+    --surface-card: #FFFFFF;
+    --surface-light: #F1F5F9;
+    --border-light: #E2E8F0;
+    --border-medium: #CBD5E1;
+    --text-primary: #0F172A;
+    --text-secondary: #475569;
+    --text-tertiary: #64748B;
 
     /* Shadows & Radii */
-    --shadow-sm: 0 1px 3px rgba(33, 104, 105, 0.06);
-    --shadow-md: 0 4px 16px rgba(33, 104, 105, 0.1);
-    --shadow-hover: 0 8px 30px rgba(33, 104, 105, 0.15);
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+    --shadow-md: 0 4px 20px -2px rgba(0, 0, 0, 0.06);
+    --shadow-hover: 0 8px 30px rgba(5, 150, 105, 0.12);
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
 
-    /* Typography */
-    --font-ui: 'Open Sans', system-ui, -apple-system, sans-serif;
-    --font-heading: 'Poppins', system-ui, -apple-system, sans-serif;
-    --font-code: 'Consolas', 'Courier New', monospace;
+    /* Typography — Native System Stack */
+    --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-heading: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-code: Consolas, "Cascadia Code", "Fira Code", monospace;
     --font-mono: var(--font-code);
 
-    /* Gradient background & surface helpers */
-    --gradient-start: #f4f4f8;
-    --gradient-end: #dce1de;
-    --textarea-focus-bg: rgba(244, 244, 248, 0.9);
-    --output-textarea-bg: rgba(220, 225, 222, 0.4);
-    --output-textarea-border: rgba(73, 160, 120, 0.2);
-    --select-bg: rgba(244, 244, 248, 0.8);
+    /* Elements */
+    --gradient-start: #F8FAFC;
+    --gradient-end: #F1F5F9;
+    --textarea-focus-bg: #FFFFFF;
+    --output-textarea-bg: #F8FAFC;
+    --output-textarea-border: #CBD5E1;
+    --select-bg: #FFFFFF;
     --btn-danger-hover-bg: rgba(239, 68, 68, 0.08);
-    --btn-secondary-hover-border: rgba(73, 160, 120, 0.35);
-    --btn-secondary-hover-bg: rgba(220, 225, 222, 0.6);
-    --theme-glow-soft: rgba(73, 160, 120, 0.25);
-    --theme-glow-medium: rgba(73, 160, 120, 0.3);
-    --theme-glow-strong: rgba(73, 160, 120, 0.4);
-    --theme-glow-hover: rgba(73, 160, 120, 0.22);
-    --theme-glow-border: rgba(73, 160, 120, 0.45);
-    --glass-blur: 12px;
+    --btn-secondary-hover-border: #94A3B8;
+    --btn-secondary-hover-bg: #E2E8F0;
+    --theme-glow-soft: rgba(5, 150, 105, 0.15);
+    --theme-glow-medium: rgba(5, 150, 105, 0.25);
+    --theme-glow-strong: rgba(5, 150, 105, 0.35);
+    --theme-glow-hover: rgba(5, 150, 105, 0.12);
+    --theme-glow-border: rgba(5, 150, 105, 0.4);
+    --glass-blur: 0px;
 }
 
 /* Base Styles */
@@ -80,89 +78,49 @@ body.theme-enterprise {
     color: var(--text-primary);
     line-height: 1.6;
     min-height: 100vh;
-    transition: background 0.4s ease, color 0.3s ease;
-    /* Dot grid background — connected squares pattern */
+    transition: background 0.3s ease, color 0.2s ease;
     background-color: var(--gradient-start);
-    background-image:
-        /* Connecting lines — horizontal */
-        repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 47px,
-            rgba(73, 160, 120, 0.07) 47px,
-            rgba(73, 160, 120, 0.07) 48px
-        ),
-        /* Connecting lines — vertical */
-        repeating-linear-gradient(
-            90deg,
-            transparent,
-            transparent 47px,
-            rgba(73, 160, 120, 0.07) 47px,
-            rgba(73, 160, 120, 0.07) 48px
-        ),
-        /* Dot pattern at intersections */
-        radial-gradient(circle, rgba(73, 160, 120, 0.18) 1.5px, transparent 1.5px);
-    background-size: 48px 48px;
-    background-position: center center;
+    background-image: radial-gradient(1200px circle at 50% -120px, rgba(5, 150, 105, 0.04), transparent 70%);
 }
 
-/* ─── Orange palette — active while on the Add Comment tab ─── */
+/* ─── Orange palette — active while on the Add Comment tab (Light) ─── */
 body.theme-enterprise.orange {
-    /* Brand Colors — Orange system */
-    --brand-primary: #F97316;      /* Orange-500 */
-    --brand-secondary: #C2410C;    /* Orange-700 */
-    --brand-accent: #FDBA74;       /* Orange-300 */
-    --brand-bg: #FDE7CB;           /* Light orange tint */
-    --brand-text: #431407;         /* Deep orange-black */
+    --brand-primary: #EA580C;
+    --brand-secondary: #C2410C;
+    --brand-accent: #F97316;
+    --brand-bg: #FAFAF9;
+    --brand-text: #1C1917;
 
-    /* Gradients */
-    --gradient-brand: linear-gradient(135deg, #F97316 0%, #C2410C 100%);
-    --gradient-brand-hover: linear-gradient(135deg, #FDBA74 0%, #F97316 100%);
-    --gradient-surface: linear-gradient(135deg, rgba(253,231,203,0.85) 0%, rgba(253,186,116,0.35) 100%);
-    --gradient-card-border: linear-gradient(135deg, #FDBA74 0%, #F97316 50%, #FDBA74 100%);
+    --gradient-brand: linear-gradient(135deg, #EA580C 0%, #C2410C 100%);
+    --gradient-brand-hover: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+    --gradient-surface: #F5F5F4;
+    --gradient-card-border: #E7E5E4;
 
-    /* Neutrals */
-    --surface-light: rgba(253, 231, 203, 0.55);
-    --border-light: rgba(253, 186, 116, 0.45);
-    --border-medium: rgba(249, 115, 22, 0.3);
-    --text-secondary: #7C4A1E;
-    --text-tertiary: #A16A33;
+    --surface-bg: #FAFAF9;
+    --surface-card: #FFFFFF;
+    --surface-light: #F5F5F4;
+    --border-light: #E7E5E4;
+    --border-medium: #D6D3D1;
+    --text-primary: #1C1917;
+    --text-secondary: #57534E;
+    --text-tertiary: #78716C;
 
-    /* Gradients & surfaces */
-    --gradient-start: #FDF3E3;
-    --gradient-end: #FDE7CB;
-    --textarea-focus-bg: rgba(253, 243, 227, 0.9);
-    --output-textarea-bg: rgba(253, 231, 203, 0.45);
-    --output-textarea-border: rgba(249, 115, 22, 0.25);
-    --select-bg: rgba(253, 243, 227, 0.85);
-    --btn-secondary-hover-border: rgba(249, 115, 22, 0.35);
-    --btn-secondary-hover-bg: rgba(253, 231, 203, 0.65);
-    --theme-glow-soft: rgba(249, 115, 22, 0.25);
-    --theme-glow-medium: rgba(249, 115, 22, 0.3);
-    --theme-glow-strong: rgba(249, 115, 22, 0.4);
-    --theme-glow-hover: rgba(249, 115, 22, 0.22);
-    --theme-glow-border: rgba(249, 115, 22, 0.45);
+    --gradient-start: #FAFAF9;
+    --gradient-end: #F5F5F4;
+    --textarea-focus-bg: #FFFFFF;
+    --output-textarea-bg: #FAFAF9;
+    --output-textarea-border: #D6D3D1;
+    --select-bg: #FFFFFF;
+    --btn-secondary-hover-border: #A8A29E;
+    --btn-secondary-hover-bg: #E7E5E4;
+    --theme-glow-soft: rgba(234, 88, 12, 0.15);
+    --theme-glow-medium: rgba(234, 88, 12, 0.25);
+    --theme-glow-strong: rgba(234, 88, 12, 0.35);
+    --theme-glow-hover: rgba(234, 88, 12, 0.12);
+    --theme-glow-border: rgba(234, 88, 12, 0.4);
 
-    /* Background — orange dot grid */
-    background-color: #FDF3E3;
-    background-image:
-        repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 47px,
-            rgba(249, 115, 22, 0.08) 47px,
-            rgba(249, 115, 22, 0.08) 48px
-        ),
-        repeating-linear-gradient(
-            90deg,
-            transparent,
-            transparent 47px,
-            rgba(249, 115, 22, 0.08) 47px,
-            rgba(249, 115, 22, 0.08) 48px
-        ),
-        radial-gradient(circle, rgba(249, 115, 22, 0.15) 1.5px, transparent 1.5px);
-    background-size: 48px 48px;
-    background-position: center center;
+    background-color: #FAFAF9;
+    background-image: radial-gradient(1200px circle at 50% -120px, rgba(234, 88, 12, 0.05), transparent 70%);
 }
 
 .btn-theme-toggle {
@@ -173,141 +131,117 @@ body.theme-enterprise.orange {
     height: 38px;
     padding: 0 !important;
     border-radius: 50% !important;
-    background: var(--gradient-surface);
-    backdrop-filter: blur(var(--glass-blur));
-    -webkit-backdrop-filter: blur(var(--glass-blur));
-    border: 1px solid var(--border-light);
+    background: var(--surface-card);
+    border: 1px solid var(--border-medium);
     color: var(--brand-primary);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-sm);
 }
 
 .btn-theme-toggle:hover {
-    background: var(--gradient-brand);
+    background: var(--brand-primary);
     color: #fff;
     border-color: transparent;
-    transform: rotate(30deg) scale(1.05);
+    transform: rotate(20deg) scale(1.05);
     box-shadow: var(--shadow-md);
 }
 
 .btn-theme-toggle svg {
-    width: 20px;
-    height: 20px;
-    transition: transform 0.5s ease;
+    width: 18px;
+    height: 18px;
+    transition: transform 0.4s ease;
 }
 
-/* Dark Mode Override Rules */
+/* ============================================================
+ * DARK OBSIDIAN / LINEAR TIER (HIGH CONTRAST)
+ * Palette: #090D14 (Obsidian) · #111827 (Surface) · #10B981 (Cyber Mint)
+ * ============================================================ */
 body.dark {
-    /* Brand Colors — Green-teal on dark */
-    --brand-bg: #0d1210;
-    --brand-text: #9CC5A1;         /* Sage green accent text */
-    --brand-primary: #49A078;      /* Medium green */
-    --brand-secondary: #216869;    /* Teal */
+    /* Brand Colors — High Contrast Cyber Mint */
+    --brand-bg: #090D14;
+    --brand-text: #F8FAFC;
+    --brand-primary: #10B981;
+    --brand-secondary: #059669;
+    --brand-accent: #34D399;
 
-    /* Gradients for dark mode */
-    --gradient-brand: linear-gradient(135deg, #49A078 0%, #216869 100%);
-    --gradient-brand-hover: linear-gradient(135deg, #9CC5A1 0%, #49A078 100%);
-    --gradient-success: linear-gradient(135deg, #4ADE80 0%, #22C55E 100%);
-    --gradient-surface: linear-gradient(135deg, rgba(15,20,18,0.85) 0%, rgba(25,40,36,0.65) 100%);
-    --gradient-card-border: linear-gradient(135deg, rgba(73,160,120,0.4) 0%, rgba(33,104,105,0.2) 50%, rgba(73,160,120,0.4) 100%);
+    /* Gradients */
+    --gradient-brand: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    --gradient-brand-hover: linear-gradient(135deg, #34D399 0%, #10B981 100%);
+    --gradient-success: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    --gradient-surface: #162032;
+    --gradient-card-border: rgba(255, 255, 255, 0.08);
 
-    /* Neutrals for Dark Mode */
-    --surface-bg: #0a0f0d;
-    --surface-card: rgba(15, 20, 18, 0.7);
-    --surface-light: rgba(25, 40, 36, 0.6);
-    --border-light: rgba(73, 160, 120, 0.12);
-    --border-medium: rgba(73, 160, 120, 0.2);
-    --text-primary: #dce1de;
-    --text-secondary: #8a9e8e;
-    --text-tertiary: #5a6e5e;
+    /* Neutrals — Solid high contrast, no transparency bleed */
+    --surface-bg: #090D14;
+    --surface-card: #111827;
+    --surface-light: #162032;
+    --border-light: rgba(255, 255, 255, 0.08);
+    --border-medium: rgba(255, 255, 255, 0.15);
+    --text-primary: #F8FAFC;
+    --text-secondary: #94A3B8;
+    --text-tertiary: #64748B;
 
     /* Dynamic elements */
-    --gradient-start: #0d1210;
-    --gradient-end: #152823;
-    --textarea-focus-bg: rgba(15, 20, 18, 0.9);
-    --output-textarea-bg: rgba(25, 40, 36, 0.5);
-    --output-textarea-border: rgba(73, 160, 120, 0.2);
-    --select-bg: rgba(15, 20, 18, 0.8);
+    --gradient-start: #090D14;
+    --gradient-end: #0E1626;
+    --textarea-focus-bg: #080C14;
+    --output-textarea-bg: #0D131F;
+    --output-textarea-border: #1E293B;
+    --select-bg: #111827;
     --btn-danger-hover-bg: rgba(239, 68, 68, 0.15);
-    --btn-secondary-hover-border: rgba(73, 160, 120, 0.35);
-    --btn-secondary-hover-bg: rgba(25, 40, 36, 0.6);
-    --glass-blur: 16px;
+    --btn-secondary-hover-border: rgba(16, 185, 129, 0.4);
+    --btn-secondary-hover-bg: #1E293B;
+    --glass-blur: 0px;
 
-    /* Shadows warmer for dark */
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
-    --shadow-hover: 0 8px 30px rgba(73, 160, 120, 0.1);
+    /* Shadows & Glow */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.6);
+    --shadow-hover: 0 8px 30px rgba(16, 185, 129, 0.15);
+    --theme-glow-soft: rgba(16, 185, 129, 0.2);
+    --theme-glow-medium: rgba(16, 185, 129, 0.3);
+    --theme-glow-strong: rgba(16, 185, 129, 0.45);
+    --theme-glow-hover: rgba(16, 185, 129, 0.15);
+    --theme-glow-border: rgba(16, 185, 129, 0.4);
 
-    /* Dot grid background — dark mode variant */
-    background-color: #0a0f0d;
-    background-image:
-        repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 47px,
-            rgba(73, 160, 120, 0.06) 47px,
-            rgba(73, 160, 120, 0.06) 48px
-        ),
-        repeating-linear-gradient(
-            90deg,
-            transparent,
-            transparent 47px,
-            rgba(73, 160, 120, 0.06) 47px,
-            rgba(73, 160, 120, 0.06) 48px
-        ),
-        radial-gradient(circle, rgba(73, 160, 120, 0.15) 1.5px, transparent 1.5px);
-    background-size: 48px 48px;
-    background-position: center center;
+    /* Background: Obsidian with subtle top radial vignette, ZERO grid distraction */
+    background-color: #090D14;
+    background-image: radial-gradient(1200px circle at 50% -120px, rgba(16, 185, 129, 0.08), transparent 70%);
 }
 
-/* Dark mode + orange tab — warm orange-on-dark palette */
+/* Dark mode + orange tab — High Contrast Amber Obsidian */
 body.theme-enterprise.dark.orange {
-    --brand-bg: #1a0e04;
-    --brand-text: #FDBA74;         /* Orange-300 accent text */
-    --brand-primary: #F97316;      /* Orange-500 */
-    --brand-secondary: #C2410C;    /* Orange-700 */
+    --brand-bg: #0C0A09;
+    --brand-text: #F8FAFC;
+    --brand-primary: #F97316;
+    --brand-secondary: #EA580C;
+    --brand-accent: #FB923C;
 
-    --gradient-brand: linear-gradient(135deg, #FF8A3C 0%, #D94A0B 100%);
-    --gradient-brand-hover: linear-gradient(135deg, #FDBA74 0%, #F97316 100%);
-    --gradient-surface: linear-gradient(135deg, rgba(30,14,4,0.85) 0%, rgba(60,30,10,0.65) 100%);
-    --gradient-card-border: linear-gradient(135deg, rgba(249,115,22,0.45) 0%, rgba(194,65,12,0.25) 50%, rgba(249,115,22,0.45) 100%);
+    --gradient-brand: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+    --gradient-brand-hover: linear-gradient(135deg, #FB923C 0%, #F97316 100%);
+    --gradient-surface: #1E1B18;
+    --gradient-card-border: rgba(249, 115, 22, 0.2);
 
-    --surface-bg: #140a03;
-    --surface-card: rgba(30, 14, 4, 0.72);
-    --surface-light: rgba(50, 25, 10, 0.62);
-    --border-light: rgba(249, 115, 22, 0.18);
-    --border-medium: rgba(249, 115, 22, 0.28);
-    --text-secondary: #E3A05E;
-    --text-tertiary: #A86B35;
+    --surface-bg: #0C0A09;
+    --surface-card: #181512;
+    --surface-light: #231E19;
+    --border-light: rgba(255, 255, 255, 0.08);
+    --border-medium: rgba(249, 115, 22, 0.25);
+    --text-primary: #F8FAFC;
+    --text-secondary: #CBD5E1;
+    --text-tertiary: #94A3B8;
 
-    --gradient-start: #1a0e04;
-    --gradient-end: #2a1507;
-    --textarea-focus-bg: rgba(30, 14, 4, 0.92);
-    --output-textarea-bg: rgba(50, 25, 10, 0.55);
-    --output-textarea-border: rgba(249, 115, 22, 0.28);
-    --select-bg: rgba(30, 14, 4, 0.85);
+    --gradient-start: #0C0A09;
+    --gradient-end: #17120E;
+    --textarea-focus-bg: #120F0C;
+    --output-textarea-bg: #14110E;
+    --output-textarea-border: #2E241B;
+    --select-bg: #181512;
     --btn-secondary-hover-border: rgba(249, 115, 22, 0.4);
-    --btn-secondary-hover-bg: rgba(50, 25, 10, 0.65);
-    --shadow-hover: 0 8px 30px rgba(249, 115, 22, 0.12);
+    --btn-secondary-hover-bg: #29221C;
+    --shadow-hover: 0 8px 30px rgba(249, 115, 22, 0.15);
 
-    background-color: #140a03;
-    background-image:
-        repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 47px,
-            rgba(249, 115, 22, 0.07) 47px,
-            rgba(249, 115, 22, 0.07) 48px
-        ),
-        repeating-linear-gradient(
-            90deg,
-            transparent,
-            transparent 47px,
-            rgba(249, 115, 22, 0.07) 47px,
-            rgba(249, 115, 22, 0.07) 48px
-        ),
-        radial-gradient(circle, rgba(249, 115, 22, 0.15) 1.5px, transparent 1.5px);
-    background-size: 48px 48px;
-    background-position: center center;
+    background-color: #0C0A09;
+    background-image: radial-gradient(1200px circle at 50% -120px, rgba(249, 115, 22, 0.08), transparent 70%);
 }
 
 /* Layout */
@@ -821,17 +755,16 @@ body.dark.orange .nav-glider .glider-glass-lens {
 }
 
 .card-header h2, .card-header h3 {
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 600;
     font-family: var(--font-heading);
-    background: var(--gradient-brand);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--text-primary);
+    -webkit-text-fill-color: var(--text-primary);
     display: flex;
     align-items: center;
     gap: 8px;
     margin: 0;
+    letter-spacing: -0.01em;
 }
 
 .icon {
@@ -2081,21 +2014,47 @@ body.theme-enterprise.orange .btn-success:hover:not(:disabled) {
     margin-top: 12px;
 }
 
+
+.sql-export-workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(260px, 0.8fr);
+    gap: 20px;
+    margin-top: 20px;
+    align-items: start;
+}
+
 .sql-export-lists {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px;
-    margin-top: 20px;
+    gap: 16px;
 }
 
-.sql-export-lists h3 {
+.sql-export-lists h3,
+.sql-export-queue h3,
+.sql-export-queue h4 {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
     margin: 0 0 8px;
     font-family: var(--font-heading);
     font-size: 0.95rem;
 }
 
+.sql-export-queue h4 {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+}
+
+.sql-export-list-meta {
+    color: var(--text-tertiary);
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
 .sql-export-object-list {
-    max-height: 320px;
+    max-height: 360px;
     overflow: auto;
     border: 1px solid var(--border-light);
     border-radius: var(--radius-sm);
@@ -2121,8 +2080,79 @@ body.theme-enterprise.orange .btn-success:hover:not(:disabled) {
     background: var(--surface-light);
 }
 
+.sql-export-object.is-selected {
+    background: var(--theme-glow-soft);
+    box-shadow: inset 3px 0 0 var(--brand-primary);
+}
+
 .sql-export-object input {
     accent-color: var(--brand-primary);
+}
+
+.sql-export-queue {
+    display: grid;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-md);
+    background: var(--surface-card);
+}
+
+.sql-export-queue-summary {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.sql-export-queue-list {
+    list-style: none;
+    max-height: 140px;
+    overflow: auto;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    background: var(--output-textarea-bg);
+}
+
+.sql-export-queue-item,
+.sql-export-queue-empty {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border-light);
+    font-family: var(--font-code);
+    font-size: 0.8125rem;
+}
+
+.sql-export-queue-item:last-child,
+.sql-export-queue-empty:last-child {
+    border-bottom: 0;
+}
+
+.sql-export-queue-empty {
+    color: var(--text-tertiary);
+    font-family: var(--font-ui);
+}
+
+.sql-export-queue-remove {
+    border: 0;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.75rem;
+}
+
+.sql-export-queue-remove:hover,
+.sql-export-queue-remove:focus-visible {
+    color: var(--status-error);
+}
+
+.sql-export-queue .btn {
+    width: 100%;
 }
 
 .sql-export-empty {
@@ -2141,12 +2171,55 @@ body.theme-enterprise.orange .btn-success:hover:not(:disabled) {
     overflow-wrap: anywhere;
 }
 
-@media (max-width: 768px) {
-    .sql-export-setup {
+/* SQL Export Progress Modal */
+.export-progress-bar-wrap {
+    width: 100%;
+    height: 10px;
+    background: var(--surface-light);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    margin-bottom: 14px;
+    border: 1px solid var(--border-light);
+}
+
+.export-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: var(--brand-primary);
+    border-radius: var(--radius-sm);
+    transition: width 0.15s ease-out;
+}
+
+.export-progress-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+}
+
+.export-progress-current {
+    margin: 0;
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    font-family: var(--font-code);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 1.3em;
+}
+
+@media (max-width: 1100px) {
+    .sql-export-workspace,
+    .sql-export-lists {
         grid-template-columns: 1fr;
     }
+}
 
-    .sql-export-lists {
+@media (max-width: 768px) {
+    .sql-export-setup {
         grid-template-columns: 1fr;
     }
 }

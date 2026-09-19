@@ -14,7 +14,15 @@ Open <http://127.0.0.1:5178>, choose **SQL Server Export**, and enter server/ins
 
 ## Run
 
-Set `TOOLSQL_PORT` to change the port; the server always binds to `127.0.0.1`.
+From `server/ToolSql.Server`:
+
+```powershell
+dotnet run
+```
+
+Or run `bin/Debug/net8.0-windows/ToolSql.Server.exe` while developing. The portable app starts `ToolSql.Server.exe` from the same folder as `toolsql-win_x64.exe` and stops it when the window closes. SQL Export calls `http://127.0.0.1:5178`. Opening `sql-formatter.html` in a browser still needs this process running separately.
+
+Set `TOOLSQL_PORT` to change the port; the server always binds to `127.0.0.1`. Missing `css`/`js` next to the exe no longer prevents the API from starting.
 
 Run `dotnet run -- self-test` for the focused request-validation check.
 

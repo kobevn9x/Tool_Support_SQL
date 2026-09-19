@@ -64,6 +64,7 @@ What this script does:
 Expected output:
 
 - `portable/dist/toolsql/toolsql-win_x64.exe`
+- `portable/dist/toolsql/ToolSql.Server.exe`
 
 ## Portable Build Checklist
 
@@ -75,9 +76,9 @@ Before running the build:
 
 After running the build:
 
-1. Check that `portable/dist/toolsql/toolsql-win_x64.exe` was generated.
-2. Launch the `.exe`.
-3. Verify the updated UI and behavior inside the portable app.
+1. Check that `portable/dist/toolsql/toolsql-win_x64.exe` and `ToolSql.Server.exe` were generated in the same folder.
+2. Launch `toolsql-win_x64.exe` only. The SQL Export API starts with the window and stops when it closes.
+3. Verify the updated UI and behavior inside the portable app, including SQL Server Export.
 4. Re-test the same flows you checked in the browser.
 
 ## When You Add New Files
@@ -101,6 +102,9 @@ const APP_FILES = [
   'js/modules/cs-formatter.js',
   'js/modules/sql-comment.js',
   'js/modules/code-generator.js',
+  'js/modules/sql-export.js',
+  'js/modules/sql-server-sidecar.js',
+  'js/neutralino.js',
   'vendor/bwip-js-min.js',
   'vendor/LICENSE.bwip-js.txt',
 ];

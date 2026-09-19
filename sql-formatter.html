@@ -593,6 +593,58 @@
             <main class="sql-export-main">
                 <section class="card">
                     <div class="card-header">
+                        <h2 data-i18n="sqlExportObjectsTitle">Database objects</h2>
+                        <span id="sqlExportSelectionCount" class="sql-export-count" aria-live="polite"></span>
+                    </div>
+                    <div class="card-body">
+                        <label class="sr-only" for="sqlExportSearch" data-i18n="sqlExportSearchLabel">Search database objects</label>
+                        <input id="sqlExportSearch" class="control-input sql-export-search" type="search" data-i18n-placeholder="sqlExportSearchPlaceholder" placeholder="Search schema or name...">
+                        <div class="sql-export-toolbar">
+                            <button id="sqlExportRefreshBtn" type="button" class="btn btn-secondary btn-sm" data-i18n="sqlExportRefresh">Refresh</button>
+                            <button id="sqlExportSelectVisibleBtn" type="button" class="btn btn-secondary btn-sm" data-i18n="sqlExportSelectVisible">Select visible</button>
+                            <button id="sqlExportDeselectVisibleBtn" type="button" class="btn btn-secondary btn-sm">Unselect visible</button>
+                            <button id="sqlExportSelectProceduresBtn" type="button" class="btn btn-secondary btn-sm" data-i18n="sqlExportOnlyProcedures">Only SP</button>
+                            <button id="sqlExportSelectTablesBtn" type="button" class="btn btn-secondary btn-sm" data-i18n="sqlExportOnlyTables">Only Table</button>
+                            <button id="sqlExportClearBtn" type="button" class="btn btn-secondary btn-sm" data-i18n="sqlExportClearSelection">Clear selection</button>
+                        </div>
+                        <div class="sql-export-workspace">
+                            <div class="sql-export-lists">
+                                <section aria-labelledby="sqlExportProceduresTitle">
+                                    <h3 id="sqlExportProceduresTitle">
+                                        <span data-i18n="sqlExportProcedures">Stored procedures</span>
+                                        <span id="sqlExportProcedureMeta" class="sql-export-list-meta"></span>
+                                    </h3>
+                                    <div id="sqlExportProceduresList" class="sql-export-object-list"></div>
+                                </section>
+                                <section aria-labelledby="sqlExportTablesTitle">
+                                    <h3 id="sqlExportTablesTitle">
+                                        <span data-i18n="sqlExportTables">Tables</span>
+                                        <span id="sqlExportTableMeta" class="sql-export-list-meta"></span>
+                                    </h3>
+                                    <div id="sqlExportTablesList" class="sql-export-object-list"></div>
+                                </section>
+                            </div>
+                            <aside class="sql-export-queue" aria-labelledby="sqlExportQueueTitle">
+                                <h3 id="sqlExportQueueTitle" data-i18n="sqlExportQueueTitle">Ready to export</h3>
+                                <p id="sqlExportQueueSummary" class="sql-export-queue-summary" aria-live="polite"></p>
+                                <section aria-labelledby="sqlExportQueueProceduresTitle">
+                                    <h4 id="sqlExportQueueProceduresTitle" data-i18n="sqlExportProcedures">Stored procedures</h4>
+                                    <ul id="sqlExportSelectedProcedures" class="sql-export-queue-list"></ul>
+                                </section>
+                                <section aria-labelledby="sqlExportQueueTablesTitle">
+                                    <h4 id="sqlExportQueueTablesTitle" data-i18n="sqlExportTables">Tables</h4>
+                                    <ul id="sqlExportSelectedTables" class="sql-export-queue-list"></ul>
+                                </section>
+                                <p class="comment-help" data-i18n="sqlExportDownloadHelp">Choose one or more objects. Supported browsers can save every script directly to a selected folder.</p>
+                                <button id="sqlExportDownloadBtn" type="button" class="btn btn-primary btn-large" disabled data-i18n="sqlExportDownload">Export selected</button>
+                                <div id="sqlExportDownloads" class="sql-export-downloads" aria-live="polite"></div>
+                            </aside>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <div class="card-header">
                         <h2 data-i18n="sqlExportConnectionTitle">Connection</h2>
                         <button id="sqlExportTestBtn" type="button" class="btn btn-secondary btn-sm" data-i18n="sqlExportTest">Test connection</button>
                     </div>
@@ -627,43 +679,6 @@
                         </div>
                     </div>
                 </section>
-
-                <section class="card">
-                    <div class="card-header">
-                        <h2 data-i18n="sqlExportObjectsTitle">Database objects</h2>
-                        <span id="sqlExportSelectionCount" class="sql-export-count" aria-live="polite"></span>
-                    </div>
-                    <div class="card-body">
-                        <label class="sr-only" for="sqlExportSearch" data-i18n="sqlExportSearchLabel">Search database objects</label>
-                        <input id="sqlExportSearch" class="control-input sql-export-search" type="search" data-i18n-placeholder="sqlExportSearchPlaceholder" placeholder="Search schema or name...">
-                        <div class="sql-export-toolbar">
-                            <button id="sqlExportRefreshBtn" type="button" class="btn btn-secondary btn-sm" data-i18n="sqlExportRefresh">Refresh</button>
-                            <button id="sqlExportSelectVisibleBtn" type="button" class="btn btn-secondary btn-sm" data-i18n="sqlExportSelectVisible">Select visible</button>
-                            <button id="sqlExportClearBtn" type="button" class="btn btn-secondary btn-sm" data-i18n="sqlExportClearSelection">Clear selection</button>
-                        </div>
-                        <div class="sql-export-lists">
-                            <section aria-labelledby="sqlExportProceduresTitle">
-                                <h3 id="sqlExportProceduresTitle" data-i18n="sqlExportProcedures">Stored procedures</h3>
-                                <div id="sqlExportProceduresList" class="sql-export-object-list"></div>
-                            </section>
-                            <section aria-labelledby="sqlExportTablesTitle">
-                                <h3 id="sqlExportTablesTitle" data-i18n="sqlExportTables">Tables</h3>
-                                <div id="sqlExportTablesList" class="sql-export-object-list"></div>
-                            </section>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="card">
-                    <div class="card-header">
-                        <h2 data-i18n="sqlExportDownloadTitle">Export scripts</h2>
-                    </div>
-                    <div class="card-body">
-                        <p class="comment-help" data-i18n="sqlExportDownloadHelp">Choose one or more objects. Supported browsers can save every script directly to a selected folder.</p>
-                        <button id="sqlExportDownloadBtn" type="button" class="btn btn-primary btn-large" disabled data-i18n="sqlExportDownload">Export selected</button>
-                        <div id="sqlExportDownloads" class="sql-export-downloads" aria-live="polite"></div>
-                    </div>
-                </section>
             </main>
         </div><!-- /page-sql-export -->
 
@@ -693,6 +708,29 @@
         </div>
     </div>
 
+    <!-- SQL EXPORT PROGRESS MODAL -->
+    <div class="confirm-overlay" id="sqlExportProgressOverlay" style="display: none;">
+        <div class="confirm-modal card">
+            <div class="card-header">
+                <h3 id="sqlExportProgressTitle">Exporting SQL Scripts</h3>
+            </div>
+            <div class="card-body">
+                <div class="export-progress-bar-wrap">
+                    <div class="export-progress-bar" id="sqlExportProgressBar" style="width: 0%;"></div>
+                </div>
+                <div class="export-progress-stats">
+                    <span id="sqlExportProgressCount">Preparing...</span>
+                    <span id="sqlExportProgressPercent">0%</span>
+                </div>
+                <p id="sqlExportProgressCurrent" class="export-progress-current"></p>
+            </div>
+            <div class="card-footer">
+                <button id="sqlExportProgressCloseBtn" type="button" class="btn btn-secondary btn-sm" disabled>Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/neutralino.js"></script>
     <script src="vendor/bwip-js-min.js"></script>
     <script src="js/core/i18n.js"></script>
     <script src="js/core/script.js"></script>
@@ -700,6 +738,7 @@
     <script src="js/modules/code-generator.js"></script>
     <script src="js/modules/bulk-update.js"></script>
     <script src="js/modules/cs-formatter.js"></script>
+    <script src="js/modules/sql-server-sidecar.js"></script>
     <script src="js/modules/sql-export.js"></script>
 </body>
 </html>
