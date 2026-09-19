@@ -1133,13 +1133,11 @@ body.theme-enterprise.orange .btn-success:hover:not(:disabled) {
 
 .stat-value {
     font-family: var(--font-code);
-    font-size: 1.75rem;
-    font-weight: 300;
-    background: var(--gradient-brand);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    font-size: 1.85rem;
+    font-weight: 700;
+    color: var(--brand-accent);
     line-height: 1.2;
+    letter-spacing: -0.02em;
 }
 
 .stat-label {
@@ -1319,7 +1317,7 @@ body.theme-enterprise.orange .btn-success:hover:not(:disabled) {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(10, 15, 13, 0.7); /* Deep dark backdrop with green-teal SaaS tint */
+    background: rgba(5, 8, 15, 0.8);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     display: flex;
@@ -2004,9 +2002,43 @@ body.theme-enterprise.orange .btn-success:hover:not(:disabled) {
 
 .sql-export-search {
     width: 100%;
+    padding: 10px 14px;
+    background-color: var(--surface-light);
+    border: 1px solid var(--border-medium);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
 }
 
-.sql-export-toolbar,
+.sql-export-search:focus {
+    background-color: var(--surface-card);
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 3px var(--theme-glow-soft);
+    outline: none;
+}
+
+.sql-export-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.sql-export-toolbar #sqlExportClearBtn {
+    margin-left: auto;
+    color: var(--text-secondary);
+}
+
+.sql-export-toolbar #sqlExportClearBtn:hover {
+    color: var(--status-error);
+    border-color: rgba(239, 68, 68, 0.4);
+    background: var(--btn-danger-hover-bg);
+}
+
 .sql-export-downloads {
     display: flex;
     flex-wrap: wrap;
