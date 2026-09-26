@@ -51,43 +51,88 @@
         return parts;
     }
 
+    function splitSetAssignments(source) {
+        const assignments = [];
+        let start = 0;
+        let bracketed = false;
+        for (let i = 0; i < source.length; i++) {
+            const char = source[i];
+            if (char === '[' && !bracketed) {
+                bracketed = true;
+            } else if (char === ']' && bracketed) {
+                if (source[i + 1] === ']') i++;
+                else bracketed = false;
+            } else if (char === ',' && !bracketed) {
+                assignments.push(source.slice(start, i).trim());
+                start = i + 1;
+            }
+        }
+        assignments.push(source.slice(start).trim());
+        return assignments;
+    }
+
     function parseTemplate(template) {
         const source = String(template ?? '');
         if (!source.trim()) return error('bulkUpdateTemplateError');
 
         const pattern = new RegExp(
-            `^\\s*UPDATE\\s+(${TABLE_PATTERN})\\s+SET\\s+(${IDENTIFIER_PATTERN})\\s*=\\s*\\{\\s*(${IDENTIFIER_PATTERN})\\s*\\}\\s+WHERE\\s+(${IDENTIFIER_PATTERN})\\s*=\\s*\\{\\s*(${IDENTIFIER_PATTERN})\\s*\\}\\s*;?\\s*$`,
+            `^\\s*UPDATE\\s+(${TABLE_PATTERN})\\s+SET\\s+([\\s\\S]+?)\\s+WHERE\\s+(${IDENTIFIER_PATTERN})\\s*=\\s*\\{\\s*(\\d+)\\s*\\}\\s*;?\\s*$`,
             'i'
         );
         const match = source.match(pattern);
-        if (!match) return error('bulkUpdateTemplateError');
+        if (!match || match[4] !== '1') return error('bulkUpdateTemplateError');
 
         const tableParts = splitQualified(match[1]);
         if (tableParts.length < 1 || tableParts.length > 3 || !tableParts.every(validIdentifier)) {
             return error('bulkUpdateTemplateError');
         }
 
-        const setColumn = match[2];
-        const setPlaceholder = match[3];
-        const keyColumn = match[4];
-        const keyPlaceholder = match[5];
-        const same = (left, right) => unbracketIdentifier(left).toLowerCase() === unbracketIdentifier(right).toLowerCase();
-        if (!validIdentifier(setColumn) || !validIdentifier(keyColumn) || !validIdentifier(setPlaceholder) || !validIdentifier(keyPlaceholder) ||
-            !same(setColumn, setPlaceholder) || !same(keyColumn, keyPlaceholder) || same(setColumn, keyColumn)) {
+        const keyColumn = match[3];
+        const keyName = unbracketIdentifier(keyColumn);
+        const assignments = splitSetAssignments(match[2]);
+        if (!assignments.length || assignments.some(assignment => !assignment)) {
             return error('bulkUpdateTemplateError');
         }
 
+        const assignmentPattern = new RegExp(
+            `^(${IDENTIFIER_PATTERN})\\s*=\\s*\\{\\s*(\\d+)\\s*\\}$`,
+            'i'
+        );
+        const setEntries = [];
+        const seenColumns = new Set();
+        const seenPlaceholders = new Set();
+        for (const assignment of assignments) {
+            const assignmentMatch = assignment.match(assignmentPattern);
+            if (!assignmentMatch) return error('bulkUpdateTemplateError');
+            const column = assignmentMatch[1];
+            const placeholder = assignmentMatch[2];
+            const normalizedColumn = unbracketIdentifier(column).toLowerCase();
+            if (placeholder.length > 1 && placeholder.startsWith('0')) return error('bulkUpdateTemplateError');
+            if (seenColumns.has(normalizedColumn) || seenPlaceholders.has(placeholder) ||
+                normalizedColumn === keyName.toLowerCase()) {
+                return error('bulkUpdateTemplateError');
+            }
+            seenColumns.add(normalizedColumn);
+            seenPlaceholders.add(placeholder);
+            setEntries.push({ column, name: unbracketIdentifier(column), number: Number(placeholder) });
+        }
+
+        setEntries.sort((left, right) => left.number - right.number);
+        for (let index = 0; index < setEntries.length; index++) {
+            if (setEntries[index].number !== index + 2) return error('bulkUpdateTemplateError');
+        }
+
+        const setColumns = setEntries.map(entry => entry.column);
+        const setNames = setEntries.map(entry => entry.name);
         return {
             ok: true,
             table: tableParts.join('.'),
             tableParts,
-            setColumn,
-            setName: unbracketIdentifier(setColumn),
-            setPlaceholder,
             keyColumn,
-            keyName: unbracketIdentifier(keyColumn),
-            keyPlaceholder,
-            columns: [unbracketIdentifier(keyColumn), unbracketIdentifier(setColumn)]
+            keyName,
+            setColumns,
+            setNames,
+            columns: [keyName, ...setNames]
         };
     }
 
@@ -122,7 +167,7 @@
     function buildPreviewModel(templateInfo, rowResult) {
         if (!templateInfo || !templateInfo.ok) return { headers: [], rows: [] };
         return {
-            headers: [templateInfo.keyName, templateInfo.setName],
+            headers: templateInfo.columns,
             rows: rowResult && rowResult.ok ? rowResult.rows : []
         };
     }
@@ -147,37 +192,38 @@
         }
         const safeMode = mode === 'commit' ? 'commit' : 'rollback';
         const key = quoteIdentifier(templateInfo.keyColumn);
-        const set = quoteIdentifier(templateInfo.setColumn);
+        const setColumns = templateInfo.setColumns.map(quoteIdentifier);
+        const columns = [key, ...setColumns];
         const table = templateInfo.tableParts.join('.');
         const lines = [
             'BEGIN TRAN;',
             '',
             'DECLARE @DATA TABLE (',
-            `    ${key} ${sqlType(rows, 0)},`,
-            `    ${set} ${sqlType(rows, 1)}`,
+            ...columns.map((column, index) => `    ${column} ${sqlType(rows, index)}${index === columns.length - 1 ? '' : ','}`),
             ');',
             ''
         ];
 
         for (let start = 0; start < rows.length; start += 1000) {
             const batch = rows.slice(start, start + 1000);
-            lines.push(`INSERT INTO @DATA (${key}, ${set})`);
+            lines.push(`INSERT INTO @DATA (${columns.join(', ')})`);
             lines.push('VALUES');
             batch.forEach((row, index) => {
                 const suffix = index === batch.length - 1 ? ';' : ',';
-                lines.push(`    (${sqlLiteral(row[0])}, ${sqlLiteral(row[1])})${suffix}`);
+                lines.push(`    (${row.map(sqlLiteral).join(', ')})${suffix}`);
             });
             lines.push('');
         }
 
         lines.push(
             'UPDATE T',
-            `SET T.${set} = D.${set}`,
+            'SET',
+            ...setColumns.map((column, index) => `    T.${column} = D.${column}${index === setColumns.length - 1 ? '' : ','}`),
             `FROM ${table} AS T`,
             'INNER JOIN @DATA AS D',
             `    ON T.${key} = D.${key};`,
             '',
-            `SELECT T.${key}, T.${set}`,
+            `SELECT ${columns.map(column => `T.${column}`).join(', ')}`,
             `FROM ${table} AS T`,
             'INNER JOIN @DATA AS D',
             `    ON T.${key} = D.${key};`,
@@ -439,6 +485,9 @@
         rowResult: null,
         generated: false,
         generatedSignature: '',
+        savedTemplates: [],
+        editingTemplateId: null,
+        savedStatus: null,
         initialized: false
     };
 
@@ -513,7 +562,9 @@
         const rowsInput = document.getElementById('bulkUpdateRowsInput');
         if (!templateInput || !rowsInput) return;
         state.templateInfo = parseTemplate(templateInput.value);
-        state.rowResult = parseRows(rowsInput.value, 2);
+        state.rowResult = state.templateInfo.ok
+            ? parseRows(rowsInput.value, state.templateInfo.columns.length)
+            : { ok: true, rows: [], delimiter: null };
 
         const templateError = showErrors && !state.templateInfo.ok ? message(state.templateInfo.messageKey) : '';
         const rowError = showErrors && !state.rowResult.ok ? message(state.rowResult.messageKey, state.rowResult.line) : '';
@@ -593,6 +644,259 @@
         return true;
     }
 
+    const SAVED_TEMPLATES_STORAGE_KEY = 'sqlBulkUpdateTemplates';
+
+    function setSavedTemplateStatus(text, type, status) {
+        state.savedStatus = status || null;
+        const element = document.getElementById('bulkUpdateSavedStatus');
+        if (!element) return;
+        element.textContent = text || '';
+        element.className = `code-status bulk-update-status${type ? ` ${type}` : ''}`;
+    }
+
+    function setSavedTemplateStatusKey(key, type, ...args) {
+        setSavedTemplateStatus(message(key, ...args), type, { key, args });
+    }
+
+    function clearSavedTemplateFormErrors() {
+        const nameInput = document.getElementById('bulkUpdateTemplateName');
+        if (nameInput) nameInput.setAttribute('aria-invalid', 'false');
+        setFieldError('bulkUpdateTemplateInput', '');
+    }
+
+    function setSavedTemplateMode(editing) {
+        const create = document.getElementById('bulkUpdateTemplateCreate');
+        const update = document.getElementById('bulkUpdateTemplateUpdate');
+        const cancel = document.getElementById('bulkUpdateTemplateCancel');
+        if (create) {
+            create.hidden = editing;
+            create.disabled = editing;
+        }
+        if (update) {
+            update.hidden = !editing;
+            update.disabled = !editing;
+        }
+        if (cancel) {
+            cancel.hidden = !editing;
+            cancel.disabled = !editing;
+        }
+    }
+
+    function renderSavedTemplates() {
+        const list = document.getElementById('bulkUpdateSavedList');
+        if (!list) return;
+        list.replaceChildren();
+        if (!state.savedTemplates.length) {
+            const empty = document.createElement('p');
+            empty.className = 'bulk-update-saved-empty';
+            empty.textContent = message('bulkUpdateSavedEmpty');
+            list.appendChild(empty);
+            return;
+        }
+        state.savedTemplates.forEach(record => {
+            const item = document.createElement('article');
+            item.className = 'bulk-update-saved-item';
+            item.setAttribute('role', 'listitem');
+
+            const name = document.createElement('strong');
+            name.className = 'bulk-update-saved-item-name';
+            name.textContent = record.name;
+            item.appendChild(name);
+
+            const preview = document.createElement('p');
+            preview.className = 'bulk-update-saved-item-preview';
+            preview.textContent = record.template.length > 200 ? `${record.template.slice(0, 200)}…` : record.template;
+            item.appendChild(preview);
+
+            const actions = document.createElement('div');
+            actions.className = 'bulk-update-saved-item-actions';
+            [
+                ['bulkUpdateSavedUse', () => useSavedTemplate(record.id)],
+                ['bulkUpdateSavedEdit', () => startSavedTemplateEdit(record.id)],
+                ['bulkUpdateSavedDelete', () => deleteSavedTemplate(record.id)]
+            ].forEach(([key, handler]) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'btn btn-secondary btn-sm';
+                button.textContent = message(key);
+                button.addEventListener('click', handler);
+                actions.appendChild(button);
+            });
+            item.appendChild(actions);
+            list.appendChild(item);
+        });
+    }
+
+    function loadSavedTemplates() {
+        let raw;
+        let recovered = [];
+        let readError = false;
+        try {
+            raw = global.localStorage.getItem(SAVED_TEMPLATES_STORAGE_KEY);
+            if (raw !== null) {
+                const parsed = JSON.parse(raw);
+                if (!Array.isArray(parsed)) {
+                    readError = true;
+                } else {
+                    const ids = new Set();
+                    const names = new Set();
+                    parsed.forEach(record => {
+                        if (!record || typeof record.id !== 'number' || !Number.isFinite(record.id) ||
+                            typeof record.name !== 'string' || typeof record.template !== 'string') {
+                            readError = true;
+                            return;
+                        }
+                        const name = record.name.trim();
+                        const template = record.template.trim();
+                        const normalizedName = name.toLowerCase();
+                        if (!name || !template || ids.has(record.id) || names.has(normalizedName)) {
+                            readError = true;
+                            return;
+                        }
+                        ids.add(record.id);
+                        names.add(normalizedName);
+                        recovered.push({ id: record.id, name, template });
+                    });
+                }
+            }
+        } catch (storageError) {
+            readError = true;
+        }
+        state.savedTemplates = recovered;
+        if (readError) showToast(message('bulkUpdateSavedStorageReadError'), 'error');
+        renderSavedTemplates();
+    }
+
+    function persistSavedTemplates(nextTemplates) {
+        try {
+            global.localStorage.setItem(SAVED_TEMPLATES_STORAGE_KEY, JSON.stringify(nextTemplates));
+        } catch (storageError) {
+            const text = message('bulkUpdateSavedStorageWriteError');
+            setSavedTemplateStatusKey('bulkUpdateSavedStorageWriteError', 'error');
+            showToast(text, 'error');
+            return false;
+        }
+        state.savedTemplates = nextTemplates;
+        return true;
+    }
+
+    function validateSavedTemplateForm() {
+        const nameInput = document.getElementById('bulkUpdateTemplateName');
+        const templateInput = document.getElementById('bulkUpdateTemplateInput');
+        const name = nameInput?.value.trim() || '';
+        const template = templateInput?.value.trim() || '';
+        if (nameInput) nameInput.setAttribute('aria-invalid', 'false');
+        if (!name) {
+            if (nameInput) nameInput.setAttribute('aria-invalid', 'true');
+            setSavedTemplateStatusKey('bulkUpdateSavedNameRequired', 'error');
+            return null;
+        }
+        const duplicate = state.savedTemplates.some(record =>
+            record.id !== state.editingTemplateId && record.name.toLowerCase() === name.toLowerCase()
+        );
+        if (duplicate) {
+            if (nameInput) nameInput.setAttribute('aria-invalid', 'true');
+            setSavedTemplateStatusKey('bulkUpdateSavedDuplicateName', 'error', name);
+            return null;
+        }
+        const info = parseTemplate(template);
+        if (!info.ok) {
+            setFieldError('bulkUpdateTemplateInput', message('bulkUpdateTemplateError'));
+            setSavedTemplateStatusKey('bulkUpdateTemplateError', 'error');
+            return null;
+        }
+        clearSavedTemplateFormErrors();
+        return { name, template };
+    }
+
+    function createSavedTemplate() {
+        const values = validateSavedTemplateForm();
+        if (!values) return false;
+        let id = Date.now();
+        while (state.savedTemplates.some(record => record.id === id)) id++;
+        const nextTemplates = [{ id, ...values }, ...state.savedTemplates];
+        if (!persistSavedTemplates(nextTemplates)) return false;
+        document.getElementById('bulkUpdateTemplateName').value = '';
+        state.editingTemplateId = null;
+        setSavedTemplateMode(false);
+        setSavedTemplateStatus('', '');
+        renderSavedTemplates();
+        showToast(message('bulkUpdateSavedCreated'), 'success');
+        return true;
+    }
+
+    function useSavedTemplate(id) {
+        const record = state.savedTemplates.find(item => item.id === id);
+        if (!record) return false;
+        const templateInput = document.getElementById('bulkUpdateTemplateInput');
+        const nameInput = document.getElementById('bulkUpdateTemplateName');
+        state.editingTemplateId = null;
+        setSavedTemplateMode(false);
+        if (nameInput) nameInput.value = '';
+        if (templateInput) templateInput.value = record.template;
+        clearSavedTemplateFormErrors();
+        setSavedTemplateStatus('', '');
+        refreshBulkUpdate();
+        showToast(message('bulkUpdateSavedLoaded'), 'success');
+        return true;
+    }
+
+    function startSavedTemplateEdit(id) {
+        const record = state.savedTemplates.find(item => item.id === id);
+        if (!record) return false;
+        state.editingTemplateId = id;
+        document.getElementById('bulkUpdateTemplateName').value = record.name;
+        document.getElementById('bulkUpdateTemplateInput').value = record.template;
+        setSavedTemplateMode(true);
+        clearSavedTemplateFormErrors();
+        refreshBulkUpdate();
+        setSavedTemplateStatusKey('bulkUpdateSavedEditing', 'info', record.name);
+        document.getElementById('bulkUpdateTemplateName').focus();
+        return true;
+    }
+
+    function updateSavedTemplate() {
+        const values = validateSavedTemplateForm();
+        if (!values) return false;
+        const index = state.savedTemplates.findIndex(record => record.id === state.editingTemplateId);
+        if (index < 0) return false;
+        const nextTemplates = state.savedTemplates.slice();
+        nextTemplates[index] = { id: state.editingTemplateId, ...values };
+        if (!persistSavedTemplates(nextTemplates)) return false;
+        state.editingTemplateId = null;
+        document.getElementById('bulkUpdateTemplateName').value = '';
+        setSavedTemplateMode(false);
+        setSavedTemplateStatus('', '');
+        renderSavedTemplates();
+        showToast(message('bulkUpdateSavedUpdated'), 'success');
+        return true;
+    }
+
+    function cancelSavedTemplateEdit() {
+        state.editingTemplateId = null;
+        document.getElementById('bulkUpdateTemplateName').value = '';
+        setSavedTemplateMode(false);
+        clearSavedTemplateFormErrors();
+        setSavedTemplateStatus('', '');
+    }
+
+    async function deleteSavedTemplate(id) {
+        const record = state.savedTemplates.find(item => item.id === id);
+        if (!record || !(await showConfirm(message('bulkUpdateSavedDeleteConfirm', record.name)))) return false;
+        const nextTemplates = state.savedTemplates.filter(item => item.id !== id);
+        if (!persistSavedTemplates(nextTemplates)) return false;
+        if (state.editingTemplateId === id) {
+            state.editingTemplateId = null;
+            document.getElementById('bulkUpdateTemplateName').value = '';
+            setSavedTemplateMode(false);
+            clearSavedTemplateFormErrors();
+            setSavedTemplateStatus('', '');
+        }
+        renderSavedTemplates();
+        showToast(message('bulkUpdateSavedDeleted'), 'success');
+        return true;
+    }
+
     function initBulkUpdate() {
         if (state.initialized) return;
         const templateInput = document.getElementById('bulkUpdateTemplateInput');
@@ -602,12 +906,24 @@
         templateInput.addEventListener('input', refreshBulkUpdate);
         rowsInput.addEventListener('input', refreshBulkUpdate);
         document.querySelectorAll('input[name="bulkUpdateTransactionMode"]').forEach(input => input.addEventListener('change', refreshBulkUpdate));
+        document.getElementById('bulkUpdateTemplateCreate')?.addEventListener('click', createSavedTemplate);
+        document.getElementById('bulkUpdateTemplateUpdate')?.addEventListener('click', updateSavedTemplate);
+        document.getElementById('bulkUpdateTemplateCancel')?.addEventListener('click', cancelSavedTemplateEdit);
+        setSavedTemplateMode(false);
+        loadSavedTemplates();
         setStatus('bulkUpdateOutputStatus', '', '');
         refreshBulkUpdate(false);
     }
 
     function refreshBulkUpdateLanguage() {
         if (!state.initialized) return;
+        renderSavedTemplates();
+        if (state.editingTemplateId !== null) {
+            const record = state.savedTemplates.find(item => item.id === state.editingTemplateId);
+            if (record) setSavedTemplateStatusKey('bulkUpdateSavedEditing', 'info', record.name);
+        } else if (state.savedStatus?.key) {
+            setSavedTemplateStatusKey(state.savedStatus.key, state.savedStatus.type, ...state.savedStatus.args);
+        }
         if (state.rowResult?.ok && state.rowResult.rows.length) {
             setStatus('bulkUpdateRowsStatus', message('bulkUpdateRowStatus', state.rowResult.rows.length, DELIMITER_LABELS[state.rowResult.delimiter]), 'success');
         } else if (state.rowResult && !state.rowResult.ok) {
@@ -629,16 +945,26 @@
             if (actual !== expected) failures.push({ label, actual, expected });
         };
         const ok = (label, value) => eq(label, Boolean(value), true);
-        const sample = 'UPDATE PP0041\nSET PACKAGING_LOT = {PACKAGING_LOT}\nWHERE LOT_NO = {LOT_NO}';
+        const sample = 'UPDATE PP0041\nSET PACKAGING_LOT = {2}\nWHERE LOT_NO = {1}';
         const info = parseTemplate(sample);
         ok('sample template', info.ok);
         eq('mapping order', info.columns.join(','), 'LOT_NO,PACKAGING_LOT');
-        ok('keyword and whitespace flexibility', parseTemplate(' update [dbo].[PP0041] set [PACKAGING_LOT]={PACKAGING_LOT} where [LOT_NO]={LOT_NO}; ').ok);
-        ok('three-part table', parseTemplate('UPDATE db.schema.table SET value_col={value_col} WHERE key_col={key_col}').ok);
+        ok('new metadata fields', info.setColumns.join(',') === 'PACKAGING_LOT' &&
+            info.setNames.join(',') === 'PACKAGING_LOT' && !('setColumn' in info));
+        ok('keyword and whitespace flexibility', parseTemplate(' update [dbo].[PP0041] set [PACKAGING_LOT]={2} where [LOT_NO]={1}; ').ok);
+        ok('three-part table', parseTemplate('UPDATE db.schema.table SET value_col={2} WHERE key_col={1}').ok);
+        ok('bracketed comma identifier', parseTemplate('UPDATE [db].[schema].[T] SET [A,B] = {2} WHERE [Id] = {1};').ok);
+        ok('escaped bracket identifier', parseTemplate('UPDATE T SET [A]]B] = {2} WHERE [K] = {1}').ok);
+        ok('out-of-order SET placeholders', parseTemplate('UPDATE T SET Price = {3}, Name = {2} WHERE Id = {1}').columns.join(',') === 'Id,Name,Price');
         ok('reject extra SQL', !parseTemplate(`${sample} SELECT 1`).ok);
-        ok('reject missing placeholder', !parseTemplate('UPDATE T SET A = 1 WHERE B = {B}').ok);
-        ok('reject mismatched placeholder', !parseTemplate('UPDATE T SET A = {B} WHERE B = {B}').ok);
-        ok('reject same field', !parseTemplate('UPDATE T SET A = {A} WHERE A = {A}').ok);
+        ok('reject legacy placeholder', !parseTemplate('UPDATE T SET A = {A} WHERE B = {B}').ok);
+        ok('reject missing key placeholder', !parseTemplate('UPDATE T SET A = {2} WHERE B = {2}').ok);
+        ok('reject duplicate SET placeholder', !parseTemplate('UPDATE T SET A = {2}, B = {2} WHERE K = {1}').ok);
+        ok('reject gapped SET placeholder', !parseTemplate('UPDATE T SET A = {2}, B = {4} WHERE K = {1}').ok);
+        ok('reject leading-zero placeholder', !parseTemplate('UPDATE T SET A = {02} WHERE K = {1}').ok);
+        ok('reject duplicate SET column', !parseTemplate('UPDATE T SET A = {2}, a = {3} WHERE K = {1}').ok);
+        ok('reject SET/WHERE collision', !parseTemplate('UPDATE T SET K = {2} WHERE [k] = {1}').ok);
+        ok('reject malformed SET', !parseTemplate('UPDATE T SET A = {2} B = {3} WHERE K = {1}').ok);
 
         ['\t', ',', ';', '|'].forEach((delimiter, index) => {
             const parsed = parseRows(`a${delimiter}b\r\nc${delimiter}d\r\n`, 2);
@@ -660,6 +986,15 @@
         ok('NVARCHAR MAX', generateSql(info, [['x'.repeat(4001), 'x']], 'rollback').includes('NVARCHAR(MAX)'));
         const many = Array.from({ length: 1001 }, (_, index) => [`K${index}`, `V${index}`]);
         eq('1001 row batches', (generateSql(info, many, 'rollback').match(/INSERT INTO @DATA/g) || []).length, 2);
+
+        const multi = parseTemplate('UPDATE dbo.Product SET Price = {3}, Name = {2} WHERE Id = {1}');
+        const multiRows = parseRows('P001\tBút đỏ\t15000\nP002\tBút xanh\t20000', 3);
+        const multiSql = generateSql(multi, multiRows.rows, 'rollback');
+        eq('multi-column preview headers', buildPreviewModel(multi, multiRows).headers.join(','), 'Id,Name,Price');
+        ok('multi-column DATA shape', multiSql.includes('DECLARE @DATA TABLE (\n    [Id] NVARCHAR(50),\n    [Name] NVARCHAR(50),\n    [Price] NVARCHAR(50)') &&
+            multiSql.includes('INSERT INTO @DATA ([Id], [Name], [Price])'));
+        ok('multi-column update assignments', multiSql.includes('T.[Name] = D.[Name],') && multiSql.includes('T.[Price] = D.[Price]'));
+        ok('multi-column key join and select', multiSql.includes('ON T.[Id] = D.[Id];') && multiSql.includes('SELECT T.[Id], T.[Name], T.[Price]'));
 
         const formatted = formatSql(sql);
         ok('format preserves literal', formatted.includes("N'PACK''01'") && formatted.includes("N'값'"));

@@ -25,7 +25,7 @@ If you add a new file that the portable app needs at runtime, you must also add 
 ## Before Rebuilding
 
 1. Make code changes in the main app files.
-2. If you add new user-facing text, update `i18n.js`.
+2. If you add new user-facing text, update `js/core/i18n.js`.
 3. If you add a new runtime asset, update `portable/build.mjs` so it gets copied into `portable/resources/`.
 4. Open `sql-formatter.html` in a browser and verify the change manually.
 5. Re-check key flows:

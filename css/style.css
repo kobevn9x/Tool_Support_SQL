@@ -1763,21 +1763,102 @@ body.theme-enterprise.orange .btn-success:hover:not(:disabled) {
 }
 .bulk-update-main {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
     gap: 24px;
-    align-items: start;
     animation: fadeIn 0.6s ease-out 0.2s both;
 }
 
 .bulk-update-inputs {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: start;
+}
+
+.bulk-update-col {
+    display: grid;
     gap: 24px;
     min-width: 0;
 }
 
+.bulk-update-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px 24px;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border-light);
+}
+
 .bulk-update-card {
     min-width: 0;
+}
+
+.bulk-update-saved-form {
+    display: grid;
+    gap: 10px;
+}
+
+.bulk-update-saved-actions {
+    margin-top: 2px;
+}
+
+.bulk-update-saved-actions .btn {
+    flex: 1 1 140px;
+}
+
+.bulk-update-saved-list {
+    max-height: 320px;
+    margin-top: 16px;
+    overflow-y: auto;
+    border-top: 1px solid var(--border-light);
+}
+
+.bulk-update-saved-empty {
+    margin: 0;
+    padding: 16px 0 0;
+    color: var(--text-tertiary);
+    font-size: 0.8125rem;
+}
+
+.bulk-update-saved-item {
+    display: grid;
+    gap: 8px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.bulk-update-saved-item:last-child {
+    border-bottom: 0;
+}
+
+.bulk-update-saved-item-name,
+.bulk-update-saved-item-preview {
+    overflow-wrap: anywhere;
+}
+
+.bulk-update-saved-item-name {
+    color: var(--text-primary);
+}
+
+.bulk-update-saved-item-preview {
+    margin: 0;
+    color: var(--text-secondary);
+    font-family: var(--font-code);
+    font-size: 0.75rem;
+    line-height: 1.45;
+    white-space: pre-wrap;
+}
+
+.bulk-update-saved-item-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.bulk-update-saved-item-actions .btn {
+    flex: 0 1 auto;
 }
 
 .bulk-update-card label,
@@ -1802,7 +1883,7 @@ body.theme-enterprise.orange .btn-success:hover:not(:disabled) {
 }
 
 .bulk-update-sql-output {
-    min-height: 560px;
+    min-height: 420px;
 }
 
 .bulk-update-status {
@@ -1870,7 +1951,8 @@ body.theme-enterprise.orange .btn-success:hover:not(:disabled) {
 }
 
 .bulk-update-mode {
-    margin: 0 0 20px;
+    flex: 1 1 320px;
+    margin: 0;
     padding: 0;
     border: 0;
 }
@@ -1894,8 +1976,14 @@ body.theme-enterprise.orange .btn-success:hover:not(:disabled) {
     font-size: 0.8125rem;
 }
 
+.bulk-update-actions {
+    flex: 0 1 auto;
+    align-self: center;
+    margin-top: 0;
+}
+
 .bulk-update-actions .btn {
-    flex: 1 1 150px;
+    flex: 0 0 auto;
 }
 
 .bulk-update-page .sr-only {
@@ -1911,21 +1999,29 @@ body.theme-enterprise.orange .btn-success:hover:not(:disabled) {
 }
 
 @media (max-width: 992px) {
-    .bulk-update-main {
+    .bulk-update-inputs {
         grid-template-columns: 1fr;
     }
 
     .bulk-update-sql-output {
-        min-height: 400px;
+        min-height: 360px;
     }
 }
 
 @media (max-width: 768px) {
-    .bulk-update-actions {
+    .bulk-update-actions,
+    .bulk-update-saved-actions,
+    .bulk-update-saved-item-actions {
         flex-direction: column;
     }
 
-    .bulk-update-actions .btn {
+    .bulk-update-actions {
+        width: 100%;
+    }
+
+    .bulk-update-actions .btn,
+    .bulk-update-saved-actions .btn,
+    .bulk-update-saved-item-actions .btn {
         width: 100%;
     }
 }

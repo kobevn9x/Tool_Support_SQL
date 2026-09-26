@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SQL Data Formatter - Enterprise</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2349A078' stroke-width='2'><path d='M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4'></path></svg>">
-<<<<<<< HEAD
     <link rel="stylesheet" href="css/style.css">
-=======
-    <link rel="stylesheet" href="style.css">
->>>>>>> e512952bdbcf8b79d211fc413112283550ca90cb
 </head>
 <body class="theme-enterprise">
     <div class="app-container">
@@ -39,7 +35,6 @@
 
         <!-- PAGE NAV -->
         <nav class="app-nav" aria-label="Main">
-<<<<<<< HEAD
             <div class="nav-glider" id="navGlider" aria-hidden="true">
                 <div class="glider-fluid-core"></div>
                 <div class="glider-glass-lens">
@@ -54,13 +49,6 @@
             <button type="button" class="nav-item" data-page="sql-comment" onclick="switchPage('sql-comment')">Add Comment</button>
             <button type="button" class="nav-item" data-page="sql-export" onclick="switchPage('sql-export')" data-i18n="sqlExportNav">SQL Server Export</button>
         </nav>
-=======
-            <button type="button" class="nav-item active" data-page="formatter" onclick="switchPage('formatter')">Data Formatter</button>
-            <button type="button" class="nav-item" data-page="sql-comment" onclick="switchPage('sql-comment')">Add Comment</button>
-            <button type="button" class="nav-item" data-page="cs-column" onclick="switchPage('cs-column')" data-i18n="navCsColumn">C# Column Align</button>
-        </nav>
-
->>>>>>> e512952bdbcf8b79d211fc413112283550ca90cb
         <!-- PAGE: DATA FORMATTER -->
         <div id="page-formatter" class="page-content">
         <!-- MAIN LAYOUT -->
@@ -148,11 +136,7 @@
                     <div class="card-body">
                         <div class="options-list">
                             <label class="control-checkbox">
-<<<<<<< HEAD
                                 <input type="checkbox" id="autoTheme">
-=======
-                                <input type="checkbox" id="autoTheme" checked>
->>>>>>> e512952bdbcf8b79d211fc413112283550ca90cb
                                 <span class="control-indicator"></span>
                                 <span data-i18n="optAutoTheme">Auto Theme (18h - 7h)</span>
                             </label>
@@ -278,11 +262,11 @@
         </section>
         </div><!-- /page-formatter -->
 
-<<<<<<< HEAD
         <!-- PAGE: BULK UPDATE -->
         <div id="page-bulk-update" class="page-content bulk-update-page" style="display: none;">
             <main class="bulk-update-main">
                 <div class="bulk-update-inputs">
+                    <div class="bulk-update-col">
                     <section class="card bulk-update-card">
                         <div class="card-header">
                             <h2>
@@ -292,11 +276,36 @@
                         </div>
                         <div class="card-body">
                             <label for="bulkUpdateTemplateInput" data-i18n="bulkUpdateTemplateLabel">UPDATE template</label>
-                            <textarea id="bulkUpdateTemplateInput" class="code-textarea bulk-update-template-input" data-i18n-placeholder="bulkUpdateTemplatePlaceholder" aria-describedby="bulkUpdateTemplateHelp bulkUpdateTemplateError" placeholder="UPDATE PP0041&#10;SET PACKAGING_LOT = {PACKAGING_LOT}&#10;WHERE LOT_NO = {LOT_NO}"></textarea>
-                            <p id="bulkUpdateTemplateHelp" class="bulk-update-help" data-i18n="bulkUpdateTemplateHelp">Use one SQL Server UPDATE with one SET placeholder and one WHERE equality placeholder.</p>
+                            <textarea id="bulkUpdateTemplateInput" class="code-textarea bulk-update-template-input" data-i18n-placeholder="bulkUpdateTemplatePlaceholder" aria-describedby="bulkUpdateTemplateHelp bulkUpdateTemplateError" placeholder="UPDATE PP0041&#10;SET PACKAGING_LOT = {2}&#10;WHERE LOT_NO = {1}"></textarea>
+                            <p id="bulkUpdateTemplateHelp" class="bulk-update-help" data-i18n="bulkUpdateTemplateHelp">Use {1} for the WHERE key and {2}, {3}, ... for SET columns.</p>
                             <p id="bulkUpdateTemplateError" class="bulk-update-error" role="alert" hidden></p>
                         </div>
                     </section>
+
+                    <section class="card bulk-update-card bulk-update-saved-card">
+                        <div class="card-header">
+                            <h2>
+                                <svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 5h14v14H5z"></path><path d="M8 9h8M8 13h5"></path></svg>
+                                <span data-i18n="bulkUpdateSavedTitle">Saved Templates</span>
+                            </h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="bulk-update-saved-form">
+                                <label for="bulkUpdateTemplateName" data-i18n="bulkUpdateSavedNameLabel">Template name</label>
+                                <input id="bulkUpdateTemplateName" class="control-input" type="text" data-i18n-placeholder="bulkUpdateSavedNamePlaceholder" placeholder="Enter a template name" aria-describedby="bulkUpdateSavedStatus">
+                                <div class="controls-row bulk-update-saved-actions">
+                                    <button id="bulkUpdateTemplateCreate" type="button" class="btn btn-primary" data-i18n="bulkUpdateSavedCreate">Save New</button>
+                                    <button id="bulkUpdateTemplateUpdate" type="button" class="btn btn-primary" data-i18n="bulkUpdateSavedUpdate" hidden disabled>Update</button>
+                                    <button id="bulkUpdateTemplateCancel" type="button" class="btn btn-secondary" data-i18n="bulkUpdateSavedCancel" hidden disabled>Cancel Edit</button>
+                                </div>
+                            </div>
+                            <div id="bulkUpdateSavedStatus" class="code-status bulk-update-status" role="status" aria-live="polite"></div>
+                            <div id="bulkUpdateSavedList" class="bulk-update-saved-list" role="list">
+                                <p class="bulk-update-saved-empty" data-i18n="bulkUpdateSavedEmpty">No saved templates yet.</p>
+                            </div>
+                        </div>
+                    </section>
+                    </div>
 
                     <section class="card bulk-update-card">
                         <div class="card-header">
@@ -308,7 +317,7 @@
                         <div class="card-body">
                             <label for="bulkUpdateRowsInput" data-i18n="bulkUpdateDataLabel">Rows from Excel</label>
                             <textarea id="bulkUpdateRowsInput" class="code-textarea bulk-update-rows-input" data-i18n-placeholder="bulkUpdateRowsPlaceholder" aria-describedby="bulkUpdateRowsHelp bulkUpdateRowsStatus bulkUpdateRowsError" placeholder="LOT001&#9;PACK001&#10;LOT002&#9;PACK002"></textarea>
-                            <p id="bulkUpdateRowsHelp" class="bulk-update-help" data-i18n="bulkUpdateRowsHelp">Paste key first, then value. Tabs, commas, semicolons, or pipes are detected automatically.</p>
+                            <p id="bulkUpdateRowsHelp" class="bulk-update-help" data-i18n="bulkUpdateRowsHelp">Paste key {1} first, then values {2}, {3}, ... in placeholder order. Tabs, commas, semicolons, or pipes are detected automatically.</p>
                             <div id="bulkUpdateRowsStatus" class="code-status bulk-update-status" role="status" aria-live="polite"></div>
                             <p id="bulkUpdateRowsError" class="bulk-update-error" role="alert" hidden></p>
                             <div class="bulk-update-preview-wrap">
@@ -331,16 +340,13 @@
                         </h2>
                     </div>
                     <div class="card-body">
+                        <div class="bulk-update-toolbar">
                         <fieldset class="bulk-update-mode">
                             <legend data-i18n="bulkUpdateTransactionLabel">Transaction ending</legend>
                             <label><input type="radio" name="bulkUpdateTransactionMode" value="rollback" checked><span data-i18n="bulkUpdateRollback">ROLLBACK (safe default)</span></label>
                             <label><input type="radio" name="bulkUpdateTransactionMode" value="commit"><span data-i18n="bulkUpdateCommit">COMMIT</span></label>
                             <p class="bulk-update-warning" data-i18n="bulkUpdateTransactionWarning">Generate defaults to ROLLBACK. Choose COMMIT only when you intend to save changes.</p>
                         </fieldset>
-                        <label for="bulkUpdateSqlOutput" data-i18n="bulkUpdateSqlLabel">SQL script</label>
-                        <textarea id="bulkUpdateSqlOutput" class="code-textarea output-textarea bulk-update-sql-output" data-i18n-placeholder="bulkUpdateSqlPlaceholder" aria-describedby="bulkUpdateSqlHelp bulkUpdateOutputStatus" placeholder="Generated SQL will appear here..."></textarea>
-                        <p id="bulkUpdateSqlHelp" class="bulk-update-help" data-i18n="bulkUpdateSqlHelp">The generated script is editable. Format and copy the text currently shown.</p>
-                        <div id="bulkUpdateOutputStatus" class="code-status bulk-update-status" role="status" aria-live="polite"></div>
                         <div class="controls-row bulk-update-actions">
                             <button class="btn btn-primary btn-large" onclick="generateBulkUpdate()">
                                 <svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M3 12h18"></path><rect x="4" y="4" width="16" height="16" rx="2"></rect></svg>
@@ -353,13 +359,16 @@
                                 <span data-i18n="bulkUpdateFormat">Format SQL</span>
                             </button>
                         </div>
+                        </div>
+                        <div id="bulkUpdateOutputStatus" class="code-status bulk-update-status" role="status" aria-live="polite"></div>
+                        <label for="bulkUpdateSqlOutput" data-i18n="bulkUpdateSqlLabel">SQL script</label>
+                        <textarea id="bulkUpdateSqlOutput" class="code-textarea output-textarea bulk-update-sql-output" data-i18n-placeholder="bulkUpdateSqlPlaceholder" aria-describedby="bulkUpdateSqlHelp bulkUpdateOutputStatus" placeholder="Generated SQL will appear here..."></textarea>
+                        <p id="bulkUpdateSqlHelp" class="bulk-update-help" data-i18n="bulkUpdateSqlHelp">The generated script is editable. Format and copy the text currently shown.</p>
                     </div>
                 </section>
             </main>
         </div><!-- /page-bulk-update -->
 
-=======
->>>>>>> e512952bdbcf8b79d211fc413112283550ca90cb
         <!-- PAGE: ADD COMMENT -->
         <div id="page-sql-comment" class="page-content" style="display: none;">
             <main class="app-main comment-main">
@@ -425,7 +434,6 @@
             </main>
         </div><!-- /page-sql-comment -->
 
-<<<<<<< HEAD
         <div id="page-code-generator" class="page-content" style="display: none;">
             <main class="app-main code-generator-main">
                 <div class="panel-left code-generator-panel">
@@ -530,8 +538,6 @@
             </main>
         </div>
 
-=======
->>>>>>> e512952bdbcf8b79d211fc413112283550ca90cb
         <!-- PAGE: C# COLUMN ALIGN -->
         <div id="page-cs-column" class="page-content" style="display: none;">
             <main class="app-main csfmt-main">
@@ -610,7 +616,6 @@
             </main>
         </div><!-- /page-cs-column -->
 
-<<<<<<< HEAD
         <!-- PAGE: SQL SERVER EXPORT -->
         <div id="page-sql-export" class="page-content sql-export-page" style="display: none;">
             <main class="sql-export-main">
@@ -705,8 +710,6 @@
             </main>
         </div><!-- /page-sql-export -->
 
-=======
->>>>>>> e512952bdbcf8b79d211fc413112283550ca90cb
         <footer class="app-footer">
             <p>&copy; 2026 SQL Data Formatter. Enterprise Precision Edition.</p>
         </footer>
@@ -733,7 +736,6 @@
         </div>
     </div>
 
-<<<<<<< HEAD
     <!-- SQL EXPORT PROGRESS MODAL -->
     <div class="confirm-overlay" id="sqlExportProgressOverlay" style="display: none;">
         <div class="confirm-modal card">
@@ -766,10 +768,5 @@
     <script src="js/modules/cs-formatter.js"></script>
     <script src="js/modules/sql-server-sidecar.js"></script>
     <script src="js/modules/sql-export.js"></script>
-=======
-    <script src="i18n.js"></script>
-    <script src="script.js"></script>
-    <script src="cs-formatter.js"></script>
->>>>>>> e512952bdbcf8b79d211fc413112283550ca90cb
 </body>
 </html>
