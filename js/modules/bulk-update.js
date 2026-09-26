@@ -488,6 +488,8 @@
         savedTemplates: [],
         editingTemplateId: null,
         savedStatus: null,
+        previewRowCount: 0,
+        modalReturnFocus: null,
         initialized: false
     };
 
@@ -495,10 +497,15 @@
         return `${document.getElementById('bulkUpdateTemplateInput')?.value || ''}\u0000${document.getElementById('bulkUpdateRowsInput')?.value || ''}\u0000${currentMode()}`;
     }
 
+    const FIELD_ERROR_IDS = {
+        bulkUpdateTemplateInput: 'bulkUpdateTemplateError',
+        bulkUpdateRowsInput: 'bulkUpdateRowsError',
+        bulkUpdateSavedTemplateInput: 'bulkUpdateSavedTemplateError'
+    };
+
     function setFieldError(id, messageText) {
         const field = document.getElementById(id);
-        const errorId = id === 'bulkUpdateTemplateInput' ? 'bulkUpdateTemplateError' : 'bulkUpdateRowsError';
-        const errorEl = document.getElementById(errorId);
+        const errorEl = document.getElementById(FIELD_ERROR_IDS[id]);
         if (field) field.setAttribute('aria-invalid', messageText ? 'true' : 'false');
         if (errorEl) {
             errorEl.textContent = messageText || '';
@@ -524,6 +531,18 @@
         state.generatedSignature = '';
     }
 
+    function renderPreviewCount() {
+        const count = document.getElementById('bulkUpdatePreviewCount');
+        if (count) count.textContent = message('bulkUpdatePreviewRows', state.previewRowCount || 0);
+    }
+
+    function autoGrowTemplate() {
+        const input = document.getElementById('bulkUpdateTemplateInput');
+        if (!input) return;
+        input.style.height = 'auto';
+        input.style.height = `${Math.min(input.scrollHeight + 2, 280)}px`;
+    }
+
     function renderPreview(model) {
         const table = document.getElementById('bulkUpdatePreview');
         const empty = document.getElementById('bulkUpdatePreviewEmpty');
@@ -532,6 +551,8 @@
         const tbody = table.querySelector('tbody');
         thead.replaceChildren();
         tbody.replaceChildren();
+        state.previewRowCount = model.rows.length;
+        renderPreviewCount();
         if (!model.headers.length) {
             if (empty) empty.hidden = false;
             return;
@@ -661,7 +682,7 @@
     function clearSavedTemplateFormErrors() {
         const nameInput = document.getElementById('bulkUpdateTemplateName');
         if (nameInput) nameInput.setAttribute('aria-invalid', 'false');
-        setFieldError('bulkUpdateTemplateInput', '');
+        setFieldError('bulkUpdateSavedTemplateInput', '');
     }
 
     function setSavedTemplateMode(editing) {
@@ -682,9 +703,97 @@
         }
     }
 
+    function renderSavedTemplateSelect() {
+        const select = document.getElementById('bulkUpdateSavedSelect');
+        if (!select) return;
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        placeholder.textContent = message('bulkUpdateSavedPick');
+        const options = state.savedTemplates.map(record => {
+            const option = document.createElement('option');
+            option.value = String(record.id);
+            option.textContent = record.name;
+            return option;
+        });
+        select.replaceChildren(placeholder, ...options);
+        syncSavedTemplateSelect();
+    }
+
+    // Show the saved template that matches the editor content, if any.
+    function syncSavedTemplateSelect() {
+        const select = document.getElementById('bulkUpdateSavedSelect');
+        const templateInput = document.getElementById('bulkUpdateTemplateInput');
+        if (!select || !templateInput) return;
+        const current = templateInput.value.trim();
+        const match = state.savedTemplates.find(record => record.template === current);
+        select.value = match ? String(match.id) : '';
+    }
+
+    function resetSavedTemplateForm() {
+        state.editingTemplateId = null;
+        document.getElementById('bulkUpdateTemplateName').value = '';
+        document.getElementById('bulkUpdateSavedTemplateInput').value = document.getElementById('bulkUpdateTemplateInput')?.value || '';
+        setSavedTemplateMode(false);
+        clearSavedTemplateFormErrors();
+        setSavedTemplateStatus('', '');
+    }
+
+    function isSavedModalOpen() {
+        const modal = document.getElementById('bulkUpdateSavedModal');
+        return Boolean(modal && !modal.hidden);
+    }
+
+    function openSavedModal() {
+        const modal = document.getElementById('bulkUpdateSavedModal');
+        if (!modal || !modal.hidden) return;
+        state.modalReturnFocus = document.activeElement;
+        resetSavedTemplateForm();
+        modal.hidden = false;
+        document.getElementById('bulkUpdateTemplateName')?.focus();
+    }
+
+    function closeSavedModal() {
+        const modal = document.getElementById('bulkUpdateSavedModal');
+        if (!modal || modal.hidden) return;
+        resetSavedTemplateForm();
+        modal.hidden = true;
+        const target = state.modalReturnFocus;
+        state.modalReturnFocus = null;
+        if (target && document.contains(target)) target.focus();
+    }
+
+    function onSavedModalKeydown(event) {
+        if (!isSavedModalOpen()) return;
+        const confirmOverlay = document.getElementById('confirmOverlay');
+        if (confirmOverlay && confirmOverlay.style.display !== 'none') return;
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            closeSavedModal();
+            return;
+        }
+        if (event.key !== 'Tab') return;
+        const dialog = document.querySelector('#bulkUpdateSavedModal .bulk-update-modal');
+        const focusable = [...dialog.querySelectorAll('button, input, textarea, select')]
+            .filter(el => !el.disabled && !el.hidden && el.offsetParent !== null);
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+        } else if (!dialog.contains(document.activeElement)) {
+            event.preventDefault();
+            first.focus();
+        }
+    }
+
     function renderSavedTemplates() {
         const list = document.getElementById('bulkUpdateSavedList');
         if (!list) return;
+        renderSavedTemplateSelect();
         list.replaceChildren();
         if (!state.savedTemplates.length) {
             const empty = document.createElement('p');
@@ -782,7 +891,7 @@
 
     function validateSavedTemplateForm() {
         const nameInput = document.getElementById('bulkUpdateTemplateName');
-        const templateInput = document.getElementById('bulkUpdateTemplateInput');
+        const templateInput = document.getElementById('bulkUpdateSavedTemplateInput');
         const name = nameInput?.value.trim() || '';
         const template = templateInput?.value.trim() || '';
         if (nameInput) nameInput.setAttribute('aria-invalid', 'false');
@@ -801,7 +910,7 @@
         }
         const info = parseTemplate(template);
         if (!info.ok) {
-            setFieldError('bulkUpdateTemplateInput', message('bulkUpdateTemplateError'));
+            setFieldError('bulkUpdateSavedTemplateInput', message('bulkUpdateTemplateError'));
             setSavedTemplateStatusKey('bulkUpdateTemplateError', 'error');
             return null;
         }
@@ -816,10 +925,7 @@
         while (state.savedTemplates.some(record => record.id === id)) id++;
         const nextTemplates = [{ id, ...values }, ...state.savedTemplates];
         if (!persistSavedTemplates(nextTemplates)) return false;
-        document.getElementById('bulkUpdateTemplateName').value = '';
-        state.editingTemplateId = null;
-        setSavedTemplateMode(false);
-        setSavedTemplateStatus('', '');
+        resetSavedTemplateForm();
         renderSavedTemplates();
         showToast(message('bulkUpdateSavedCreated'), 'success');
         return true;
@@ -829,13 +935,11 @@
         const record = state.savedTemplates.find(item => item.id === id);
         if (!record) return false;
         const templateInput = document.getElementById('bulkUpdateTemplateInput');
-        const nameInput = document.getElementById('bulkUpdateTemplateName');
-        state.editingTemplateId = null;
-        setSavedTemplateMode(false);
-        if (nameInput) nameInput.value = '';
         if (templateInput) templateInput.value = record.template;
-        clearSavedTemplateFormErrors();
-        setSavedTemplateStatus('', '');
+        closeSavedModal();
+        resetSavedTemplateForm();
+        autoGrowTemplate();
+        syncSavedTemplateSelect();
         refreshBulkUpdate();
         showToast(message('bulkUpdateSavedLoaded'), 'success');
         return true;
@@ -846,10 +950,9 @@
         if (!record) return false;
         state.editingTemplateId = id;
         document.getElementById('bulkUpdateTemplateName').value = record.name;
-        document.getElementById('bulkUpdateTemplateInput').value = record.template;
+        document.getElementById('bulkUpdateSavedTemplateInput').value = record.template;
         setSavedTemplateMode(true);
         clearSavedTemplateFormErrors();
-        refreshBulkUpdate();
         setSavedTemplateStatusKey('bulkUpdateSavedEditing', 'info', record.name);
         document.getElementById('bulkUpdateTemplateName').focus();
         return true;
@@ -863,21 +966,14 @@
         const nextTemplates = state.savedTemplates.slice();
         nextTemplates[index] = { id: state.editingTemplateId, ...values };
         if (!persistSavedTemplates(nextTemplates)) return false;
-        state.editingTemplateId = null;
-        document.getElementById('bulkUpdateTemplateName').value = '';
-        setSavedTemplateMode(false);
-        setSavedTemplateStatus('', '');
+        resetSavedTemplateForm();
         renderSavedTemplates();
         showToast(message('bulkUpdateSavedUpdated'), 'success');
         return true;
     }
 
     function cancelSavedTemplateEdit() {
-        state.editingTemplateId = null;
-        document.getElementById('bulkUpdateTemplateName').value = '';
-        setSavedTemplateMode(false);
-        clearSavedTemplateFormErrors();
-        setSavedTemplateStatus('', '');
+        resetSavedTemplateForm();
     }
 
     async function deleteSavedTemplate(id) {
@@ -885,13 +981,7 @@
         if (!record || !(await showConfirm(message('bulkUpdateSavedDeleteConfirm', record.name)))) return false;
         const nextTemplates = state.savedTemplates.filter(item => item.id !== id);
         if (!persistSavedTemplates(nextTemplates)) return false;
-        if (state.editingTemplateId === id) {
-            state.editingTemplateId = null;
-            document.getElementById('bulkUpdateTemplateName').value = '';
-            setSavedTemplateMode(false);
-            clearSavedTemplateFormErrors();
-            setSavedTemplateStatus('', '');
-        }
+        if (state.editingTemplateId === id) resetSavedTemplateForm();
         renderSavedTemplates();
         showToast(message('bulkUpdateSavedDeleted'), 'success');
         return true;
@@ -904,6 +994,17 @@
         if (!templateInput || !rowsInput) return;
         state.initialized = true;
         templateInput.addEventListener('input', refreshBulkUpdate);
+        templateInput.addEventListener('input', autoGrowTemplate);
+        templateInput.addEventListener('input', syncSavedTemplateSelect);
+        document.getElementById('bulkUpdateSavedSelect')?.addEventListener('change', event => {
+            if (event.target.value) useSavedTemplate(Number(event.target.value));
+        });
+        document.getElementById('bulkUpdateSavedManage')?.addEventListener('click', openSavedModal);
+        document.getElementById('bulkUpdateSavedClose')?.addEventListener('click', closeSavedModal);
+        document.getElementById('bulkUpdateSavedModal')?.addEventListener('click', event => {
+            if (event.target === event.currentTarget) closeSavedModal();
+        });
+        document.addEventListener('keydown', onSavedModalKeydown);
         rowsInput.addEventListener('input', refreshBulkUpdate);
         document.querySelectorAll('input[name="bulkUpdateTransactionMode"]').forEach(input => input.addEventListener('change', refreshBulkUpdate));
         document.getElementById('bulkUpdateTemplateCreate')?.addEventListener('click', createSavedTemplate);
@@ -911,6 +1012,7 @@
         document.getElementById('bulkUpdateTemplateCancel')?.addEventListener('click', cancelSavedTemplateEdit);
         setSavedTemplateMode(false);
         loadSavedTemplates();
+        autoGrowTemplate();
         setStatus('bulkUpdateOutputStatus', '', '');
         refreshBulkUpdate(false);
     }
@@ -918,6 +1020,7 @@
     function refreshBulkUpdateLanguage() {
         if (!state.initialized) return;
         renderSavedTemplates();
+        renderPreviewCount();
         if (state.editingTemplateId !== null) {
             const record = state.savedTemplates.find(item => item.id === state.editingTemplateId);
             if (record) setSavedTemplateStatusKey('bulkUpdateSavedEditing', 'info', record.name);

@@ -266,68 +266,58 @@
         <div id="page-bulk-update" class="page-content bulk-update-page" style="display: none;">
             <main class="bulk-update-main">
                 <div class="bulk-update-inputs">
-                    <div class="bulk-update-col">
                     <section class="card bulk-update-card">
                         <div class="card-header">
                             <h2>
-                                <svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"></path></svg>
+                                <span class="bulk-update-step" aria-hidden="true">1</span>
                                 <span data-i18n="bulkUpdateTemplateTitle">Update Template</span>
                             </h2>
+                            <div class="bulk-update-saved-picker">
+                                <label for="bulkUpdateSavedSelect" class="sr-only" data-i18n="bulkUpdateSavedTitle">Saved Templates</label>
+                                <select id="bulkUpdateSavedSelect" class="control-input bulk-update-saved-select">
+                                    <option value="">Choose a saved template…</option>
+                                </select>
+                                <button id="bulkUpdateSavedManage" type="button" class="btn btn-secondary btn-sm" aria-haspopup="dialog" aria-controls="bulkUpdateSavedModal">
+                                    <svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                                    <span data-i18n="bulkUpdateSavedManage">Manage</span>
+                                </button>
+                            </div>
                         </div>
                         <div class="card-body">
-                            <label for="bulkUpdateTemplateInput" data-i18n="bulkUpdateTemplateLabel">UPDATE template</label>
+                            <label for="bulkUpdateTemplateInput" class="sr-only" data-i18n="bulkUpdateTemplateLabel">UPDATE template</label>
                             <textarea id="bulkUpdateTemplateInput" class="code-textarea bulk-update-template-input" data-i18n-placeholder="bulkUpdateTemplatePlaceholder" aria-describedby="bulkUpdateTemplateHelp bulkUpdateTemplateError" placeholder="UPDATE PP0041&#10;SET PACKAGING_LOT = {2}&#10;WHERE LOT_NO = {1}"></textarea>
                             <p id="bulkUpdateTemplateHelp" class="bulk-update-help" data-i18n="bulkUpdateTemplateHelp">Use {1} for the WHERE key and {2}, {3}, ... for SET columns.</p>
                             <p id="bulkUpdateTemplateError" class="bulk-update-error" role="alert" hidden></p>
                         </div>
                     </section>
 
-                    <section class="card bulk-update-card bulk-update-saved-card">
-                        <div class="card-header">
-                            <h2>
-                                <svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 5h14v14H5z"></path><path d="M8 9h8M8 13h5"></path></svg>
-                                <span data-i18n="bulkUpdateSavedTitle">Saved Templates</span>
-                            </h2>
-                        </div>
-                        <div class="card-body">
-                            <div class="bulk-update-saved-form">
-                                <label for="bulkUpdateTemplateName" data-i18n="bulkUpdateSavedNameLabel">Template name</label>
-                                <input id="bulkUpdateTemplateName" class="control-input" type="text" data-i18n-placeholder="bulkUpdateSavedNamePlaceholder" placeholder="Enter a template name" aria-describedby="bulkUpdateSavedStatus">
-                                <div class="controls-row bulk-update-saved-actions">
-                                    <button id="bulkUpdateTemplateCreate" type="button" class="btn btn-primary" data-i18n="bulkUpdateSavedCreate">Save New</button>
-                                    <button id="bulkUpdateTemplateUpdate" type="button" class="btn btn-primary" data-i18n="bulkUpdateSavedUpdate" hidden disabled>Update</button>
-                                    <button id="bulkUpdateTemplateCancel" type="button" class="btn btn-secondary" data-i18n="bulkUpdateSavedCancel" hidden disabled>Cancel Edit</button>
-                                </div>
-                            </div>
-                            <div id="bulkUpdateSavedStatus" class="code-status bulk-update-status" role="status" aria-live="polite"></div>
-                            <div id="bulkUpdateSavedList" class="bulk-update-saved-list" role="list">
-                                <p class="bulk-update-saved-empty" data-i18n="bulkUpdateSavedEmpty">No saved templates yet.</p>
-                            </div>
-                        </div>
-                    </section>
-                    </div>
-
                     <section class="card bulk-update-card">
                         <div class="card-header">
                             <h2>
-                                <svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"></path><path d="M4 9h16M9 4v16"></path></svg>
+                                <span class="bulk-update-step" aria-hidden="true">2</span>
                                 <span data-i18n="bulkUpdateDataTitle">Data Input</span>
                             </h2>
+                            <div id="bulkUpdateRowsStatus" class="code-status bulk-update-status" role="status" aria-live="polite"></div>
                         </div>
                         <div class="card-body">
                             <label for="bulkUpdateRowsInput" data-i18n="bulkUpdateDataLabel">Rows from Excel</label>
                             <textarea id="bulkUpdateRowsInput" class="code-textarea bulk-update-rows-input" data-i18n-placeholder="bulkUpdateRowsPlaceholder" aria-describedby="bulkUpdateRowsHelp bulkUpdateRowsStatus bulkUpdateRowsError" placeholder="LOT001&#9;PACK001&#10;LOT002&#9;PACK002"></textarea>
                             <p id="bulkUpdateRowsHelp" class="bulk-update-help" data-i18n="bulkUpdateRowsHelp">Paste key {1} first, then values {2}, {3}, ... in placeholder order. Tabs, commas, semicolons, or pipes are detected automatically.</p>
-                            <div id="bulkUpdateRowsStatus" class="code-status bulk-update-status" role="status" aria-live="polite"></div>
                             <p id="bulkUpdateRowsError" class="bulk-update-error" role="alert" hidden></p>
-                            <div class="bulk-update-preview-wrap">
-                                <table id="bulkUpdatePreview" class="bulk-update-preview">
-                                    <caption class="sr-only" data-i18n="bulkUpdatePreviewCaption">Bulk update data preview</caption>
-                                    <thead></thead>
-                                    <tbody></tbody>
-                                </table>
-                                <p id="bulkUpdatePreviewEmpty" class="bulk-update-empty" data-i18n="bulkUpdatePreviewEmpty">Enter valid template and rows to preview the mapping.</p>
-                            </div>
+                            <details id="bulkUpdatePreviewPanel" class="bulk-update-preview-panel" open>
+                                <summary>
+                                    <span data-i18n="bulkUpdatePreviewTitle">Mapping preview</span>
+                                    <span id="bulkUpdatePreviewCount" class="bulk-update-count">0</span>
+                                </summary>
+                                <div class="bulk-update-preview-wrap">
+                                    <table id="bulkUpdatePreview" class="bulk-update-preview">
+                                        <caption class="sr-only" data-i18n="bulkUpdatePreviewCaption">Bulk update data preview</caption>
+                                        <thead></thead>
+                                        <tbody></tbody>
+                                    </table>
+                                    <p id="bulkUpdatePreviewEmpty" class="bulk-update-empty" data-i18n="bulkUpdatePreviewEmpty">Enter valid template and rows to preview the mapping.</p>
+                                </div>
+                            </details>
                         </div>
                     </section>
                 </div>
@@ -335,38 +325,72 @@
                 <section class="card bulk-update-card bulk-update-output-card">
                     <div class="card-header">
                         <h2>
-                            <svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M16 3h3a2 2 0 0 1 2 2v3"></path><path d="M8 21H5a2 2 0 0 1-2-2v-3"></path><path d="M16 21h3a2 2 0 0 0 2-2v-3"></path><path d="M8 8h8v8H8z"></path></svg>
+                            <span class="bulk-update-step" aria-hidden="true">3</span>
                             <span data-i18n="bulkUpdateOutputTitle">Generated SQL</span>
                         </h2>
+                        <div class="bulk-update-output-actions">
+                            <button id="bulkUpdateFormatBtn" type="button" class="btn btn-secondary btn-sm" onclick="formatBulkUpdateSql()" disabled>
+                                <span data-i18n="bulkUpdateFormat">Format SQL</span>
+                            </button>
+                            <button id="bulkUpdateCopyBtn" type="button" class="btn btn-secondary btn-sm" onclick="copyBulkUpdateSql()" disabled>
+                                <svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <span data-i18n="bulkUpdateCopy">Copy SQL</span>
+                            </button>
+                        </div>
                     </div>
                     <div class="card-body">
                         <div class="bulk-update-toolbar">
-                        <fieldset class="bulk-update-mode">
-                            <legend data-i18n="bulkUpdateTransactionLabel">Transaction ending</legend>
-                            <label><input type="radio" name="bulkUpdateTransactionMode" value="rollback" checked><span data-i18n="bulkUpdateRollback">ROLLBACK (safe default)</span></label>
-                            <label><input type="radio" name="bulkUpdateTransactionMode" value="commit"><span data-i18n="bulkUpdateCommit">COMMIT</span></label>
-                            <p class="bulk-update-warning" data-i18n="bulkUpdateTransactionWarning">Generate defaults to ROLLBACK. Choose COMMIT only when you intend to save changes.</p>
-                        </fieldset>
-                        <div class="controls-row bulk-update-actions">
-                            <button class="btn btn-primary btn-large" onclick="generateBulkUpdate()">
-                                <svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M3 12h18"></path><rect x="4" y="4" width="16" height="16" rx="2"></rect></svg>
+                            <fieldset class="bulk-update-mode">
+                                <legend class="sr-only" data-i18n="bulkUpdateTransactionLabel">Transaction ending</legend>
+                                <label><input type="radio" name="bulkUpdateTransactionMode" value="rollback" checked><span data-i18n="bulkUpdateRollback">ROLLBACK (safe default)</span></label>
+                                <label class="bulk-update-mode-commit"><input type="radio" name="bulkUpdateTransactionMode" value="commit"><span data-i18n="bulkUpdateCommit">COMMIT</span></label>
+                            </fieldset>
+                            <button type="button" class="btn btn-primary bulk-update-generate" onclick="generateBulkUpdate()">
+                                <svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M7 4.5v15l12-7.5z"></path></svg>
                                 <span data-i18n="bulkUpdateGenerate">Generate SQL</span>
                             </button>
-                            <button id="bulkUpdateCopyBtn" class="btn btn-success btn-large" onclick="copyBulkUpdateSql()" disabled>
-                                <span data-i18n="bulkUpdateCopy">Copy SQL</span>
-                            </button>
-                            <button id="bulkUpdateFormatBtn" class="btn btn-secondary btn-large" onclick="formatBulkUpdateSql()" disabled>
-                                <span data-i18n="bulkUpdateFormat">Format SQL</span>
-                            </button>
                         </div>
-                        </div>
-                        <div id="bulkUpdateOutputStatus" class="code-status bulk-update-status" role="status" aria-live="polite"></div>
-                        <label for="bulkUpdateSqlOutput" data-i18n="bulkUpdateSqlLabel">SQL script</label>
+                        <p class="bulk-update-warning" data-i18n="bulkUpdateTransactionWarning">Generate defaults to ROLLBACK. Choose COMMIT only when you intend to save changes.</p>
+                        <label for="bulkUpdateSqlOutput" class="sr-only" data-i18n="bulkUpdateSqlLabel">SQL script</label>
                         <textarea id="bulkUpdateSqlOutput" class="code-textarea output-textarea bulk-update-sql-output" data-i18n-placeholder="bulkUpdateSqlPlaceholder" aria-describedby="bulkUpdateSqlHelp bulkUpdateOutputStatus" placeholder="Generated SQL will appear here..."></textarea>
-                        <p id="bulkUpdateSqlHelp" class="bulk-update-help" data-i18n="bulkUpdateSqlHelp">The generated script is editable. Format and copy the text currently shown.</p>
+                        <div class="bulk-update-output-footer">
+                            <div id="bulkUpdateOutputStatus" class="code-status bulk-update-status" role="status" aria-live="polite"></div>
+                            <p id="bulkUpdateSqlHelp" class="bulk-update-help" data-i18n="bulkUpdateSqlHelp">The generated script is editable. Format and copy the text currently shown.</p>
+                        </div>
                     </div>
                 </section>
             </main>
+
+            <!-- Saved templates manager (popup) -->
+            <div id="bulkUpdateSavedModal" class="confirm-overlay bulk-update-modal-overlay" hidden>
+                <div class="bulk-update-modal" role="dialog" aria-modal="true" aria-labelledby="bulkUpdateSavedModalTitle">
+                    <div class="bulk-update-modal-header">
+                        <h3 id="bulkUpdateSavedModalTitle" data-i18n="bulkUpdateSavedTitle">Saved Templates</h3>
+                        <button id="bulkUpdateSavedClose" type="button" class="bulk-update-modal-close" data-i18n-title="bulkUpdateSavedClose" title="Close">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+                        </button>
+                    </div>
+                    <div class="bulk-update-modal-body">
+                        <div id="bulkUpdateSavedList" class="bulk-update-saved-list" role="list">
+                            <p class="bulk-update-saved-empty" data-i18n="bulkUpdateSavedEmpty">No saved templates yet.</p>
+                        </div>
+                        <div class="bulk-update-saved-form">
+                            <label for="bulkUpdateTemplateName" data-i18n="bulkUpdateSavedNameLabel">Template name</label>
+                            <input id="bulkUpdateTemplateName" class="control-input" type="text" data-i18n-placeholder="bulkUpdateSavedNamePlaceholder" placeholder="Enter a template name" aria-describedby="bulkUpdateSavedStatus">
+                            <label for="bulkUpdateSavedTemplateInput" data-i18n="bulkUpdateSavedTemplateLabel">Template content</label>
+                            <textarea id="bulkUpdateSavedTemplateInput" class="code-textarea bulk-update-saved-template-input" aria-describedby="bulkUpdateSavedFormHelp bulkUpdateSavedTemplateError"></textarea>
+                            <p id="bulkUpdateSavedFormHelp" class="bulk-update-help" data-i18n="bulkUpdateSavedFormHelp">Prefilled with the current UPDATE template.</p>
+                            <p id="bulkUpdateSavedTemplateError" class="bulk-update-error" role="alert" hidden></p>
+                            <div id="bulkUpdateSavedStatus" class="code-status bulk-update-status" role="status" aria-live="polite"></div>
+                            <div class="bulk-update-saved-actions">
+                                <button id="bulkUpdateTemplateCancel" type="button" class="btn btn-secondary" data-i18n="bulkUpdateSavedCancel" hidden disabled>Cancel Edit</button>
+                                <button id="bulkUpdateTemplateCreate" type="button" class="btn btn-primary" data-i18n="bulkUpdateSavedCreate">Save New</button>
+                                <button id="bulkUpdateTemplateUpdate" type="button" class="btn btn-primary" data-i18n="bulkUpdateSavedUpdate" hidden disabled>Update</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div><!-- /page-bulk-update -->
 
         <!-- PAGE: ADD COMMENT -->
