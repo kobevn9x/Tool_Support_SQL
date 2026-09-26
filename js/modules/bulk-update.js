@@ -685,6 +685,8 @@
     function renderSavedTemplates() {
         const list = document.getElementById('bulkUpdateSavedList');
         if (!list) return;
+        const count = document.getElementById('bulkUpdateSavedCount');
+        if (count) count.textContent = String(state.savedTemplates.length);
         list.replaceChildren();
         if (!state.savedTemplates.length) {
             const empty = document.createElement('p');
@@ -851,6 +853,8 @@
         clearSavedTemplateFormErrors();
         refreshBulkUpdate();
         setSavedTemplateStatusKey('bulkUpdateSavedEditing', 'info', record.name);
+        const panel = document.getElementById('bulkUpdateSavedPanel');
+        if (panel) panel.open = true;
         document.getElementById('bulkUpdateTemplateName').focus();
         return true;
     }
@@ -911,6 +915,8 @@
         document.getElementById('bulkUpdateTemplateCancel')?.addEventListener('click', cancelSavedTemplateEdit);
         setSavedTemplateMode(false);
         loadSavedTemplates();
+        const savedPanel = document.getElementById('bulkUpdateSavedPanel');
+        if (savedPanel && state.savedTemplates.length) savedPanel.open = true;
         setStatus('bulkUpdateOutputStatus', '', '');
         refreshBulkUpdate(false);
     }
