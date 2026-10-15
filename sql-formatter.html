@@ -22,11 +22,7 @@
             </div>
             <div class="header-actions">
                 <div class="header-clock" id="headerClock" aria-label="Clock"></div>
-                <button id="themeToggleBtn" class="btn btn-secondary btn-theme-toggle" title="Toggle Theme" aria-label="Toggle Theme">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                    </svg>
-                </button>
+                <button id="themeToggleBtn" type="button" class="btn btn-secondary btn-sm btn-theme-toggle" title="Switch to dark mode">Dark mode</button>
                 <div class="lang-switcher">
                     <select id="langSelect" aria-label="Language"></select>
                 </div>
@@ -54,17 +50,15 @@
         <!-- MAIN LAYOUT -->
         <main class="app-main">
             <!-- LEFT PANEL -->
-            <div class="panel-left">
+            <div class="panel-left workspace-split">
                 <!-- INPUT SECTION -->
                 <section class="card section-input">
                     <div class="card-header">
                         <h2 data-i18n="inputTitle">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                             Raw Data Input
                         </h2>
                         <div class="card-actions">
-                            <button class="btn btn-danger btn-sm" onclick="clearInput()">
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="clearInput()">
                                 <span data-i18n="btnClear">Clear</span>
                             </button>
                         </div>
@@ -78,7 +72,6 @@
                 <section class="card section-output interactive-border">
                     <div class="card-header">
                         <h2 data-i18n="outputTitle">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="8 17 12 21 16 17"></polyline><line x1="12" y1="12" x2="12" y2="21"></line><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"></path></svg>
                             Formatted Result
                         </h2>
                     </div>
@@ -87,12 +80,10 @@
                         <div id="singleOutputMode">
                             <textarea id="outputText" class="code-textarea output-textarea" readonly data-i18n-placeholder="outputPlaceholder" placeholder="Result will appear here..."></textarea>
                             <div class="controls-row">
-                                <button class="btn btn-success" onclick="copyToClipboard()">
-                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <button type="button" class="btn btn-primary" onclick="copyToClipboard()">
                                     <span data-i18n="btnCopy">Copy</span>
                                 </button>
-                                <button class="btn btn-secondary" onclick="downloadResult()">
-                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                <button type="button" class="btn btn-secondary" onclick="downloadResult()">
                                     <span data-i18n="btnDownload">Download</span>
                                 </button>
                             </div>
@@ -104,16 +95,13 @@
                             <div class="chunk-content">
                                 <textarea id="chunkedOutputText" class="code-textarea output-textarea" readonly></textarea>
                                 <div class="controls-row">
-                                    <button class="btn btn-success" onclick="copyCurrentChunk()">
-                                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                        <span data-i18n="btnCopyCurrentBlock">Copy Current Block</span>
+                                    <button type="button" class="btn btn-primary" onclick="copyCurrentChunk()">
+                                        <span data-i18n="btnCopyCurrentBlock">Copy block</span>
                                     </button>
-                                    <button class="btn btn-primary-alt" onclick="copyAllChunks()">
-                                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                        <span data-i18n="btnCopyAllBlocks">Copy All Blocks</span>
+                                    <button type="button" class="btn btn-tonal" onclick="copyAllChunks()">
+                                        <span data-i18n="btnCopyAllBlocks">Copy all blocks</span>
                                     </button>
-                                    <button class="btn btn-secondary" onclick="downloadResult()">
-                                        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                    <button type="button" class="btn btn-secondary" onclick="downloadResult()">
                                         <span data-i18n="btnDownload">Download</span>
                                     </button>
                                 </div>
@@ -129,7 +117,6 @@
                 <section class="card section-options">
                     <div class="card-header">
                         <h3 data-i18n="optionsTitle">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                             Configuration
                         </h3>
                     </div>
@@ -206,9 +193,8 @@
                         </div>
 
                         <div class="action-convert-container">
-                            <button class="btn btn-primary btn-large btn-block" onclick="convertData()">
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-                                <span data-i18n="btnConvert">Convert Data</span>
+                            <button id="convertBtn" type="button" class="btn btn-primary btn-large btn-block" onclick="convertData()">
+                                <span data-i18n="btnConvert">Convert</span>
                             </button>
                         </div>
                     </div>
@@ -218,7 +204,6 @@
                 <section class="card section-stats">
                     <div class="card-header">
                         <h3 data-i18n="statsTitle">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
                             Statistics
                         </h3>
                     </div>
@@ -245,13 +230,11 @@
         <!-- HISTORY PANEL -->
         <section class="history-panel card">
             <div class="card-header history-header-main">
-                <h3 style="margin: 0; display: flex; align-items: center; gap: 8px;">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <h3>
                     <span data-i18n="historyTitle">Conversion History</span>
                 </h3>
-                <button class="btn btn-danger btn-sm" onclick="clearHistory()">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                    <span data-i18n="btnClearAll">Clear</span>
+                <button type="button" class="btn btn-danger btn-sm" onclick="clearHistory()">
+                    <span data-i18n="btnClearAll">Clear all</span>
                 </button>
             </div>
             <div class="card-body">
@@ -274,11 +257,10 @@
                             </h2>
                             <div class="bulk-update-saved-picker">
                                 <label for="bulkUpdateSavedSelect" class="sr-only" data-i18n="bulkUpdateSavedTitle">Saved Templates</label>
-                                <select id="bulkUpdateSavedSelect" class="control-input bulk-update-saved-select">
+                                <select id="bulkUpdateSavedSelect" class="control-select bulk-update-saved-select">
                                     <option value="">Choose a saved template…</option>
                                 </select>
                                 <button id="bulkUpdateSavedManage" type="button" class="btn btn-secondary btn-sm" aria-haspopup="dialog" aria-controls="bulkUpdateSavedModal">
-                                    <svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                                     <span data-i18n="bulkUpdateSavedManage">Manage</span>
                                 </button>
                             </div>
@@ -332,8 +314,7 @@
                             <button id="bulkUpdateFormatBtn" type="button" class="btn btn-secondary btn-sm" onclick="formatBulkUpdateSql()" disabled>
                                 <span data-i18n="bulkUpdateFormat">Format SQL</span>
                             </button>
-                            <button id="bulkUpdateCopyBtn" type="button" class="btn btn-secondary btn-sm" onclick="copyBulkUpdateSql()" disabled>
-                                <svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            <button id="bulkUpdateCopyBtn" type="button" class="btn btn-tonal btn-sm" onclick="copyBulkUpdateSql()" disabled>
                                 <span data-i18n="bulkUpdateCopy">Copy SQL</span>
                             </button>
                         </div>
@@ -346,7 +327,6 @@
                                 <label class="bulk-update-mode-commit"><input type="radio" name="bulkUpdateTransactionMode" value="commit"><span data-i18n="bulkUpdateCommit">COMMIT</span></label>
                             </fieldset>
                             <button type="button" class="btn btn-primary bulk-update-generate" onclick="generateBulkUpdate()">
-                                <svg class="icon" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M7 4.5v15l12-7.5z"></path></svg>
                                 <span data-i18n="bulkUpdateGenerate">Generate SQL</span>
                             </button>
                         </div>
@@ -366,9 +346,7 @@
                 <div class="bulk-update-modal" role="dialog" aria-modal="true" aria-labelledby="bulkUpdateSavedModalTitle">
                     <div class="bulk-update-modal-header">
                         <h3 id="bulkUpdateSavedModalTitle" data-i18n="bulkUpdateSavedTitle">Saved Templates</h3>
-                        <button id="bulkUpdateSavedClose" type="button" class="bulk-update-modal-close" data-i18n-title="bulkUpdateSavedClose" title="Close">
-                            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"></path></svg>
-                        </button>
+                        <button id="bulkUpdateSavedClose" type="button" class="btn btn-ghost btn-sm" data-i18n="bulkUpdateSavedClose">Close</button>
                     </div>
                     <div class="bulk-update-modal-body">
                         <div id="bulkUpdateSavedList" class="bulk-update-saved-list" role="list">
@@ -383,8 +361,8 @@
                             <p id="bulkUpdateSavedTemplateError" class="bulk-update-error" role="alert" hidden></p>
                             <div id="bulkUpdateSavedStatus" class="code-status bulk-update-status" role="status" aria-live="polite"></div>
                             <div class="bulk-update-saved-actions">
-                                <button id="bulkUpdateTemplateCancel" type="button" class="btn btn-secondary" data-i18n="bulkUpdateSavedCancel" hidden disabled>Cancel Edit</button>
-                                <button id="bulkUpdateTemplateCreate" type="button" class="btn btn-primary" data-i18n="bulkUpdateSavedCreate">Save New</button>
+                                <button id="bulkUpdateTemplateCancel" type="button" class="btn btn-secondary" data-i18n="bulkUpdateSavedCancel" hidden disabled>Cancel edit</button>
+                                <button id="bulkUpdateTemplateCreate" type="button" class="btn btn-primary" data-i18n="bulkUpdateSavedCreate">Save as new</button>
                                 <button id="bulkUpdateTemplateUpdate" type="button" class="btn btn-primary" data-i18n="bulkUpdateSavedUpdate" hidden disabled>Update</button>
                             </div>
                         </div>
@@ -396,16 +374,14 @@
         <!-- PAGE: ADD COMMENT -->
         <div id="page-sql-comment" class="page-content" style="display: none;">
             <main class="app-main comment-main">
-                <div class="panel-left comment-panel">
+                <div class="panel-left comment-panel workspace-split">
                     <section class="card section-input">
                         <div class="card-header">
                             <h2>
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
                                 SQL Query Input
                             </h2>
                             <div class="card-actions">
-                                <button class="btn btn-danger btn-sm" onclick="clearCommentInput()">
-                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                <button type="button" class="btn btn-danger btn-sm" onclick="clearCommentInput()">
                                     <span>Clear</span>
                                 </button>
                             </div>
@@ -418,15 +394,13 @@
                     <section class="card section-output interactive-border">
                         <div class="card-header">
                             <h2>
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="8 17 12 21 16 17"></polyline><line x1="12" y1="12" x2="12" y2="21"></line><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"></path></svg>
                                 Query with Table Comments
                             </h2>
                         </div>
                         <div class="card-body">
                             <textarea id="commentSqlOutput" class="code-textarea output-textarea" readonly placeholder="Result will appear here..."></textarea>
                             <div class="controls-row">
-                                <button class="btn btn-success" onclick="copyCommentResult()">
-                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <button type="button" class="btn btn-primary" onclick="copyCommentResult()">
                                     <span>Copy</span>
                                 </button>
                             </div>
@@ -438,7 +412,6 @@
                     <section class="card section-options">
                         <div class="card-header">
                             <h3>
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                                 Actions
                             </h3>
                         </div>
@@ -448,8 +421,7 @@
 -- orders | o</pre>
                             <div class="action-convert-container">
                                 <button class="btn btn-primary btn-large btn-block" onclick="generateTableComments()">
-                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-                                    <span>Generate Comments</span>
+                                    <span>Generate comments</span>
                                 </button>
                             </div>
                         </div>
@@ -464,12 +436,10 @@
                     <section class="card section-input">
                         <div class="card-header">
                             <h2>
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><path d="M14 14h3v3h-3zM18 18h3v3h-3zM14 21h3"></path></svg>
                                 <span data-i18n="codeInputTitle">Code List Input</span>
                             </h2>
                             <div class="card-actions">
-                                <button class="btn btn-danger btn-sm" onclick="clearCodeInput()">
-                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                <button type="button" class="btn btn-danger btn-sm" onclick="clearCodeInput()">
                                     <span data-i18n="codeBtnClear">Clear</span>
                                 </button>
                             </div>
@@ -484,11 +454,9 @@
                     <section class="card section-output interactive-border code-generator-output">
                         <div class="card-header">
                             <h2>
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M16 3h3a2 2 0 0 1 2 2v3"></path><path d="M8 21H5a2 2 0 0 1-2-2v-3"></path><path d="M16 21h3a2 2 0 0 0 2-2v-3"></path><rect x="8" y="8" width="8" height="8"></rect></svg>
                                 <span data-i18n="codeOutputTitle">Generated Codes</span>
                             </h2>
                             <button id="codePrintBtn" class="btn btn-secondary btn-sm" onclick="printCodes()" disabled>
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
                                 <span data-i18n="codeBtnPrint">Print</span>
                             </button>
                         </div>
@@ -503,7 +471,6 @@
                     <section class="card section-options">
                         <div class="card-header">
                             <h3>
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82V9A1.65 1.65 0 0 0 3 8a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9A1.65 1.65 0 0 0 10 3.09V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.14.61.7 1 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09A1.65 1.65 0 0 0 19.4 15z"></path></svg>
                                 <span data-i18n="codeOptionsTitle">Code & Print Options</span>
                             </h3>
                         </div>
@@ -552,8 +519,7 @@
                             <p class="code-generator-help" data-i18n="codePrintHelp">Print uses the configured grid. Choose actual size in the print dialog for physical dimensions.</p>
                             <div class="action-convert-container">
                                 <button id="codeGenerateBtn" class="btn btn-primary btn-large btn-block" onclick="generateCodes()">
-                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18M3 12h18"></path><rect x="4" y="4" width="16" height="16" rx="2"></rect></svg>
-                                    <span data-i18n="codeBtnGenerate">Generate Codes</span>
+                                    <span data-i18n="codeBtnGenerate">Generate codes</span>
                                 </button>
                             </div>
                         </div>
@@ -569,12 +535,10 @@
                     <section class="card section-input">
                         <div class="card-header">
                             <h2>
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 17l6-6-6-6"></path><path d="M12 19h8"></path></svg>
                                 <span data-i18n="csInputTitle">C# Source Input</span>
                             </h2>
                             <div class="card-actions">
-                                <button class="btn btn-danger btn-sm" onclick="clearCsInput()">
-                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                <button type="button" class="btn btn-danger btn-sm" onclick="clearCsInput()">
                                     <span data-i18n="btnClear">Clear</span>
                                 </button>
                             </div>
@@ -587,15 +551,13 @@
                     <section class="card section-output interactive-border">
                         <div class="card-header">
                             <h2>
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="8 17 12 21 16 17"></polyline><line x1="12" y1="12" x2="12" y2="21"></line><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"></path></svg>
                                 <span data-i18n="csOutputTitle">Column-Aligned Result</span>
                             </h2>
                         </div>
                         <div class="card-body">
                             <textarea id="csOutput" class="code-textarea output-textarea" readonly data-i18n-placeholder="outputPlaceholder" placeholder="Result will appear here..."></textarea>
                             <div class="controls-row">
-                                <button class="btn btn-success" onclick="copyCsResult()">
-                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                <button type="button" class="btn btn-primary" onclick="copyCsResult()">
                                     <span data-i18n="btnCopy">Copy</span>
                                 </button>
                             </div>
@@ -607,7 +569,6 @@
                     <section class="card section-options">
                         <div class="card-header">
                             <h3>
-                                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
                                 <span data-i18n="csOptionsTitle">Alignment Options</span>
                             </h3>
                         </div>
@@ -630,8 +591,7 @@
                             </div>
                             <div class="action-convert-container">
                                 <button class="btn btn-primary btn-large btn-block" onclick="csAlignColumns()">
-                                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"></path><path d="M8 4v16M12 4v16M16 4v16"></path></svg>
-                                    <span data-i18n="csBtnAlign">Align Columns</span>
+                                    <span data-i18n="csBtnAlign">Align columns</span>
                                 </button>
                             </div>
                         </div>
@@ -654,9 +614,9 @@
                         <div class="sql-export-toolbar">
                             <button id="sqlExportRefreshBtn" type="button" class="btn btn-secondary btn-sm" data-i18n="sqlExportRefresh">Refresh</button>
                             <button id="sqlExportSelectVisibleBtn" type="button" class="btn btn-secondary btn-sm" data-i18n="sqlExportSelectVisible">Select visible</button>
-                            <button id="sqlExportDeselectVisibleBtn" type="button" class="btn btn-secondary btn-sm">Unselect visible</button>
-                            <button id="sqlExportSelectProceduresBtn" type="button" class="btn btn-secondary btn-sm" data-i18n="sqlExportOnlyProcedures">Only SP</button>
-                            <button id="sqlExportSelectTablesBtn" type="button" class="btn btn-secondary btn-sm" data-i18n="sqlExportOnlyTables">Only Table</button>
+                            <button id="sqlExportDeselectVisibleBtn" type="button" class="btn btn-secondary btn-sm" data-i18n="sqlExportDeselectVisible">Deselect visible</button>
+                            <button id="sqlExportSelectProceduresBtn" type="button" class="btn btn-secondary btn-sm" data-i18n="sqlExportOnlyProcedures">Procedures only</button>
+                            <button id="sqlExportSelectTablesBtn" type="button" class="btn btn-secondary btn-sm" data-i18n="sqlExportOnlyTables">Tables only</button>
                             <button id="sqlExportClearBtn" type="button" class="btn btn-secondary btn-sm" data-i18n="sqlExportClearSelection">Clear selection</button>
                         </div>
                         <div class="sql-export-workspace">
@@ -754,8 +714,8 @@
                 <p id="confirmMessage"></p>
             </div>
             <div class="card-footer">
-                <button id="confirmCancel" class="confirm-btn-cancel" data-i18n="confirmCancel">Hủy</button>
-                <button id="confirmOk" class="confirm-btn-ok" data-i18n="confirmOk">Đồng ý</button>
+                <button id="confirmCancel" type="button" class="btn btn-secondary" data-i18n="confirmCancel">Hủy</button>
+                <button id="confirmOk" type="button" class="btn btn-danger-solid" data-i18n="confirmOk">Đồng ý</button>
             </div>
         </div>
     </div>
