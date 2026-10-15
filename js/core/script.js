@@ -140,9 +140,6 @@ function switchPage(pageId) {
         target.style.display = 'flex';
     }
 
-    // Orange theme is active only while on the Add Comment tab
-    document.body.classList.toggle('orange', pageId === 'sql-comment');
-
     const navItems = Array.from(document.querySelectorAll('.app-nav .nav-item'));
     const prevIndex = currentActiveNavIndex;
     let newIndex = -1;

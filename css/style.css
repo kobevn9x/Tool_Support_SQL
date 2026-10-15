@@ -1,7 +1,7 @@
 /* SQL DATA FORMATTER — DESIGN SYSTEM
  * Flat, high-contrast surfaces tuned for long sessions in light and dark mode.
  * Every text/background pair below meets WCAG AA (4.5:1) or better.
- * Accent: Emerald (default) · Orange (Add Comment tab)
+ * Accent: Emerald
  */
 
 :root {
@@ -66,16 +66,6 @@
     --font-mono: var(--font-code);
 }
 
-/* Orange accent — active while on the Add Comment tab */
-body.theme-enterprise.orange {
-    --brand-primary: #C2410C;
-    --brand-hover: #9A3412;
-    --brand-soft: #FFF0E6;
-    --brand-soft-hover: #FFE1CC;
-    --brand-soft-text: #9A3412;
-    --focus-ring: rgba(194, 65, 12, 0.32);
-}
-
 /* Dark mode — deep slate with brightened accents (dark text on accent fills) */
 body.dark {
     --brand-primary: #34D399;
@@ -119,16 +109,6 @@ body.dark {
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
     --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.45);
     --shadow-lg: 0 24px 56px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.4);
-}
-
-body.theme-enterprise.dark.orange {
-    --brand-primary: #FB923C;
-    --brand-hover: #FDBA74;
-    --on-brand: #2B1203;
-    --brand-soft: rgba(251, 146, 60, 0.14);
-    --brand-soft-hover: rgba(251, 146, 60, 0.22);
-    --brand-soft-text: #FDBA74;
-    --focus-ring: rgba(251, 146, 60, 0.4);
 }
 
 /* Base */
@@ -188,6 +168,17 @@ body.theme-enterprise {
 .panel-right {
     position: sticky;
     top: 16px;
+}
+
+/* Data Formatter keeps its original layout: stacked input/output, 320px rail */
+#page-formatter .panel-right {
+    position: static;
+}
+
+@media (min-width: 1101px) {
+    #page-formatter .app-main {
+        grid-template-columns: minmax(0, 1fr) 320px;
+    }
 }
 
 /* Input and output side by side on wide screens */
@@ -289,19 +280,17 @@ body.theme-enterprise {
     min-width: 104px;
 }
 
-/* ============================================================
- * PAGE NAVIGATION (segmented control with sliding indicator)
- * ============================================================ */
+/* Page navigation tabs container */
 .app-nav {
     position: relative;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 4px;
-    padding: 4px;
+    gap: 8px;
+    padding: 6px;
     background: var(--surface-card);
     border: 1px solid var(--border-light);
-    border-radius: var(--radius-md);
+    border-radius: 999px;
     box-shadow: var(--shadow-sm);
     isolation: isolate;
 }
@@ -310,25 +299,27 @@ body.theme-enterprise {
     position: relative;
     z-index: 2;
     appearance: none;
-    height: 36px;
-    padding: 0 18px;
-    border: 0;
-    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
     background: transparent;
     color: var(--text-secondary);
     font-family: var(--font-ui);
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     font-weight: 600;
-    white-space: nowrap;
+    padding: 10px 22px;
+    border-radius: 999px;
     cursor: pointer;
     user-select: none;
     -webkit-user-select: none;
-    transition: color 0.2s ease, background-color 0.2s ease;
+    transition: color 0.25s cubic-bezier(0.2, 0.8, 0.2, 1),
+                background 0.25s ease,
+                border-color 0.25s ease,
+                transform 0.12s ease-out;
 }
 
 .app-nav .nav-item:hover {
-    color: var(--text-primary);
+    color: var(--brand-primary);
     background: var(--surface-hover);
+    border-color: var(--border-light);
 }
 
 .app-nav .nav-item:focus-visible {
@@ -336,16 +327,38 @@ body.theme-enterprise {
     box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
-.app-nav .nav-item.active {
-    color: var(--on-brand);
-    background: var(--brand-primary);
+.app-nav .nav-item:active {
+    transform: scale(0.96);
 }
 
-/* With the sliding indicator, the active tab itself stays transparent */
-.app-nav.has-glider .nav-item.active,
-.app-nav.has-glider .nav-item.active:hover {
-    background: transparent;
+.app-nav .nav-item.active {
+    color: #fff;
+    font-weight: 600;
+    background: var(--brand-primary);
+    border-color: transparent;
+    box-shadow: 0 0 0 1px var(--focus-ring);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
 }
+
+/* When liquid glass glider is active, buttons become transparent windows */
+.app-nav.has-glider .nav-item.active {
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+
+.app-nav.has-glider .nav-item:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: transparent;
+}
+body:not(.dark) .app-nav.has-glider .nav-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+/* ============================================================
+ * APPLE LIQUID GLASS GLIDER (PHYSICAL OPTICAL REFRACTION)
+ * Dual-layer: Fluid Color Core + 3D Liquid Glass Lens
+ * ============================================================ */
 
 .nav-glider {
     position: absolute;
@@ -354,47 +367,239 @@ body.theme-enterprise {
     z-index: 1;
     pointer-events: none;
     opacity: 0;
-    border-radius: var(--radius-sm);
-    will-change: transform, width;
-    transition: transform 0.32s cubic-bezier(0.2, 0.9, 0.3, 1.05),
-                width 0.28s cubic-bezier(0.2, 0.9, 0.3, 1),
-                height 0.28s ease;
+    border-radius: 999px;
+    will-change: transform, width, height;
+    /* Apple Spring Timing Curve for primary capsule */
+    transition: transform 0.44s cubic-bezier(0.18, 0.92, 0.25, 1.22),
+                width 0.38s cubic-bezier(0.18, 0.92, 0.25, 1),
+                height 0.35s ease;
+    transform-origin: center center;
 }
 
+/* ────────────────────────────────────────────────────────────
+ * 1. FLUID COLOR CORE (Clean Deep Emerald — No Fuzzy Glow)
+ * ──────────────────────────────────────────────────────────── */
 .nav-glider .glider-fluid-core {
+    position: absolute;
+    inset: 5px 12px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #15803D 0%, #0F766E 100%);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.35);
+    will-change: transform;
+    transform-origin: center center;
+    transition: background 0.4s ease, box-shadow 0.4s ease, transform 0.15s ease-out;
+}
+
+body.dark .nav-glider .glider-fluid-core {
+    background: linear-gradient(135deg, #10B981 0%, #047857 100%);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+}
+
+/* ────────────────────────────────────────────────────────────
+ * 2. THICK LIQUID GLASS LENS (Pure Physical Glass Refraction — Zero Glow)
+ * ──────────────────────────────────────────────────────────── */
+.nav-glider .glider-glass-lens {
+    position: absolute;
+    inset: -1px -2px;
+    border-radius: inherit;
+    /* Ultra-clear optical crystal interior */
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(8px) saturate(125%) contrast(1.1);
+    -webkit-backdrop-filter: blur(8px) saturate(125%) contrast(1.1);
+    border: 1px solid rgba(255, 255, 255, 0.55);
+
+    /* Pure physical optics: ambient occlusion + razor specular bevel */
+    box-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.1),                        /* Ambient contact shadow */
+        0 1px 2px rgba(0, 0, 0, 0.06),                         /* Crisp ground contact */
+        inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.95),        /* Razor-sharp top specular rim */
+        inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.22);              /* Internal refraction occlusion */
+
+    will-change: transform;
+    transform-origin: center center;
+    overflow: hidden;
+    transition: box-shadow 0.4s ease, border-color 0.4s ease, transform 0.15s ease-out;
+}
+
+body.dark .nav-glider .glider-glass-lens {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.35);
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.45),
+        0 1px 3px rgba(0, 0, 0, 0.3),
+        inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.9),
+        inset 0 -2px 3px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* Glass Specular Top Glare (thin optical crescent) */
+.glass-specular-top {
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background: var(--brand-primary);
-    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.18);
-    transition: background-color 0.25s ease, transform 0.15s ease-out;
+    background: radial-gradient(ellipse 90% 40% at 50% 0%, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 65%);
+    pointer-events: none;
 }
 
-/* Decorative glass layers are retired; kept in markup for the JS hooks */
-.nav-glider .glider-glass-lens,
-.glass-rim-caustic,
-.glass-specular-top {
-    display: none;
+/* Glass Caustic Beam */
+.glass-rim-caustic {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    border-radius: 50%;
+    background: linear-gradient(
+        115deg,
+        transparent 35%,
+        rgba(255, 255, 255, 0.08) 45%,
+        rgba(255, 255, 255, 0.6) 50%,
+        rgba(255, 255, 255, 0.08) 55%,
+        transparent 65%
+    );
+    opacity: 0;
+    pointer-events: none;
+    transform: rotate(20deg);
 }
 
+/* Tactile press down feedback */
+.nav-glider.is-pressing .glider-glass-lens {
+    transform: scale(0.94);
+}
 .nav-glider.is-pressing .glider-fluid-core {
     transform: scale(0.97);
 }
 
-/* Gentle stretch while sliding */
-.nav-glider.gliding-right .glider-fluid-core { animation: gliderStretchRight 0.34s ease-out; }
-.nav-glider.gliding-left .glider-fluid-core { animation: gliderStretchLeft 0.34s ease-out; }
+/* ============================================================
+ * LIQUID FLUID SEPARATION & DRAG KEYFRAME ANIMATIONS
+ * Glass lens leads ahead, fluid color core trails & snaps
+ * ============================================================ */
 
-@keyframes gliderStretchRight {
-    0% { transform: scaleX(1); transform-origin: left center; }
-    40% { transform: scaleX(1.06); transform-origin: left center; }
-    100% { transform: scaleX(1); transform-origin: left center; }
+/* Single-tab Jump */
+.nav-glider.gliding-right.gliding-jump-1 .glider-glass-lens {
+    animation: lensLeadRight1 0.44s cubic-bezier(0.18, 0.95, 0.25, 1);
+}
+.nav-glider.gliding-right.gliding-jump-1 .glider-fluid-core {
+    animation: fluidTrailRight1 0.48s cubic-bezier(0.12, 0.85, 0.3, 1.18);
+}
+.nav-glider.gliding-left.gliding-jump-1 .glider-glass-lens {
+    animation: lensLeadLeft1 0.44s cubic-bezier(0.18, 0.95, 0.25, 1);
+}
+.nav-glider.gliding-left.gliding-jump-1 .glider-fluid-core {
+    animation: fluidTrailLeft1 0.48s cubic-bezier(0.12, 0.85, 0.3, 1.18);
 }
 
-@keyframes gliderStretchLeft {
-    0% { transform: scaleX(1); transform-origin: right center; }
-    40% { transform: scaleX(1.06); transform-origin: right center; }
-    100% { transform: scaleX(1); transform-origin: right center; }
+/* Multi-tab Jump (e.g. Func 1 -> Func 3): Pronounced Liquid Stretch & Separation */
+.nav-glider.gliding-right.gliding-jump-multi .glider-glass-lens {
+    animation: lensLeadRightMulti 0.48s cubic-bezier(0.18, 0.95, 0.25, 1);
+}
+.nav-glider.gliding-right.gliding-jump-multi .glider-fluid-core {
+    animation: fluidTrailRightMulti 0.52s cubic-bezier(0.12, 0.85, 0.3, 1.18);
+}
+.nav-glider.gliding-left.gliding-jump-multi .glider-glass-lens {
+    animation: lensLeadLeftMulti 0.48s cubic-bezier(0.18, 0.95, 0.25, 1);
+}
+.nav-glider.gliding-left.gliding-jump-multi .glider-fluid-core {
+    animation: fluidTrailLeftMulti 0.52s cubic-bezier(0.12, 0.85, 0.3, 1.18);
+}
+
+/* Caustic Light Sweep */
+.nav-glider.gliding-right .glass-rim-caustic {
+    animation: causticSweepRight 0.46s cubic-bezier(0.2, 1, 0.3, 1);
+}
+.nav-glider.gliding-left .glass-rim-caustic {
+    animation: causticSweepLeft 0.46s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+/* Single-tab Keyframes */
+@keyframes lensLeadRight1 {
+    0% { transform: translateX(0) scale(1, 1); }
+    35% { transform: translateX(14px) scaleX(1.12) scaleY(0.94); }
+    70% { transform: translateX(-3px) scaleX(0.97) scaleY(1.02); }
+    88% { transform: translateX(1px) scale(1, 1); }
+    100% { transform: translateX(0) scale(1, 1); }
+}
+
+@keyframes fluidTrailRight1 {
+    0% { transform: translateX(0) scale(1, 1); }
+    35% { transform: translateX(-16px) scaleX(1.18) scaleY(0.9); }
+    70% { transform: translateX(4px) scaleX(0.96) scaleY(1.03); }
+    88% { transform: translateX(-1px) scale(1, 1); }
+    100% { transform: translateX(0) scale(1, 1); }
+}
+
+@keyframes lensLeadLeft1 {
+    0% { transform: translateX(0) scale(1, 1); }
+    35% { transform: translateX(-14px) scaleX(1.12) scaleY(0.94); }
+    70% { transform: translateX(3px) scaleX(0.97) scaleY(1.02); }
+    88% { transform: translateX(-1px) scale(1, 1); }
+    100% { transform: translateX(0) scale(1, 1); }
+}
+
+@keyframes fluidTrailLeft1 {
+    0% { transform: translateX(0) scale(1, 1); }
+    35% { transform: translateX(16px) scaleX(1.18) scaleY(0.9); }
+    70% { transform: translateX(-4px) scaleX(0.96) scaleY(1.03); }
+    88% { transform: translateX(1px) scale(1, 1); }
+    100% { transform: translateX(0) scale(1, 1); }
+}
+
+/* Multi-tab Keyframes (Extensive Fluid Separation as in reference image) */
+@keyframes lensLeadRightMulti {
+    0% { transform: translateX(0) scale(1, 1); }
+    35% { transform: translateX(28px) scaleX(1.22) scaleY(0.88); }
+    68% { transform: translateX(-5px) scaleX(0.93) scaleY(1.05); }
+    86% { transform: translateX(2px) scaleX(1.02) scaleY(0.99); }
+    100% { transform: translateX(0) scale(1, 1); }
+}
+
+@keyframes fluidTrailRightMulti {
+    0% { transform: translateX(0) scale(1, 1); }
+    35% { transform: translateX(-34px) scaleX(1.3) scaleY(0.84); }
+    68% { transform: translateX(8px) scaleX(0.92) scaleY(1.06); }
+    86% { transform: translateX(-3px) scaleX(1.02) scaleY(0.99); }
+    100% { transform: translateX(0) scale(1, 1); }
+}
+
+@keyframes lensLeadLeftMulti {
+    0% { transform: translateX(0) scale(1, 1); }
+    35% { transform: translateX(-28px) scaleX(1.22) scaleY(0.88); }
+    68% { transform: translateX(5px) scaleX(0.93) scaleY(1.05); }
+    86% { transform: translateX(-2px) scaleX(1.02) scaleY(0.99); }
+    100% { transform: translateX(0) scale(1, 1); }
+}
+
+@keyframes fluidTrailLeftMulti {
+    0% { transform: translateX(0) scale(1, 1); }
+    35% { transform: translateX(34px) scaleX(1.3) scaleY(0.84); }
+    68% { transform: translateX(-8px) scaleX(0.92) scaleY(1.06); }
+    86% { transform: translateX(3px) scaleX(1.02) scaleY(0.99); }
+    100% { transform: translateX(0) scale(1, 1); }
+}
+
+@keyframes causticSweepRight {
+    0% { transform: translateX(-80%) rotate(20deg); opacity: 0; }
+    30% { opacity: 0.95; }
+    70% { opacity: 0.85; }
+    100% { transform: translateX(85%) rotate(20deg); opacity: 0; }
+}
+
+@keyframes causticSweepLeft {
+    0% { transform: translateX(85%) rotate(20deg); opacity: 0; }
+    30% { opacity: 0.95; }
+    70% { opacity: 0.85; }
+    100% { transform: translateX(-80%) rotate(20deg); opacity: 0; }
+}
+
+/* Accessibility: Respect Reduced Motion Preference */
+@media (prefers-reduced-motion: reduce) {
+    .nav-glider {
+        transition: opacity 0.2s ease !important;
+    }
+    .nav-glider .glider-glass-lens,
+    .nav-glider .glider-fluid-core,
+    .glass-rim-caustic {
+        animation: none !important;
+    }
 }
 
 /* ============================================================
@@ -1387,9 +1592,7 @@ body.theme-enterprise {
     html,
     body,
     body.theme-enterprise,
-    body.dark,
-    body.theme-enterprise.orange,
-    body.theme-enterprise.dark.orange {
+    body.dark {
         min-height: 0 !important;
         background: #fff !important;
         background-image: none !important;
