@@ -116,32 +116,11 @@ function applyTheme(theme) {
     }
 
     if (btn) {
-        // Update SVG icon inside the button and its tooltips/aria-labels
-        if (theme === 'dark') {
-            btn.innerHTML = `
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="5"></circle>
-                    <line x1="12" y1="1" x2="12" y2="3"></line>
-                    <line x1="12" y1="21" x2="12" y2="23"></line>
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                    <line x1="1" y1="12" x2="3" y2="12"></line>
-                    <line x1="21" y1="12" x2="23" y2="12"></line>
-                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                </svg>
-            `;
-            btn.title = t('themeLight');
-            btn.setAttribute('aria-label', t('themeLight'));
-        } else {
-            btn.innerHTML = `
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                </svg>
-            `;
-            btn.title = t('themeDark');
-            btn.setAttribute('aria-label', t('themeDark'));
-        }
+        // Text label names the mode the button switches to
+        const isDark = theme === 'dark';
+        btn.textContent = t(isDark ? 'themeLightShort' : 'themeDarkShort');
+        btn.title = t(isDark ? 'themeLight' : 'themeDark');
+        btn.setAttribute('aria-label', btn.title);
     }
 }
 
@@ -336,11 +315,10 @@ function convertData(isFromHistory = false) {
     const sectionOutput = document.querySelector('.section-output');
     if (sectionOutput) sectionOutput.classList.add('processing');
 
-    const convertBtn = document.querySelector('.btn-primary');
-    const originalBtnText = convertBtn?.innerHTML;
+    const convertBtn = document.getElementById('convertBtn');
     if (convertBtn) {
         convertBtn.disabled = true;
-        convertBtn.innerHTML = '<span class="spinner"></span> Processing...';
+        convertBtn.textContent = t('btnProcessing');
     }
 
     // Use setTimeout to allow UI to update before heavy processing
@@ -358,7 +336,7 @@ function convertData(isFromHistory = false) {
 
             if (convertBtn) {
                 convertBtn.disabled = false;
-                convertBtn.innerHTML = originalBtnText || '<span data-i18n="btnConvert">🔄 Convert</span>';
+                convertBtn.textContent = t('btnConvert');
             }
         }
     }, 50);
@@ -825,7 +803,10 @@ function displayHistory() {
     const historyList = document.getElementById('historyList');
     
     if (formatterHistory.length === 0) {
-        historyList.innerHTML = `<p style="text-align: center; color: #9ca3af; padding: 40px;">${t('historyEmpty')}</p>`;
+        const empty = document.createElement('p');
+        empty.className = 'history-empty';
+        empty.textContent = t('historyEmpty');
+        historyList.replaceChildren(empty);
         return;
     }
     
@@ -841,24 +822,27 @@ function displayHistory() {
         
         const timeSpan = document.createElement('span');
         timeSpan.className = 'history-time';
-        timeSpan.textContent = `🕐 ${item.timestamp}`;
+        timeSpan.textContent = item.timestamp;
         
         const actionsDiv = document.createElement('div');
         actionsDiv.className = 'history-actions';
         
         const loadBtn = document.createElement('button');
+        loadBtn.type = 'button';
         loadBtn.className = 'btn btn-secondary btn-sm';
         loadBtn.textContent = t('btnLoad');
         loadBtn.onclick = () => loadHistory(item.id);
 
         const copyBtn = document.createElement('button');
-        copyBtn.className = 'btn btn-success btn-sm';
+        copyBtn.type = 'button';
+        copyBtn.className = 'btn btn-tonal btn-sm';
         copyBtn.textContent = t('btnCopy');
         copyBtn.onclick = () => copyHistoryItem(item.id);
 
         const deleteBtn = document.createElement('button');
+        deleteBtn.type = 'button';
         deleteBtn.className = 'btn btn-danger btn-sm';
-        deleteBtn.textContent = '❌';
+        deleteBtn.textContent = t('btnDelete');
         deleteBtn.onclick = () => deleteHistoryItem(item.id);
         
         actionsDiv.appendChild(loadBtn);

@@ -21,28 +21,34 @@ const languages = {
         headerSubtitle: 'Công cụ định dạng dữ liệu SQL nhanh và hiệu quả',
         themeLight: 'Chuyển sang giao diện sáng',
         themeDark: 'Chuyển sang giao diện tối',
+        themeLightShort: 'Giao diện sáng',
+        themeDarkShort: 'Giao diện tối',
+        btnProcessing: 'Đang xử lý...',
+        btnDelete: 'Xóa',
+        sqlExportDeselectVisible: 'Bỏ chọn mục đang hiển thị',
 
         // Input card
-        inputTitle: '📝 Dữ liệu đầu vào',
+        inputTitle: 'Dữ liệu đầu vào',
         inputPlaceholder: 'Nhập dữ liệu của bạn vào đây (mỗi giá trị một dòng)...\n\n💡 Phím tắt: Ctrl + Enter để chuyển đổi nhanh',
         btnConvert: 'Chuyển đổi',
         btnClear: 'Xóa',
 
         // Output card
-        outputTitle: '✨ Kết quả',
+        outputTitle: 'Kết quả',
         outputPlaceholder: 'Kết quả sẽ hiển thị ở đây...',
         btnCopy: 'Copy',
         btnDownload: 'Tải xuống',
-        btnCopyCurrentBlock: 'Copy Block hiện tại',
-        btnCopyAllBlocks: 'Copy TẤT CẢ Blocks',
+        btnCopyCurrentBlock: 'Copy block này',
+        btnCopyAllBlocks: 'Copy tất cả block',
 
         // Stats
+        statsTitle: 'Thống kê',
         statLines: 'Dòng',
         statChars: 'Ký tự',
         statBlocks: 'Blocks',
 
         // Options panel
-        optionsTitle: '⚙️ Tùy chọn',
+        optionsTitle: 'Tùy chọn',
         optAutoTheme: 'Tự động chuyển giao diện (18h - 7h)',
         optRemoveEmpty: 'Xóa dòng trống',
         optRemoveDuplicates: 'Xóa giá trị trùng lặp',
@@ -60,7 +66,7 @@ const languages = {
         templatePlaceholder: "Ví dụ:\nSELECT * FROM users WHERE id IN ({values})\nINSERT INTO users (id, name) VALUES ({values})\nUPDATE users SET active = 1 WHERE id IN ({values})",
 
         // History panel
-        historyTitle: '📚 Lịch sử chuyển đổi',
+        historyTitle: 'Lịch sử chuyển đổi',
         btnClearAll: 'Xóa tất cả',
         historyEmpty: 'Chưa có lịch sử nào',
         btnLoad: 'Tải',
@@ -94,10 +100,10 @@ const languages = {
 
         // C# Column Align
         navCsColumn: 'Căn cột C#',
-        csInputTitle: '📝 Mã nguồn C#',
+        csInputTitle: 'Mã nguồn C#',
         csInputPlaceholder: 'Dán các câu lệnh gọi phương thức C# vào đây...\n\n_GridUtil.InitColumn(grid2, "PLANT_CD", "사업장", 140, 0, false, false, 2, GridColDataType_emu.VarChar, HAlign.Left, string.Empty, string.Empty);',
-        csOutputTitle: '✨ Kết quả căn cột',
-        csOptionsTitle: '⚙️ Tùy chọn căn cột',
+        csOutputTitle: 'Kết quả căn cột',
+        csOptionsTitle: 'Tùy chọn căn cột',
         csOptAlignNumbersRight: 'Căn phải các số',
         csOptMinGroupSize: 'Số lệnh tối thiểu trong nhóm:',
         csOptMaxLineLength: 'Độ dài dòng tối đa (0 = tắt):',
@@ -230,9 +236,9 @@ const languages = {
         sqlExportSearchLabel: 'Tìm đối tượng database',
         sqlExportSearchPlaceholder: 'Tìm theo schema hoặc tên...',
         sqlExportRefresh: 'Làm mới',
-        sqlExportSelectVisible: 'Chọn kết quả đang hiển thị',
-        sqlExportOnlyProcedures: 'Chỉ SP',
-        sqlExportOnlyTables: 'Chỉ Table',
+        sqlExportSelectVisible: 'Chọn mục đang hiển thị',
+        sqlExportOnlyProcedures: 'Chỉ procedure',
+        sqlExportOnlyTables: 'Chỉ table',
         sqlExportClearSelection: 'Bỏ chọn',
         sqlExportProcedures: 'Stored procedures',
         sqlExportTables: 'Tables',
@@ -264,28 +270,34 @@ const languages = {
         headerSubtitle: 'Fast and efficient SQL data formatting tool',
         themeLight: 'Switch to light mode',
         themeDark: 'Switch to dark mode',
+        themeLightShort: 'Light mode',
+        themeDarkShort: 'Dark mode',
+        btnProcessing: 'Processing...',
+        btnDelete: 'Delete',
+        sqlExportDeselectVisible: 'Deselect visible',
 
         // Input card
-        inputTitle: '📝 Input Data',
+        inputTitle: 'Input Data',
         inputPlaceholder: 'Enter your data here (one value per line)...\n\n💡 Keyboard Shortcut: Ctrl + Enter to convert quickly',
         btnConvert: 'Convert',
-        btnClear: ' Clear',
+        btnClear: 'Clear',
 
         // Output card
-        outputTitle: '✨ Result',
+        outputTitle: 'Result',
         outputPlaceholder: 'Results will be displayed here...',
         btnCopy: 'Copy',
         btnDownload: 'Download',
-        btnCopyCurrentBlock: 'Copy Current Block',
-        btnCopyAllBlocks: 'Copy ALL Blocks',
+        btnCopyCurrentBlock: 'Copy block',
+        btnCopyAllBlocks: 'Copy all blocks',
 
         // Stats
+        statsTitle: 'Statistics',
         statLines: 'Lines',
         statChars: 'Chars',
         statBlocks: 'Blocks',
 
         // Options panel
-        optionsTitle: '⚙️ Options',
+        optionsTitle: 'Options',
         optAutoTheme: 'Auto Theme (18:00 - 07:00)',
         optRemoveEmpty: 'Remove empty lines',
         optRemoveDuplicates: 'Remove duplicates',
@@ -303,8 +315,8 @@ const languages = {
         templatePlaceholder: 'Examples:\nSELECT * FROM users WHERE id IN ({values})\nINSERT INTO users (id, name) VALUES ({values})\nUPDATE users SET active = 1 WHERE id IN ({values})',
 
         // History panel
-        historyTitle: '📚 Conversion History',
-        btnClearAll: ' Clear All',
+        historyTitle: 'Conversion History',
+        btnClearAll: 'Clear all',
         historyEmpty: 'No history yet',
         btnLoad: 'Load',
 
@@ -337,15 +349,15 @@ const languages = {
 
         // C# Column Align
         navCsColumn: 'C# Column Align',
-        csInputTitle: '📝 C# Source Input',
+        csInputTitle: 'C# Source Input',
         csInputPlaceholder: 'Paste C# method call statements here...\n\n_GridUtil.InitColumn(grid2, "PLANT_CD", "사업장", 140, 0, false, false, 2, GridColDataType_emu.VarChar, HAlign.Left, string.Empty, string.Empty);',
-        csOutputTitle: '✨ Column-Aligned Result',
-        csOptionsTitle: '⚙️ Alignment Options',
+        csOutputTitle: 'Column-Aligned Result',
+        csOptionsTitle: 'Alignment Options',
         csOptAlignNumbersRight: 'Right-align numeric literals',
         csOptMinGroupSize: 'Minimum group size:',
         csOptMaxLineLength: 'Max line length (0 = off):',
         csHelpText: 'Aligns consecutive calls to the same method by argument column, using East-Asian display width so Korean/CJK columns line up in the editor.',
-        csBtnAlign: 'Align Columns',
+        csBtnAlign: 'Align columns',
         csToastEmpty: 'Please enter C# source code',
         csToastNoGroup: 'No alignable method-call groups found',
         csToastSuccess: (groups, calls) => `Aligned ${groups} group(s) (${calls} calls)`,
@@ -370,7 +382,7 @@ const languages = {
         codeSpacingLabel: 'Spacing (mm):',
         codeRemoveEmpty: 'Remove empty lines',
         codePrintHelp: 'Print uses the configured grid. Choose actual size in the print dialog for physical dimensions.',
-        codeBtnGenerate: 'Generate Codes',
+        codeBtnGenerate: 'Generate codes',
         codeBtnPrint: 'Print',
         codeBtnClear: 'Clear',
         codeEmptyState: 'Enter values and generate codes.',
@@ -396,9 +408,9 @@ const languages = {
         bulkUpdateSavedTitle: 'Saved Templates',
         bulkUpdateSavedNameLabel: 'Template name',
         bulkUpdateSavedNamePlaceholder: 'Enter a template name',
-        bulkUpdateSavedCreate: 'Save New',
+        bulkUpdateSavedCreate: 'Save as new',
         bulkUpdateSavedUpdate: 'Update',
-        bulkUpdateSavedCancel: 'Cancel Edit',
+        bulkUpdateSavedCancel: 'Cancel edit',
         bulkUpdateSavedEmpty: 'No saved templates yet.',
         bulkUpdateSavedUse: 'Use',
         bulkUpdateSavedEdit: 'Edit',
@@ -475,8 +487,8 @@ const languages = {
         sqlExportSearchPlaceholder: 'Search schema or name...',
         sqlExportRefresh: 'Refresh',
         sqlExportSelectVisible: 'Select visible',
-        sqlExportOnlyProcedures: 'Only SP',
-        sqlExportOnlyTables: 'Only Table',
+        sqlExportOnlyProcedures: 'Procedures only',
+        sqlExportOnlyTables: 'Tables only',
         sqlExportClearSelection: 'Clear selection',
         sqlExportProcedures: 'Stored procedures',
         sqlExportTables: 'Tables',
@@ -507,15 +519,20 @@ const languages = {
         headerSubtitle: '빠르고 효율적인 SQL 데이터 포맷 도구',
         themeLight: '라이트 모드로 전환',
         themeDark: '다크 모드로 전환',
+        themeLightShort: '라이트 모드',
+        themeDarkShort: '다크 모드',
+        btnProcessing: '처리 중...',
+        btnDelete: '삭제',
+        sqlExportDeselectVisible: '표시된 항목 해제',
 
         // Input card
-        inputTitle: '📝 입력 데이터',
+        inputTitle: '입력 데이터',
         inputPlaceholder: '여기에 데이터를 입력하세요 (줄당 하나의 값)...',
         btnConvert: '변환',
-        btnClear: ' 지우기',
+        btnClear: '지우기',
 
         // Output card
-        outputTitle: '✨ 결과',
+        outputTitle: '결과',
         outputPlaceholder: '결과가 여기에 표시됩니다...',
         btnCopy: '복사',
         btnDownload: '다운로드',
@@ -523,12 +540,13 @@ const languages = {
         btnCopyAllBlocks: '모든 블록 복사',
 
         // Stats
+        statsTitle: '통계',
         statLines: '줄',
         statChars: '문자',
         statBlocks: '블록',
 
         // Options panel
-        optionsTitle: '⚙️ 옵션',
+        optionsTitle: '옵션',
         optAutoTheme: '자동 테마 전환 (18:00 - 07:00)',
         optRemoveEmpty: '빈 줄 제거',
         optRemoveDuplicates: '중복 제거',
@@ -546,8 +564,8 @@ const languages = {
         templatePlaceholder: '예시:\nSELECT * FROM users WHERE id IN ({values})\nINSERT INTO users (id, name) VALUES ({values})\nUPDATE users SET active = 1 WHERE id IN ({values})',
 
         // History panel
-        historyTitle: '📚 변환 기록',
-        btnClearAll: ' 전체 삭제',
+        historyTitle: '변환 기록',
+        btnClearAll: '전체 삭제',
         historyEmpty: '기록이 없습니다',
         btnLoad: '불러오기',
 
@@ -580,10 +598,10 @@ const languages = {
 
         // C# Column Align
         navCsColumn: 'C# 열 정렬',
-        csInputTitle: '📝 C# 소스 입력',
+        csInputTitle: 'C# 소스 입력',
         csInputPlaceholder: '여기에 C# 메서드 호출문을 붙여넣으세요...\n\n_GridUtil.InitColumn(grid2, "PLANT_CD", "사업장", 140, 0, false, false, 2, GridColDataType_emu.VarChar, HAlign.Left, string.Empty, string.Empty);',
-        csOutputTitle: '✨ 열 정렬 결과',
-        csOptionsTitle: '⚙️ 정렬 옵션',
+        csOutputTitle: '열 정렬 결과',
+        csOptionsTitle: '정렬 옵션',
         csOptAlignNumbersRight: '숫자 오른쪽 정렬',
         csOptMinGroupSize: '최소 그룹 크기:',
         csOptMaxLineLength: '최대 줄 길이 (0 = 끄기):',
@@ -718,7 +736,7 @@ const languages = {
         sqlExportSearchPlaceholder: '스키마 또는 이름 검색...',
         sqlExportRefresh: '새로 고침',
         sqlExportSelectVisible: '표시된 항목 선택',
-        sqlExportOnlyProcedures: 'SP만',
+        sqlExportOnlyProcedures: '프로시저만',
         sqlExportOnlyTables: '테이블만',
         sqlExportClearSelection: '선택 해제',
         sqlExportProcedures: '저장 프로시저',
